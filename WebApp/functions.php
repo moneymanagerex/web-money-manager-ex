@@ -202,6 +202,9 @@ class design
             echo "</div>";
                 
         }
+        
+        
+        
     //Create password input element    
     function input_setting_password ($VarName,$PlaceHolder,$Required,$OnChange)
         {
@@ -222,11 +225,11 @@ class design
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' onchange='".$OnChange."' required />";
+                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' onchange='".$OnChange."' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' onchange='".$OnChange."' />";
+                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' onchange='".$OnChange."' />";
                             } 
                     }
                 echo "<span class='help-block'></span>";
@@ -484,23 +487,50 @@ class security
 {
     function redirect_if_not_loggedin ()
         {
-            if(isset($_SESSION["login_string"],$_SESSION["username"]))
+            $disable_authentication = costant::disable_authentication();
+            if (($disable_authentication) == False)
             {
-                $password = costant::login_password(); 
-                $login_string = $_SESSION["login_string"];
-                $username = $_SESSION["username"];
-                $user_browser = $_SERVER["HTTP_USER_AGENT"];
-                
-                $login_check = hash('sha512', $password . $user_browser);
-                if ($login_check !== $login_string)
-                    {
-                        header("Location: index.php");
-                    }
+                if(isset($_SESSION["login_string"],$_SESSION["username"]))
+                {
+                    $password = costant::login_password(); 
+                    $login_string = $_SESSION["login_string"];
+                    $username = $_SESSION["username"];
+                    $user_browser = $_SERVER["HTTP_USER_AGENT"];
+                    
+                    $login_check = hash('sha512', $password . $user_browser);
+                    if ($login_check !== $login_string)
+                        {
+                            header("Location: index.php");
+                        }
+                }
+                else
+                {
+                    header("Location: index.php");
+                }
             }
+        }
+        
+        
+    function generate_guid()
+        {
+            if (function_exists('com_create_guid'))
+                {
+                    return com_create_guid();
+                }
             else
-            {
-                header("Location: index.php");
-            }
+                {
+                    mt_srand((double)microtime()*10000);
+                    $charid = strtoupper(md5(uniqid(rand(), true)));
+                    $hyphen = chr(45);// "-"
+                    $uuid = chr(123)// "{"
+                    .substr($charid, 0, 8).$hyphen
+                    .substr($charid, 8, 4).$hyphen
+                    .substr($charid,12, 4).$hyphen
+                    .substr($charid,16, 4).$hyphen
+                    .substr($charid,20,12)
+                    .chr(125);// "}"
+                    return $uuid;
+                }
         }
 }
 
@@ -602,6 +632,38 @@ class costant
             {
                 global $app_version;
                 return $app_version;
+            }
+        
+        function disable_authentication ()
+            {
+                global $disable_authentication;
+                if (($disable_authentication) == "True")
+                    {
+                        return True;
+                    }
+                else
+                    {
+                        return False;
+                    }
+            }
+        
+        function current_page_url ()
+            {
+             $pageURL = 'http';
+             #if ($_SERVER["HTTPS"] == "on")
+             #    {
+             #       $pageURL .= "s";
+             #    }
+             $pageURL .= "://";
+             if ($_SERVER["SERVER_PORT"] != "80")
+                {
+                    $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+                }
+             else
+                {
+                    $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+                 }
+             return $pageURL;
             }
     }
 ?>

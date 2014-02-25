@@ -20,13 +20,16 @@ security::redirect_if_not_loggedin();
     
     <body>
         <div class="container" align="center">
-            <h2><strong>Money Manager EX - Web App</strong></h2>
             <br />
-            <img src="res\mmex.ico" alt="Money Manager EX Logo" height="150" width="150"/>
+            <img src="res\mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
             <br />
+            <h2><strong>Money Manager Ex - Web App</strong></h2>
+            <?php
+	           echo "<h4> Version ".costant::app_version()."</h4>";
+            ?>
             <br />
-            <br />
-            <h4> Copyright 2014 - Gabriele</h4>
+            <h4> Developer: Gabriele [Gabriele-v]</h4>
+            <a href="https://sourceforge.net/projects/moneymanagerex-webapp"><h4> Sourceforge WebPage</h4></a>
             <br />
             <p>
                 Used components:
@@ -38,6 +41,7 @@ security::redirect_if_not_loggedin();
                 <a href="http://www.sqlite.org/">SQLite</a>
             </p>
             <br />
+            <input type="button" class="btn btn-lg btn-success btn-block" value="Return" onclick="top.location.href = 'landing.php'" />
             <br />
         </div>
     </body>

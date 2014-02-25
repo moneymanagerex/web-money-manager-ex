@@ -12,31 +12,60 @@ if (isset($const_username) AND isset($const_password))
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
     {        
-        if(!empty($_POST["Set_Username"]) && !empty($_POST["Account"]))
+        if (isset ($_POST["Set_Disable_authentication"]))
+            {
+                $disable_authentication = $_POST["Set_Disable_authentication"];
+            }
+        else
+            {
+                $disable_authentication = "False";
+            }
+        if (isset ($_POST["Set_Username"]))
             {
                 $username = $_POST["Set_Username"];
-                $account = $_POST["Account"];
-                if (isset($_POST["Set_Password"]))
+            }
+        else
+            {
+                $username = "";
+            }
+        $account = $_POST["Account"];
+        $guid = $_POST["Set_Guid"];
+        
+        if (isset($_POST["Set_Password"]) && $_POST["Set_Password"] !== "" && $_POST["Set_Password"] !== Null)
+            {
+                $password = hash("sha512", $_POST["Set_Password"]);
+            }
+        else
+            {
+                if (isset ($_POST["Set_Disable_authentication"]))
                     {
-                        $password = hash("sha512", $_POST["Set_Password"]);
+                        $password = "";
                     }
                 else
                     {
                         $password = costant::login_password();
                     }
                 
-                $parameterarray = array(
-                    "user_username"         => $username,
-                    "user_password"         => $password,
-                    "defaultaccountname"    => $account
-                );
-                
+            }
+        
+        $parameterarray = array
+            (
+                "disable_authentication"=> $disable_authentication,
+                "user_username"         => $username,
+                "user_password"         => $password,
+                "defaultaccountname"    => $account,
+                "desktop_guid"          => $guid
+            );
+              
+        if (file_exists("configuration_user.php"))
+            {
                 various::update_configuration_file($parameterarray);
                 header("Location: landing.php");
             }
         else
             {
-                header("Location: landing2.php");
+                various::update_configuration_file($parameterarray);
+                header("Location: guide.php");
             }
     }
 ?>
@@ -61,25 +90,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <?php
         if (isset($const_username) AND isset($const_password))
             {
-                echo "<h2 align = 'center'>Edit settings</h2>";
+                echo "<h3 align = 'center'>Edit settings</h3>";
             }
         else
             {
                 echo "<br />";
                 echo "<p style='text-align:center'><img src='res\mmex.ico' alt='Money Manager EX Logo' height='150' width='150' /></p>";
-                echo "<br />";
-                echo "<h2 align = 'center'>Insert new settings to start use Money Manager</h2>";
+                echo "<h3 align = 'center'>Insert new settings to start use Money Manager</h3>";
             }
         ?>
         <br />
-        <form id="login" method="post">
+        <form id="login" method="post" action="settings.php">
             <?php
                 require_once "functions.php";
+                $const_disable_authentication = costant::disable_authentication();
                 $const_username = costant::login_username();
                 $const_password = costant::login_password();
+                $const_desktop_guid = costant::desktop_guid();
                 $const_defaultaccountname = costant::transaction_account_default();
                 
-                if (isset($const_username))
+                echo "<div class='checkbox'>";
+                    echo "<label>";
+                        if ($const_disable_authentication == True)
+                            {
+                                echo "<input id='Set_Disable_authentication' type='checkbox' name='Set_Disable_authentication' value='True' onchange = 'Disable_Authentication()' checked>Disable authentication (Not recommended)";
+                            }
+                        else
+                            {
+                                echo "<input id='Set_Disable_authentication' type='checkbox' name='Set_Disable_authentication' value='True' onchange = 'Disable_Authentication()'>Disable authentication (Not recommended)";
+                            }
+                    echo "</label>";
+                echo "</div>";
+
+                
+                if (isset($const_username) && $const_disable_authentication == False)
                     {
                         design::input_setting("Username",$const_username,"","Text",True);
                     }
@@ -88,17 +132,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                         design::input_setting("Username","","Inser a username","Text",True);
                     }
                 
-                if (isset($const_password))
+                if (isset($const_password) && $const_disable_authentication == False)
                     {
                         #design::input_setting("Password",$const_password,"","Password");
                         design::input_setting_password("Password","To change insert a new password",False,"");
                     }
                 else
                     {
-                        design::input_setting_password("Password","Insert a password",True,"disable_element(".'"'."Set_Confirm_Password".'","'."Set_Password".'","")');
+                        design::input_setting_password("Password","Insert a password",True,"disable_element_if_empty(".'"'."Set_Confirm_Password".'","'."Set_Password".'")');
                     }
         
                 design::input_setting_password("Confirm_Password","Confirm new password",False,"");
+                
+                if (isset($const_desktop_guid))
+                    {
+                        design::input_setting("Guid",$const_desktop_guid,"","Text",True);
+                    }
+                else
+                    {
+                        design::input_setting("Guid",security::generate_guid(),"","Text",True);
+                    }
                 
                 if (isset($const_defaultaccountname))
                     {
@@ -110,8 +163,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     }
                 
             ?>
+            <script type="text/javascript">
+                function Disable_Authentication()
+                    {
+                        if (document.getElementById("Set_Disable_authentication").checked)
+                            {
+                                document.getElementById("Set_Username").disabled = true;
+                                document.getElementById("Set_Password").disabled = true;
+                                document.getElementById("Set_Confirm_Password").disabled = true;
+                                disable_element_if_empty ("Set_Confirm_Password","Set_Password");
+                            }
+                        else
+                            {
+                                document.getElementById("Set_Username").disabled = false;
+                                document.getElementById("Set_Password").disabled = false;
+                                document.getElementById("Set_Confirm_Password").disabled = false;
+                                disable_element_if_empty ("Set_Confirm_Password","Set_Password");
+                            }
+                    }
+                disable_element_if_empty ("Set_Confirm_Password","Set_Password");
+                Disable_Authentication();
+            </script>  
             <br />
-            <button type="submit" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block">Edit Settings</button>
+            <?php
+                if (isset($const_username) AND isset($const_password))
+                    {
+                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='checkcheck_password_match_and_submit(".'"'."Set_Password".'","'."Set_Confirm_Password".'","'."settings.php".'","'."login".'"'.")'>Edit Settings</button>");
+                    }
+                else
+                    {
+                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='checkcheck_password_match_and_submit(".'"'."Set_Password".'","'."Set_Confirm_Password".'","'."settings.php".'","'."login".'"'.")'>Apply Settings</button>");
+                    }
+            ?>
+            <br />
         </form>
     </body>
 </html>

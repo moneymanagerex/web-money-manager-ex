@@ -27,14 +27,38 @@ function send_alert_and_redirect (alertmessage,newurl)
         window.location.href = newurl;
     }
 
-function disable_element(element_to_disable,element_to_test,value_to_test)
+function disable_element(element_to_disable,element_to_test,value_to_disable)
     {
-        if (document.getElementById(element_to_test).value !== value_to_test)
+        if (document.getElementById(element_to_test).value !== value_to_disable)
             {
                 document.getElementById(element_to_disable).disabled = true;
             }
         else
             {
                 document.getElementById(element_to_disable).disabled = false;
+            }
+    }
+
+function disable_element_if_empty(element_to_disable,element_to_test)
+    {
+        if (document.getElementById(element_to_test).value == "")
+            {
+                document.getElementById(element_to_disable).disabled = true;
+            }
+        else
+            {
+                document.getElementById(element_to_disable).disabled = false;
+            }
+    }
+
+function checkcheck_password_match_and_submit (Password1,Password2,newurl,formid)
+    {
+        if (document.getElementById(Password1).value !== document.getElementById(Password2).value)
+            {
+                send_alert_and_redirect("Password doesn't match!",newurl);
+            }
+        else
+            {
+                document.forms[formid].submit();
             }
     }

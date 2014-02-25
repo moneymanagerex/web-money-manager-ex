@@ -32,6 +32,8 @@ security::redirect_if_not_loggedin();
             <br />
             <input type="button" class="btn btn-lg btn-success btn-block" value="Edit settings" onclick="top.location.href = 'settings.php'" />
             <br />
+            <input type="button" class="btn btn-lg btn-success btn-block" value="Guide" onclick="top.location.href = 'guide.php'" />
+            <br />
             <input type="button" class="btn btn-lg btn-success btn-block" value="About" onclick="top.location.href = 'about.php'" />
             <br />
             <input type="button" class="btn btn-lg btn-success btn-block" value="Logout" onclick="top.location.href = 'logout.php'" />

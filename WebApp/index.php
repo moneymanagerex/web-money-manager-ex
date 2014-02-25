@@ -10,8 +10,14 @@ $password = null;
 
 $const_username = costant::login_username();
 $const_password = costant::login_password();
-            
-if (!isset($const_username) OR !isset($const_password))
+$const_disable_authentication = costant::disable_authentication();
+
+if ($const_disable_authentication == "True")
+    {
+        header("Location: landing.php");
+    }
+       
+if ($const_disable_authentication !== "True" && (!isset($const_username) OR !isset($const_password)))
     {
         header("Location: settings.php");
     }
