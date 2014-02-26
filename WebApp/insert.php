@@ -28,7 +28,14 @@ security::redirect_if_not_loggedin();
         $TrStatus = $_POST["Status"];
         $TrType = $_POST["Type"];
         $TrAccount = $_POST["Account"];
-        $TrToAccount = $_POST["ToAccount"];
+        if (isset($_POST["ToAccount"]))
+            {
+                $TrToAccount = $_POST["ToAccount"];
+            }
+        else
+            {
+                $TrToAccount = "None";
+            }
         $TrAmount = $_POST["Amount"];
         $TrNotes = $_POST["Notes"];
          
@@ -45,6 +52,8 @@ security::redirect_if_not_loggedin();
             <input type="button" class="btn btn-lg btn-success btn-block" value="Insert new" onclick="top.location.href = 'new_transaction.php'" />
             <br />
             <input type="button" class="btn btn-lg btn-success btn-block" value="Show transaction" onclick="top.location.href = 'show.php'" />
+            <br />
+            <input type="button" class="btn btn-lg btn-success btn-block" value="Return to menu" onclick="top.location.href = 'landing.php'" />
             <br />
             <br />
         </div>

@@ -1,9 +1,11 @@
 <?php
-###################################
-##    Configurable constants     ##
-###################################
-$defaultaccountname = "Account1";
+#######################
+##    User Setting   ##
+#######################
+
+$disable_authentication = "True";
 $user_username = "admin";
 $user_password = "admin";
-$desktop_guid = "29367785-55f5-4429-ad3b-5414c575261b";
+$defaultaccountname = "Account1";
+$desktop_guid = "{EC2DC42B-26CF-C553-5A52-E4593D547E6B}";
 ?>

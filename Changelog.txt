@@ -1,3 +1,8 @@
+Version 0.9.2
+- Increased security with robots.txt
+- Completed desktop GUID connection\management in services page
+- Addedd htaccess to block direct download of sensible file
+
 Version 0.9.1
 - Added disable authentication function
 - Added guide for first use

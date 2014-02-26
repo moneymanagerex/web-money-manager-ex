@@ -101,6 +101,8 @@ if ($recordmaxid > 0 )
             echo "</form>";
             #echo "<input type='button' class='btn btn-lg btn-success btn-block' value='New transaction' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
             echo "<br />";
+            echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
+            echo "<br />";
             echo "<br />";
         echo "</div>";
     }
@@ -113,6 +115,8 @@ else
             echo "<br />";
             echo "<br />";
             echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Insert new' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
+            echo "<br />";
+            echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
             echo "<br />";
             echo "<br />";
         echo "</div>";
