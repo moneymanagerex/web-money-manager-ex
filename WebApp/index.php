@@ -89,6 +89,7 @@ else
                 <br />
                 <button type="submit" id="Login" name="Login" class="btn btn-lg btn-success btn-block" value = "Login">Login</button>
             </form>
+        </div>
     </body>
 </html>
 <?php

@@ -28,7 +28,7 @@ security::redirect_if_not_loggedin();
 	           echo "<h4> Version ".costant::app_version()."</h4>";
             ?>
             <br />
-            <h4> Developer: Gabriele [Gabriele-v]</h4>
+            <h4> Developer: Gabriele [Gabriele-V]</h4>
             <a href="https://sourceforge.net/projects/moneymanagerex-webapp"><h4> Sourceforge WebPage</h4></a>
             <br />
             <p>

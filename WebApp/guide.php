@@ -34,12 +34,18 @@ security::redirect_if_not_loggedin();
                 echo "<br />";
                 echo "<br />";
             ?>
+            <p>
+                Please open desktop version to import bank account and start use Web version
+            </p>
+            <br />
+            <br />
             <!--
             <input type="button" class="btn btn-default" value="Copy URL" />
             &nbsp;&nbsp;
             <input type="button" class="btn btn-default" value="Copy GUID" />
             -->
             <input type="button" class="btn btn-lg btn-success btn-block" value="Return to menu" onclick="top.location.href = 'landing.php'" />
+            <br />
             <br />
         </div>
     </body>
