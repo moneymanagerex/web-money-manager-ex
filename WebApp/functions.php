@@ -681,7 +681,7 @@ class db_upgrade
                                 break 2;
                         }
                 }
-            if ($start_db_version !== $app_version)
+            if ($start_db_version !== $app_version && db_function::db_version() == $app_version)
                 {
                     return "update_done";
                 }
