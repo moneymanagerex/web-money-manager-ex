@@ -131,6 +131,32 @@ class design
         
         
         
+    //Create payee input element
+    function input_payee ($TrPayeeDefault)
+        {
+            $PayeeArrayDesc = db_function::payee_select_all();
+            array_unshift($PayeeArrayDesc,"None");
+
+            echo "<div class='form-group'>";
+                echo "<label for='Payee'>Payee</label>";
+                if ($TrPayeeDefault <> "None")
+                    {
+                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' value='".$TrPayeeDefault."' required />";
+                    }
+                else
+                    {
+                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' required />";
+                    }
+                echo "<datalist id='PayeeList'>";
+                    for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
+                    {
+                        echo "<option value='".$PayeeArrayDesc[$i]."'>";
+                    }
+                echo "</datalist>";
+                echo "<span class='help-block'></span>";
+            echo "</div>";              
+        }
+        
     //Create amount input element
     function input_amount ($TrAmountDefault)
         {
@@ -170,6 +196,11 @@ class design
         }
         
         
+    //Create Hidden Field    
+    function input_hidden ($FieldName,$Value)
+        {
+            echo "<input type='hidden' id = '".$FieldName."' name='".$FieldName."' value='".$Value."' />";
+        }
         
     //Create setting input element
     function input_setting ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
@@ -263,11 +294,15 @@ class db_function
                                             ToAccount   TEXT,
                                             Status      TEXT        NOT NULL,
                                             Type        TEXT        NOT NULL,
+                                            Payee       TEXT,
                                             Amount      NUMERIC     NOT NULL,
                                             Notes       TEXT
                                         );");
                     $db -> exec     ("CREATE TABLE IF NOT EXISTS [Account_List] ( 
                                             AccountName TEXT PRIMARY KEY NOT NULL 
+                                        );");
+                    $db -> exec     ("CREATE TABLE IF NOT EXISTS [Payee_List] ( 
+                                            PayeeName TEXT PRIMARY KEY NOT NULL 
                                         );");
                     $db -> exec     ("CREATE TABLE IF NOT EXISTS [Parameters] ( 
                                             Parameter   TEXT PRIMARY KEY NOT NULL,
@@ -285,20 +320,34 @@ class db_function
         }
     
     
-    
-    // Insert transaction 
-    function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrAmount, $TrNotes)
+    // Get database version
+    function db_version ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:".$const_dbpath);
             
-            $statement = $db -> prepare("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Amount, Notes)
-                                        VALUES(:TrDate, :TrStatus, :TrType, :TrAccount, :TrToAccount, :TrAmount, :TrNotes);");
+            $statement = $db->query("SELECT Value FROM Parameters WHERE Parameter = 'Version';");
+            $db_version=$statement->fetchColumn(0);
+            
+            $db = null;
+            return $db_version;
+        }
+        
+        
+    // Insert transaction 
+    function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrAmount, $TrNotes)
+        {
+            $const_dbpath = costant::database_path();
+            $db = new PDO("sqlite:".$const_dbpath);
+            
+            $statement = $db -> prepare("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Amount, Notes)
+                                        VALUES(:TrDate, :TrStatus, :TrType, :TrAccount, :TrToAccount, :TrPayee, :TrAmount, :TrNotes);");
                 $statement->bindParam(":TrDate",$TrDate);
                 $statement->bindParam(":TrStatus",$TrStatus);
                 $statement->bindParam(":TrType",$TrType);
                 $statement->bindParam(":TrAccount",$TrAccount);
                 $statement->bindParam(":TrToAccount",$TrToAccount);
+                $statement->bindParam(":TrPayee",$TrPayee);
                 $statement->bindParam(":TrAmount",$TrAmount);
                 $statement->bindParam(":TrNotes",$TrNotes);
             $statement-> execute ();
@@ -330,10 +379,12 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:".$const_dbpath);
             
-            $results = $db -> query("SELECT Id, Date, Status, Type, Account, ToAccount, Amount, Notes FROM New_Transaction;");
+            $results = $db -> query("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Amount, Notes FROM New_Transaction;");
             $resultarray = array();
-            $resultarray = $results->fetchall(PDO::FETCH_ASSOC);
-
+            if($results !== false)
+                {
+                    $resultarray = $results->fetchall(PDO::FETCH_ASSOC);
+                }
             $db = null;
             return $resultarray;
         }
@@ -348,8 +399,10 @@ class db_function
             
             $results = $db -> query("SELECT Id, Date, Type, Account, Amount, Notes FROM New_Transaction;");
             $resultarray = array();
-            $resultarray = $results->fetchall(PDO::FETCH_ASSOC);
-            
+            if($results !== false)
+                {
+                    $resultarray = $results->fetchall(PDO::FETCH_ASSOC);
+                }
             $db = null;
             return $resultarray;
         }
@@ -362,7 +415,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:".$const_dbpath);
             
-            $statement = $db-> prepare("SELECT Id, Date, Status, Type, Account, ToAccount, Amount, Notes FROM New_Transaction WHERE ID = :TrEditNr;");
+            $statement = $db-> prepare("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Amount, Notes FROM New_Transaction WHERE ID = :TrEditNr;");
                     $statement->bindParam(":TrEditNr",$TrEditNr);
             $statement-> execute ();
             $resultarray = array();
@@ -408,13 +461,13 @@ class db_function
     
     
     // Update transaction 
-    function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrAmount,$TrNotes)
+    function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrAmount,$TrNotes)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:".$const_dbpath);
             
             $statement = $db-> prepare("UPDATE New_Transaction SET Date = :TrDate, Status = :TrStatus, Type = :TrType,
-                                        Account = :TrAccount, ToAccount = :TrToAccount, Amount = :TrAmount, Notes = :TrNotes
+                                        Account = :TrAccount, ToAccount = :TrToAccount, Payee = :TrPayee, Amount = :TrAmount, Notes = :TrNotes
                                         WHERE ID = :TrEditedId;");
                 $statement->bindParam(":TrEditedId",$TrEditedId);
                 $statement->bindParam(":TrDate",$TrDate);
@@ -422,6 +475,7 @@ class db_function
                 $statement->bindParam(":TrType",$TrType);
                 $statement->bindParam(":TrAccount",$TrAccount);
                 $statement->bindParam(":TrToAccount",$TrToAccount);
+                $statement->bindParam(":TrPayee",$TrPayee);
                 $statement->bindParam(":TrAmount",$TrAmount);
                 $statement->bindParam(":TrNotes",$TrNotes);
             $statement-> execute ();
@@ -471,11 +525,81 @@ class db_function
         
         $results = $db -> query("SELECT AccountName FROM Account_list ORDER BY AccountName;");    
         $resultarray = array();
-        $resultarray = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+        if($results !== false)
+            {
+                $resultarray = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+            }
+        $db = null;
+        return $resultarray;
+    }
+    
+    
+    
+    //Select all payee
+   public function payee_select_all ()
+    {
+        $const_dbpath = costant::database_path();
+        $db = new PDO("sqlite:".$const_dbpath);
+        
+        $results = $db -> query("SELECT PayeeName FROM Payee_List ORDER BY PayeeName;");    
+        $resultarray = array();
+        if($results !== false)
+            {
+                $resultarray = $results->fetchAll(PDO::FETCH_COLUMN, 0);
+            }
         
         $db = null;
         return $resultarray;
     }
+   
+   
+   // Insert all payees accounts
+    function payee_insert_all ($payees_array)
+        {
+            $const_dbpath = costant::database_path();
+            db_function::payee_delete_all();
+            $db = new PDO("sqlite:".$const_dbpath);
+            
+            for ($i = 0; $i < sizeof($payees_array); $i++)
+                {
+                    $statement = $db -> prepare("INSERT INTO Payee_list (PayeeName) VALUES (:PayeeName);");
+                    $statement->bindParam(":PayeeName",$payees_array[$i]);
+                    $statement-> execute ();
+                }
+            
+            $db = null;
+        }
+    
+    
+    // Insert new payee if not exist
+    function payee_insert_new ($payee)
+        {
+            $const_dbpath = costant::database_path();
+            $existent_payee = array();
+            $existent_payee = db_function::payee_select_all();
+            
+            if (!in_array($payee,$existent_payee) && $payee !== "None")
+                {
+                    $db = new PDO("sqlite:".$const_dbpath);
+                    $statement = $db -> prepare("INSERT INTO Payee_list (PayeeName) VALUES (:PayeeName);");
+                    $statement->bindParam(":PayeeName",$payee);
+                    $statement-> execute ();
+                    $db = null;
+                }
+            
+            
+        }
+    
+    //Delete all payee
+    function payee_delete_all ()
+        {
+            $const_dbpath = costant::database_path();
+            $db = new PDO("sqlite:".$const_dbpath);
+            
+            $db->exec   ("DELETE FROM Payee_list;");
+            
+            $db = null;
+        }
 }
 
 
@@ -539,13 +663,55 @@ class security
 #########################
 class db_upgrade
 {
-    function to_1_1_0 ()
+    function upgrade_db ()
+        {
+            $start_db_version = db_function::db_version();
+            $app_version = costant::app_version();
+            while (db_function::db_version() !== $app_version)
+                {
+                    switch (db_function::db_version())
+                        {
+                            case "0.9.2":
+                                db_upgrade::to_0_9_3();
+                                break;
+                            case $app_version;
+                                break;
+                            default:
+                                various::send_alert_and_redirect("Database version not compliant: DB Version = ".db_function::db_version()." - APP Version = ".$app_version,"error.php");
+                                break 2;
+                        }
+                }
+            if ($start_db_version !== $app_version)
+                {
+                    return "update_done";
+                }
+            else
+                {
+                    return "update_not_need";
+                }
+        }
+    function to_0_9_3 ()
         {
             $const_dbpath = costant::database_path();
-            db_function::db_create();
             $db = new PDO("sqlite:".$const_dbpath);
             
+            $db->exec   ("ALTER TABLE New_Transaction RENAME TO New_Transaction_Old");
+            db_function::db_create();
+            $db->exec   ("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Amount, Notes) SELECT Date, Status, Type, Account, ToAccount, 'None', Amount, Notes FROM New_Transaction_Old");
+            $db->exec   ("DROP TABLE New_Transaction_Old");
+            $db->exec   ("UPDATE Parameters SET Value = '0.9.3' WHERE Parameter = 'Version';");           
             $db = null;
+            
+            $parameterarray = array
+                (
+                    "disable_authentication"=> costant::disable_authentication() ? 'True' : 'False',
+                    "user_username"         => costant::login_username(),
+                    "user_password"         => costant::login_password(),
+                    "disable_payee"         => "False",
+                    "desktop_guid"          => costant::desktop_guid(),
+                    "defaultaccountname"    => costant::transaction_account_default()
+                );
+            various::update_configuration_file($parameterarray);
         }
 }
 
@@ -594,7 +760,7 @@ class various
 }
 
 ##########################
-###  Costant function  ###
+### Constant  function ###
 ##########################
 class costant
     {
@@ -647,6 +813,19 @@ class costant
                     }
             }
         
+        function disable_payee ()
+            {
+                global $disable_payee;
+                if (($disable_payee) == "True")
+                    {
+                        return True;
+                    }
+                else
+                    {
+                        return False;
+                    }
+            }
+            
         function current_page_url ()
             {
              $pageURL = 'http';

@@ -40,8 +40,16 @@ security::redirect_if_not_loggedin();
                 design::input_type("Withdrawal");
                 design::input_account($const_defaultaccountname);
                 design::input_toaccount("None");
+                if (costant::disable_payee() !== True)
+                    {
+                        design::input_payee("None");
+                    }
+                else
+                    {
+                        design::input_hidden("Payee","None");
+                    }
                 design::input_amount("0");
-                design::input_notes("Empty")
+                design::input_notes("Empty");
                 
             ?>
             <script type="text/javascript">

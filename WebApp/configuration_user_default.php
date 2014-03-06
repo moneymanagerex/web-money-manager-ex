@@ -3,9 +3,10 @@
 ##    User Setting   ##
 #######################
 
-$disable_authentication = "True";
+$disable_authentication = "False";
 $user_username = "admin";
 $user_password = "admin";
+$disable_payee = "False";
+$desktop_guid = "{54B63230-BDB5-FD75-3F44-8411E121CB4F}";
 $defaultaccountname = "Account1";
-$desktop_guid = "{EC2DC42B-26CF-C553-5A52-E4593D547E6B}";
 ?>

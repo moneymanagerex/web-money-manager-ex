@@ -23,25 +23,14 @@ require_once "functions.php";
             <br />
             <img src="res\mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
             <br />
-            <h2><strong>Money Manager Ex - Web App</strong></h2>
+            <h2><strong>Internal Error</strong></h2>
             <?php
 	           echo "<h4> Version ".costant::app_version()."</h4>";
             ?>
             <br />
-            <h4> Developer: Gabriele [Gabriele-V]</h4>
-            <a href="https://sourceforge.net/projects/moneymanagerex-webapp"><h4> Sourceforge WebPage</h4></a>
+            <h4> Please contact developer Gabriele [Gabriele-V]</h4>
+            <a href="https://sourceforge.net/projects/moneymanagerex-webapp"><h4> on Sourceforge WebPage</h4></a>
             <br />
-            <p>
-                Used components:
-                <br />
-                <a href="http://getbootstrap.com/">Bootstrap</a>
-                <br />
-                <a href="http://modernizr.com/">Modernizr</a>
-                <br />
-                <a href="http://www.sqlite.org/">SQLite</a>
-            </p>
-            <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Return" onclick="top.location.href = 'landing.php'" />
             <br />
         </div>
     </body>

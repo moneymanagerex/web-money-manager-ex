@@ -1,9 +1,17 @@
 <?php
 require_once "functions.php";
 $error = db_function::db_create();
-if ($error <> "ok")
+if ($error !== "ok")
     {
         echo $error;
+    }
+else
+    {
+        $upgrade_result = db_upgrade::upgrade_db();
+        if ($upgrade_result == "update_done")
+            {
+                various::send_alert_and_redirect("Database succesfully updated to version ".costant::app_version(),"index.php");
+            }
     }
 $username = null;
 $password = null;

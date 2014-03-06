@@ -36,11 +36,20 @@ security::redirect_if_not_loggedin();
             {
                 $TrToAccount = "None";
             }
+        if (isset($_POST["Payee"]))
+            {
+                $TrPayee = $_POST["Payee"];
+            }
+        else
+            {
+                $TrPayee = "None";
+            }
         $TrAmount = $_POST["Amount"];
         $TrNotes = $_POST["Notes"];
          
         #Execute insert
-        db_function::transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrAmount, $TrNotes);
+        db_function::transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrAmount, $TrNotes);
+        db_function::payee_insert_new($TrPayee);
         ?>
         
         <div class="container" align="center">

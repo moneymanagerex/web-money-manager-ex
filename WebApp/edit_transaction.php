@@ -45,9 +45,17 @@ security::redirect_if_not_loggedin();
                             design::input_type($resultarray["Type"]);
                             design::input_account($resultarray["Account"]);
                             design::input_toaccount($resultarray["ToAccount"]);
+                            if (costant::disable_payee() !== True)
+                                {
+                                    design::input_payee($resultarray["Payee"]);
+                                }
+                            else
+                                {
+                                    design::input_hidden("Payee","None");
+                                }
                             design::input_amount($resultarray["Amount"]);
                             design::input_notes($resultarray["Notes"]);
-                            echo "<input type='hidden' id = 'TrEditedId' name='TrEditedId' value='".$TrEditNr."' />";
+                            design::input_hidden("TrEditedId",$TrEditNr);
                             echo "<button type='submit' id='EditSubmit' name='EditSubmit' class='btn btn-lg btn-success btn-block' value='EditSubmit'>Edit</button>";
                             echo "<br />";
                             echo "<br />";
