@@ -1,3 +1,7 @@
+Version 0.9.3
+- Added payee management
+- Added database patching at startup
+
 Version 0.9.2
 - Increased security with robots.txt
 - Completed desktop GUID connection\management in services page
