@@ -26,6 +26,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
             {
                 $bankaccounts_string = $_GET["import_bankaccount"];
                 $bankaccounts_array = explode(";;", $bankaccounts_string);
+                db_function::bankaccount_delete_all();
                 db_function::bankaccount_insert($bankaccounts_array);
                 echo "All accounts imported succesfully!";
             }
@@ -36,7 +37,8 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
             {
                 $payees_string = $_GET["import_payee"];
                 $payees_array = explode(";;", $payees_string);
-                db_function::payee_insert_all ($payees_array);
+                db_function::payee_delete_all();
+                db_function::payee_insert ($payees_array);
                 echo "All payees imported succesfully!";
             }
         

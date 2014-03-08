@@ -49,7 +49,7 @@ security::redirect_if_not_loggedin();
          
         #Execute insert
         db_function::transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrAmount, $TrNotes);
-        db_function::payee_insert_new($TrPayee);
+        db_function::payee_insert(array($TrPayee));
         ?>
         
         <div class="container" align="center">

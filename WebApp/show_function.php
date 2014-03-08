@@ -67,7 +67,7 @@ if(isset($_POST["EditSubmit"]))
                 
                 # Update
                 db_function::transaction_update($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrAmount,$TrNotes);
-                db_function::payee_insert_new($TrPayee);
+                db_function::payee_insert(array($TrPayee));
                 
                 header("Location: show.php");
             }

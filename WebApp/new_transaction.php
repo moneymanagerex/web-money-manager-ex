@@ -27,7 +27,7 @@ security::redirect_if_not_loggedin();
 	</script>
 
     <div class="container">
-        <form id="New_Transaction" class="form-new-transaction" method="post" action = "insert.php">
+        <form id="New_Transaction" class="form-new-transaction" method="post" action = "insert.php" onsubmit="return confirm_if_not_present_in_datalist('Payee','PayeeList','Do you want to add the new payee')">
             <h3 align="center">Insert new transaction</h3>
             <br />
             <?php
@@ -55,8 +55,12 @@ security::redirect_if_not_loggedin();
             <script type="text/javascript">
             var date_today = get_today();
             document.getElementById('Date').value=date_today;
-            disable_element ("ToAccount","Type","Transfer");
+            enable_element ("ToAccount","Type","Transfer");
+            disable_element ("Payee","Type","Transfer");
             </script>  
+            <!--
+                <button type="button" id="Insert" name="Insert" class="btn btn-lg btn-success btn-block" onclick="confirm_if_not_present_in_datalist ('Payee','PayeeList')">Insert</button>
+            -->
             <button type="submit" id="Insert" name="Insert" class="btn btn-lg btn-success btn-block">Insert</button>
             <br />
             <br />

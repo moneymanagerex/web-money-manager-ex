@@ -1,6 +1,13 @@
 function test_html5 ()
     {
-        if (!Modernizr.inputtypes.date || !Modernizr.inputtypes.date)
+        if  (      !Modernizr.inputtypes.date
+                || !Modernizr.inputtypes.number
+                || !Modernizr.input.required
+                //|| !Modernizr.input.autocomplete  //Used but not prerequisite 
+                //|| !Modernizr.input.placeholder   //Used but not prerequisite
+                || !Modernizr.input.min
+                //|| !Modernizr.input.step          //Used but not prerequisite
+            )
             {
                 alert("Seems that the browser doesn't supports HTML5" + '\n' + '\n' + "Please make attention because it doesn't validate filed!");
                 //close();
@@ -27,9 +34,21 @@ function send_alert_and_redirect (alertmessage,newurl)
         window.location.href = newurl;
     }
 
+function enable_element(element_to_enable,element_to_test,value_to_enable)
+    {
+        if (document.getElementById(element_to_test).value !== value_to_enable)
+            {
+                document.getElementById(element_to_enable).disabled = true;
+            }
+        else
+            {
+                document.getElementById(element_to_enable).disabled = false;
+            }
+    }
+    
 function disable_element(element_to_disable,element_to_test,value_to_disable)
     {
-        if (document.getElementById(element_to_test).value !== value_to_disable)
+        if (document.getElementById(element_to_test).value == value_to_disable)
             {
                 document.getElementById(element_to_disable).disabled = true;
             }
@@ -51,14 +70,37 @@ function disable_element_if_empty(element_to_disable,element_to_test)
             }
     }
 
-function checkcheck_password_match_and_submit (Password1,Password2,newurl,formid)
+function check_password_match_and_submit (Password1,Password2,formid)
     {
         if (document.getElementById(Password1).value !== document.getElementById(Password2).value)
             {
-                send_alert_and_redirect("Password doesn't match!",newurl);
+                alert("Password doesn't match!");
             }
         else
             {
-                document.forms[formid].submit();
+                document.getElementById(formid).submit();
+            }
+    }
+    
+function confirm_if_not_present_in_datalist (Field,Datalist,Confirm_Question)
+    {
+        datalist_element = document.getElementById(Datalist);
+        datalist_node = datalist_element.getElementsByTagName("option"); 
+        field_value = document.getElementById(Field).value;
+        ifound = false;
+        for (i=0;i<datalist_node.length;i++)
+            {
+                if (datalist_node[i].value == field_value) 
+                    {
+                        ifound = true;
+                    }
+            }
+        if (ifound == true)
+            {
+                return true;
+            }
+        else
+            {
+                return confirm (Confirm_Question+' "'+field_value+'"?')
             }
     }

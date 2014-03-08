@@ -58,7 +58,7 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Type'>Type</label>";
-                echo "<select id ='Type' name='Type' class='form-control'  onchange='disable_element(\"ToAccount\",\"Type\",\"Transfer\")' required>";
+                echo "<select id ='Type' name='Type' class='form-control'  onchange='enable_element(\"ToAccount\",\"Type\",\"Transfer\"); disable_element(\"Payee\",\"Type\",\"Transfer\")' required>";
                 for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
                 {
                         if ($TypeArrayDesc[$i] == $TrTypeDefault)
@@ -141,11 +141,11 @@ class design
                 echo "<label for='Payee'>Payee</label>";
                 if ($TrPayeeDefault <> "None")
                     {
-                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' value='${TrPayeeDefault}' required />";
+                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' autocomplete='off' value='${TrPayeeDefault}' required />";
                     }
                 else
                     {
-                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' required />";
+                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' autocomplete='off' required />";
                     }
                 echo "<datalist id='PayeeList'>";
                     for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
@@ -358,7 +358,7 @@ class db_function
     
 
     // Get transaction Max ID
-    function transaction_maxid ()
+    function transaction_select_maxid ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -489,12 +489,11 @@ class db_function
     function bankaccount_insert ($bankaccounts_array)
         {
             $const_dbpath = costant::database_path();
-            db_function::bankaccount_delete_all();
             $db = new PDO("sqlite:${const_dbpath}");
             
             for ($i = 0; $i < sizeof($bankaccounts_array); $i++)
                 {
-                    $statement = $db -> prepare("INSERT INTO Account_list (AccountName) VALUES (:AccountName);");
+                    $statement = $db -> prepare("INSERT or IGNORE INTO Account_list (AccountName) VALUES (:AccountName);");
                     $statement->bindParam(":AccountName",$bankaccounts_array[$i]);
                     $statement-> execute ();
                 }
@@ -554,41 +553,24 @@ class db_function
    
    
    // Insert all payees accounts
-    function payee_insert_all ($payees_array)
+    function payee_insert ($payees_array)
         {
             $const_dbpath = costant::database_path();
-            db_function::payee_delete_all();
             $db = new PDO("sqlite:${const_dbpath}");
             
             for ($i = 0; $i < sizeof($payees_array); $i++)
                 {
-                    $statement = $db -> prepare("INSERT INTO Payee_list (PayeeName) VALUES (:PayeeName);");
-                    $statement->bindParam(":PayeeName",$payees_array[$i]);
-                    $statement-> execute ();
+                    if ($payees_array[$i] !== "None")
+                        {
+                            $statement = $db -> prepare("INSERT or IGNORE INTO Payee_list (PayeeName) VALUES (:PayeeName);");
+                            $statement->bindParam(":PayeeName",$payees_array[$i]);
+                            $statement-> execute ();
+                        }
                 }
             
             $db = null;
         }
     
-    
-    // Insert new payee if not exist
-    function payee_insert_new ($payee)
-        {
-            $const_dbpath = costant::database_path();
-            $existent_payee = array();
-            $existent_payee = db_function::payee_select_all();
-            
-            if (!in_array($payee,$existent_payee) && $payee !== "None")
-                {
-                    $db = new PDO("sqlite:${const_dbpath}");
-                    $statement = $db -> prepare("INSERT INTO Payee_list (PayeeName) VALUES (:PayeeName);");
-                    $statement->bindParam(":PayeeName",$payee);
-                    $statement-> execute ();
-                    $db = null;
-                }
-            
-            
-        }
     
     //Delete all payee
     function payee_delete_all ()
@@ -674,6 +656,8 @@ class db_upgrade
                             case "0.9.2":
                                 db_upgrade::to_0_9_3();
                                 break;
+                            case "0.9.3":
+                                db_upgrade::to_0_9_4();
                             case $app_version;
                                 break;
                             default:
@@ -690,6 +674,7 @@ class db_upgrade
                     return "update_not_need";
                 }
         }
+        
     function to_0_9_3 ()
         {
             $const_dbpath = costant::database_path();
@@ -712,6 +697,15 @@ class db_upgrade
                     "defaultaccountname"    => costant::transaction_account_default()
                 );
             various::update_configuration_file($parameterarray);
+        }
+
+    function to_0_9_4 ()
+        {
+            $const_dbpath = costant::database_path();
+            $db = new PDO("sqlite:${const_dbpath}");
+            
+            $db->exec   ("UPDATE Parameters SET Value = '0.9.4' WHERE Parameter = 'Version';");           
+            $db = null;
         }
 }
 

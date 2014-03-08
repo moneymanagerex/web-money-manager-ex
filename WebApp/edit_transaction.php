@@ -37,7 +37,7 @@ security::redirect_if_not_loggedin();
             if (sizeof($resultarray) > 0)
                 {
                     echo "<div class='container'>";
-                        echo "<form id='Edit_Transaction' class='form-edit-transaction' method='post' action = 'show_function.php'>";
+                        echo "<form id='Edit_Transaction' class='form-edit-transaction' method='post' action = 'show_function.php' onsubmit='return confirm_if_not_present_in_datalist(\"Payee\",\"PayeeList\",\"Do you want to add the new payee\")'>";
                             echo "<h3 align='center'>Edit transaction</h3>";
                             echo "<br />";
                             design::input_date($resultarray["Date"]);
@@ -62,7 +62,8 @@ security::redirect_if_not_loggedin();
                         echo "</form>";
                     echo "</div>";
                     echo "<script type='text/javascript'>";
-                        echo "disable_element ('ToAccount','Type','Transfer');";
+                        echo "enable_element ('ToAccount','Type','Transfer');";
+                        echo "disable_element ('Payee','Type','Transfer');";
                     echo "</script>";  
                 }
             else

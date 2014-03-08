@@ -1,3 +1,9 @@
+Version 0.9.4
+- Disabled browser autocomplete on payee field
+- Disabled payee field if transaction type is "Transfer"
+- Added confirm if new payee inserted
+- Fixed HTML5 test
+
 Version 0.9.3
 - Added payee management
 - Added database patching at startup

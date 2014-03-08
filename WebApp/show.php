@@ -25,7 +25,7 @@ security::redirect_if_not_loggedin();
 #Import common file
 require_once "functions.php";
 
-$recordmaxid = db_function::transaction_maxid();
+$recordmaxid = db_function::transaction_select_maxid();
 if ($recordmaxid > 0 )
     {
         $resultarray = db_function::transaction_select_all_show();
