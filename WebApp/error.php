@@ -23,7 +23,7 @@ require_once "functions.php";
             <br />
             <img src="res\mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
             <br />
-            <h2><strong>Internal Error</strong></h2>
+            <h3><strong>Internal Error</strong></h3>
             <?php
 	           echo "<h4> Version ".costant::app_version()."</h4>";
             ?>

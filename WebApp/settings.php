@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 $username = "";
             }
         
-        $account = $_POST["Account"];
+        $default_account = $_POST["Default_Account"];
         
         if (isset ($_POST["Set_Disable_payee"]))
             {
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 "user_password"         => $password,
                 "disable_payee"         => $disable_payee,
                 "desktop_guid"          => $guid,
-                "defaultaccountname"    => $account
+                "defaultaccountname"    => $default_account
             );
               
         if (file_exists("configuration_user.php"))
@@ -122,71 +122,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 $const_disable_payee = costant::disable_payee();
                 $const_defaultaccountname = costant::transaction_account_default();
                 
-                echo "<div class='checkbox'>";
-                    echo "<label>";
-                        if ($const_disable_authentication == True)
-                            {
-                                echo "<input id='Set_Disable_authentication' type='checkbox' name='Set_Disable_authentication' value='True' onchange = 'Disable_Authentication()' checked>Disable authentication (Not recommended)";
-                            }
-                        else
-                            {
-                                echo "<input id='Set_Disable_authentication' type='checkbox' name='Set_Disable_authentication' value='True' onchange = 'Disable_Authentication()'>Disable authentication (Not recommended)";
-                            }
-                    echo "</label>";
-                echo "</div>";
-
-                
-                if (isset($const_username) && $const_disable_authentication == False)
-                    {
-                        design::input_setting("Username",$const_username,"","Text",True);
-                    }
-                else
-                    {
-                        design::input_setting("Username","","Insert a new username","Text",True);
-                    }
-                
-                if (isset($const_password) && $const_disable_authentication == False)
-                    {
-                        #design::input_setting("Password",$const_password,"","Password");
-                        design::input_setting_password("Password","To change insert a new password",False,"");
-                    }
-                else
-                    {
-                        design::input_setting_password("Password","Insert a password",True,"disable_element_if_empty(\"Set_Confirm_Password\",\"Set_Password\")");
-                    }
-        
-                design::input_setting_password("Confirm_Password","Confirm new password",False,"");
-                
-                echo "<div class='checkbox'>";
-                    echo "<label>";
-                        if ($const_disable_payee == True)
-                            {
-                                echo "<input id='Set_Disable_payee' type='checkbox' name='Set_Disable_payee' value='True' checked>Disable payees management";
-                            }
-                        else
-                            {
-                                echo "<input id='Set_Disable_payee' type='checkbox' name='Set_Disable_payee' value='True'>Disable payees management";
-                            }
-                    echo "</label>";
-                echo "</div>";
-                
-                if (isset($const_desktop_guid))
-                    {
-                        design::input_setting("Guid",$const_desktop_guid,"","Text",True);
-                    }
-                else
-                    {
-                        design::input_setting("Guid",security::generate_guid(),"","Text",True);
-                    }
-                
-                if (isset($const_defaultaccountname))
-                    {
-                        design::input_account($const_defaultaccountname);
-                    }
-                else
-                    {
-                        design::input_account("None");
-                    }
+                design::section_legened("Authentication");
+                    echo "<div class='checkbox'>";
+                        echo "<label>";
+                            if ($const_disable_authentication == True)
+                                {
+                                    echo "<input id='Set_Disable_authentication' type='checkbox' name='Set_Disable_authentication' value='True' onchange = 'Disable_Authentication()' checked>Disable authentication (Not recommended)";
+                                }
+                            else
+                                {
+                                    echo "<input id='Set_Disable_authentication' type='checkbox' name='Set_Disable_authentication' value='True' onchange = 'Disable_Authentication()'>Disable authentication (Not recommended)";
+                                }
+                        echo "</label>";
+                    echo "</div>";
+    
+                    
+                    if (isset($const_username) && $const_disable_authentication == False)
+                        {
+                            design::settings("Username",$const_username,"","Text",True);
+                        }
+                    else
+                        {
+                            design::settings("Username","","Insert a new username","Text",True);
+                        }
+                    
+                    if (isset($const_password) && $const_disable_authentication == False)
+                        {
+                            #design::settings("Password",$const_password,"","Password");
+                            design::settings_password("Password","To change insert a new password",False,"disable_element_if_empty(\"Set_Confirm_Password\",\"Set_Password\")");
+                        }
+                    else
+                        {
+                            design::settings_password("Password","Insert a password",True,"disable_element_if_empty(\"Set_Confirm_Password\",\"Set_Password\")");
+                        }
+            
+                    design::settings_password("Confirm_Password","Confirm new password",False,"");
+                    
+                echo "<br />";
+                design::section_legened("New transaction");
+                    echo "<div class='checkbox'>";
+                        echo "<label>";
+                            if ($const_disable_payee == True)
+                                {
+                                    echo "<input id='Set_Disable_payee' type='checkbox' name='Set_Disable_payee' value='True' checked>Disable payees management";
+                                }
+                            else
+                                {
+                                    echo "<input id='Set_Disable_payee' type='checkbox' name='Set_Disable_payee' value='True'>Disable payees management";
+                                }
+                        echo "</label>";
+                    echo "</div>";
+                    
+                    if (isset($const_defaultaccountname))
+                        {
+                            design::settings_default_account($const_defaultaccountname);
+                        }
+                    else
+                        {
+                            design::settings_default_account("None");
+                        }
+                echo "<br />";
+                design::section_legened("Desktop integration");
+                    if (isset($const_desktop_guid))
+                        {
+                            design::settings("Guid",$const_desktop_guid,"","Text",True);
+                        }
+                    else
+                        {
+                            design::settings("Guid",security::generate_guid(),"","Text",True);
+                        }
                 
             ?>
             <script type="text/javascript">
@@ -220,6 +224,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     {
                         echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='check_password_match_and_submit(\"Set_Password\",\"Set_Confirm_Password\",\"login\")'>Apply Settings</button>");
                     }
+                echo "<br />";
+                echo "<br />";
             ?>
             <br />
         </form>

@@ -176,7 +176,6 @@ class design
         }
     
     
-    
     //Create notes input element
     function input_notes ($TrNotesDefault)
         {
@@ -203,7 +202,7 @@ class design
         }
         
     //Create setting input element
-    function input_setting ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
+    function settings ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
@@ -234,10 +233,9 @@ class design
                 
         }
         
-        
-        
+          
     //Create password input element    
-    function input_setting_password ($VarName,$PlaceHolder,$Required,$OnChange)
+    function settings_password ($VarName,$PlaceHolder,$Required,$OnChange)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
@@ -267,6 +265,41 @@ class design
             echo "</div>";
                 
         }
+        
+        
+    //Design setting default account
+    function settings_default_account ($TrAccountDefault)
+        {
+            $AccountArrayDesc = db_function::bankaccount_select_all();
+            $AccountArrayDesc[sizeof($AccountArrayDesc)] = "None";
+            
+            echo "<div class='form-group'>";
+                echo "<label for='Default_Account'> Default Account</label>";
+                echo "<select id ='Default_Account' name='Default_Account' class='form-control' required>";
+                for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
+                {
+                        if ($AccountArrayDesc[$i] == $TrAccountDefault)
+                            {
+                                echo "<option selected> ${AccountArrayDesc[$i]} </option>";
+                            }
+                        else
+                            {
+                                echo "<option> ${AccountArrayDesc[$i]} </option>";
+                            }
+                }
+                echo "</select>";
+                echo "<span class='help-block'></span>";
+            echo "</div>";              
+        }
+        
+        
+    //Design section legend
+    function section_legened ($Text)
+        {
+                echo "<h4>$Text</h4>";
+                echo "<hr>";
+        }
+    
 }
 
 
