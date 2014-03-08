@@ -152,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     }
                 else
                     {
-                        design::input_setting_password("Password","Insert a password",True,"disable_element_if_empty(".'"'."Set_Confirm_Password".'","'."Set_Password".'")');
+                        design::input_setting_password("Password","Insert a password",True,"disable_element_if_empty(\"Set_Confirm_Password\",\"Set_Password\")");
                     }
         
                 design::input_setting_password("Confirm_Password","Confirm new password",False,"");
@@ -214,11 +214,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             <?php
                 if (isset($const_username) AND isset($const_password))
                     {
-                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='checkcheck_password_match_and_submit(".'"'."Set_Password".'","'."Set_Confirm_Password".'","'."settings.php".'","'."login".'"'.")'>Edit Settings</button>");
+                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='checkcheck_password_match_and_submit(\"Set_Password\",\"Set_Confirm_Password\",\"settings.php\",\"login\")'>Edit Settings</button>");
                     }
                 else
                     {
-                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='checkcheck_password_match_and_submit(".'"'."Set_Password".'","'."Set_Confirm_Password".'","'."settings.php".'","'."login".'"'.")'>Apply Settings</button>");
+                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='checkcheck_password_match_and_submit(\"Set_Password\",\"Set_Confirm_Password\",\"settings.php\",\"login\")'>Apply Settings</button>");
                     }
             ?>
             <br />

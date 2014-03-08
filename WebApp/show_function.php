@@ -26,7 +26,7 @@ if(isset($_POST["TrModify"]))
             {
                 $TrEdit = $_POST["TrEdit"];
                 
-                header("Location: edit_transaction.php?tredit=".$TrEdit[0]);
+                header("Location: edit_transaction.php?tredit=${TrEdit[0]}");
             }
             
         if(!isset($_POST["TrEdit"]) && $TrModify == "Edit")

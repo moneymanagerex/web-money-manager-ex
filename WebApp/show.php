@@ -83,10 +83,10 @@ if ($recordmaxid > 0 )
                                             echo "</td>";
                                         }
                                         echo "<td>";
-                                            echo "<input type='checkbox' name='TrDelete[]' value='".$lineid."' >";
+                                            echo "<input type='checkbox' name='TrDelete[]' value='${lineid}' >";
                                         echo "</td>";
                                         echo "<td>";
-                                            echo "<input type='radio' name='TrEdit[]' value='".$lineid."' >";
+                                            echo "<input type='radio' name='TrEdit[]' value='${lineid}' >";
                                         echo "</td>";
                                     echo "</tr>";
                                 }

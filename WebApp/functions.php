@@ -16,7 +16,7 @@ class design
         {
             echo "<div class='form-group'>";
                 echo "<label for='Date'>Date</label>";
-                echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '".$TrDateDefault."'/>";
+                echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '${TrDateDefault}'/>";
                 echo "<span class='help-block'></span>";
             echo "</div>";
                 
@@ -37,11 +37,11 @@ class design
                 {
                         if ($StatusArrayDB[$i] == $TrStatusDefault)
                             {
-                                echo "<option value = '".$StatusArrayDB[$i]."' selected>".$StatusArrayDesc[$i]."</option>";
+                                echo "<option value = '${StatusArrayDB[$i]}' selected> ${StatusArrayDesc[$i]} </option>";
                             }
                         else
                             {
-                                echo "<option value = '".$StatusArrayDB[$i]."'>".$StatusArrayDesc[$i]."</option>";
+                                echo "<option value = '${StatusArrayDB[$i]}'> ${StatusArrayDesc[$i]} </option>";
                             }
                 }
                 echo "</select>";
@@ -58,16 +58,16 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Type'>Type</label>";
-                echo "<select id ='Type' name='Type' class='form-control'  onchange='disable_element(".'"'."ToAccount".'","'."Type".'","'."Transfer".'"'.")' required>";
+                echo "<select id ='Type' name='Type' class='form-control'  onchange='disable_element(\"ToAccount\",\"Type\",\"Transfer\")' required>";
                 for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
                 {
                         if ($TypeArrayDesc[$i] == $TrTypeDefault)
                             {
-                                echo "<option value='".$TypeArrayDesc[$i]."'selected>".$TypeArrayDesc[$i]."</option>";
+                                echo "<option value='${TypeArrayDesc[$i]}'selected> ${TypeArrayDesc[$i]} </option>";
                             }
                         else
                             {
-                                echo "<option value='".$TypeArrayDesc[$i]."'>".$TypeArrayDesc[$i]."</option>";
+                                echo "<option value='${TypeArrayDesc[$i]}'> ${TypeArrayDesc[$i]} </option>";
                             }
                 }
                 echo "</select>";
@@ -90,11 +90,11 @@ class design
                 {
                         if ($AccountArrayDesc[$i] == $TrAccountDefault)
                             {
-                                echo "<option selected>".$AccountArrayDesc[$i]."</option>";
+                                echo "<option selected> ${AccountArrayDesc[$i]} </option>";
                             }
                         else
                             {
-                                echo "<option>".$AccountArrayDesc[$i]."</option>";
+                                echo "<option> ${AccountArrayDesc[$i]} </option>";
                             }
                 }
                 echo "</select>";
@@ -117,11 +117,11 @@ class design
                 {
                         if ($ToAccountArrayDesc[$i] == $TrToAccountDefault)
                             {
-                                echo "<option selected>".$ToAccountArrayDesc[$i]."</option>";
+                                echo "<option selected> ${ToAccountArrayDesc[$i]} </option>";
                             }
                         else
                             {
-                                echo "<option>".$ToAccountArrayDesc[$i]."</option>";
+                                echo "<option> ${ToAccountArrayDesc[$i]} </option>";
                             }
                 }
                 echo "</select>";
@@ -141,7 +141,7 @@ class design
                 echo "<label for='Payee'>Payee</label>";
                 if ($TrPayeeDefault <> "None")
                     {
-                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' value='".$TrPayeeDefault."' required />";
+                        echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' list='PayeeList' value='${TrPayeeDefault}' required />";
                     }
                 else
                     {
@@ -150,7 +150,7 @@ class design
                 echo "<datalist id='PayeeList'>";
                     for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
                     {
-                        echo "<option value='".$PayeeArrayDesc[$i]."'>";
+                        echo "<option value='${PayeeArrayDesc[$i]}'>";
                     }
                 echo "</datalist>";
                 echo "<span class='help-block'></span>";
@@ -164,7 +164,7 @@ class design
                 echo "<label for='Amount'>Amount</label>";
                 if ($TrAmountDefault <> 0)
                     {
-                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='New transaction amount' min='0' step ='0.01' value='".$TrAmountDefault."' required />";
+                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='New transaction amount' min='0' step ='0.01' value='${TrAmountDefault}' required />";
                     }
                 else
                     {
@@ -184,7 +184,7 @@ class design
                 echo "<label for='Notes'>Notes</label>";
                 if ($TrNotesDefault <> "Empty")
                     {
-                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'>".$TrNotesDefault."</textarea>";
+                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'> ${TrNotesDefault} </textarea>";
                     }
                 else
                     {
@@ -199,34 +199,34 @@ class design
     //Create Hidden Field    
     function input_hidden ($FieldName,$Value)
         {
-            echo "<input type='hidden' id = '".$FieldName."' name='".$FieldName."' value='".$Value."' />";
+            echo "<input type='hidden' id = '${FieldName}' name='${FieldName}' value='${Value}' />";
         }
         
     //Create setting input element
     function input_setting ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Set_".$VarName."'>".str_replace("_"," ",$VarName)."</label>";
+                echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
                 if ($VarValue == "")
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_".$VarName."' type='".$InputType."' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' required />";
+                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_".$VarName."' type='".$InputType."' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' />";
+                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' />";
                             }
                     }
                 else
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_".$VarName."' type='".$InputType."' name='Set_".$VarName."' class='form-control' value='".$VarValue."' required />";
+                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' value='${VarValue}' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_".$VarName."' type='".$InputType."' name='Set_".$VarName."' class='form-control' value='".$VarValue."' />";
+                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' value='${VarValue}' />";
                             } 
                     }
                 echo "<span class='help-block'></span>";
@@ -240,27 +240,27 @@ class design
     function input_setting_password ($VarName,$PlaceHolder,$Required,$OnChange)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Set_".$VarName."'>".str_replace("_"," ",$VarName)."</label>";
+                echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
                 if ($OnChange == "")
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' required />";
+                                echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' />";
+                                echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' />";
                             }
                     }
                 else
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' onchange='".$OnChange."' required />";
+                                echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' onchange='${OnChange}' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_".$VarName."' type='Password' name='Set_".$VarName."' class='form-control' placeholder='".$PlaceHolder."' onchange='".$OnChange."' />";
+                                echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' onchange='${OnChange}' />";
                             } 
                     }
                 echo "<span class='help-block'></span>";
@@ -285,7 +285,7 @@ class db_function
             
             try
                 {
-                    $db = new PDO("sqlite:".$const_dbpath);
+                    $db = new PDO("sqlite:${const_dbpath}");
         
                     $db -> exec   ("CREATE TABLE IF NOT EXISTS [New_Transaction](
                                             ID          INTEGER     PRIMARY KEY  AUTOINCREMENT,
@@ -308,7 +308,7 @@ class db_function
                                             Parameter   TEXT PRIMARY KEY NOT NULL,
                                             Value       TEXT
                                         );");
-                    $db -> exec     ("INSERT or IGNORE INTO Parameters VALUES ('Version','".$const_app_version."');");
+                    $db -> exec     ("INSERT or IGNORE INTO Parameters VALUES ('Version','${const_app_version}');");
                     $db = null;
                 }
             catch(PDOException $e)
@@ -324,7 +324,7 @@ class db_function
     function db_version ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $statement = $db->query("SELECT Value FROM Parameters WHERE Parameter = 'Version';");
             $db_version=$statement->fetchColumn(0);
@@ -338,7 +338,7 @@ class db_function
     function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrAmount, $TrNotes)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $statement = $db -> prepare("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Amount, Notes)
                                         VALUES(:TrDate, :TrStatus, :TrType, :TrAccount, :TrToAccount, :TrPayee, :TrAmount, :TrNotes);");
@@ -361,7 +361,7 @@ class db_function
     function transaction_maxid ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $statement = $db->query("SELECT MAX(ID) FROM New_Transaction;");
             $resultcount=$statement->fetchColumn(0);
@@ -377,7 +377,7 @@ class db_function
     function transaction_select_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $results = $db -> query("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Amount, Notes FROM New_Transaction;");
             $resultarray = array();
@@ -395,7 +395,7 @@ class db_function
     function transaction_select_all_show ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $results = $db -> query("SELECT Id, Date, Type, Account, Amount, Notes FROM New_Transaction;");
             $resultarray = array();
@@ -413,7 +413,7 @@ class db_function
     function transaction_select_one ($TrEditNr)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $statement = $db-> prepare("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Amount, Notes FROM New_Transaction WHERE ID = :TrEditNr;");
                     $statement->bindParam(":TrEditNr",$TrEditNr);
@@ -432,7 +432,7 @@ class db_function
     function transaction_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $db->exec   ("DELETE FROM New_Transaction;");
             
@@ -452,8 +452,8 @@ class db_function
                 $SQLDelete = $SQLDelete.$TrDeleteArr[$i] . ",";
             }
             $SQLDelete = rtrim($SQLDelete, ",");
-            $db = new PDO("sqlite:".$const_dbpath);
-            $db->exec   ("DELETE FROM New_Transaction WHERE ID IN (".$SQLDelete.");");
+            $db = new PDO("sqlite:${const_dbpath}");
+            $db->exec   ("DELETE FROM New_Transaction WHERE ID IN (${SQLDelete});");
             
             $db = null;
         }
@@ -464,7 +464,7 @@ class db_function
     function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrAmount,$TrNotes)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $statement = $db-> prepare("UPDATE New_Transaction SET Date = :TrDate, Status = :TrStatus, Type = :TrType,
                                         Account = :TrAccount, ToAccount = :TrToAccount, Payee = :TrPayee, Amount = :TrAmount, Notes = :TrNotes
@@ -490,7 +490,7 @@ class db_function
         {
             $const_dbpath = costant::database_path();
             db_function::bankaccount_delete_all();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             for ($i = 0; $i < sizeof($bankaccounts_array); $i++)
                 {
@@ -508,7 +508,7 @@ class db_function
     function bankaccount_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $db->exec   ("DELETE FROM Account_list;");
             
@@ -521,7 +521,7 @@ class db_function
    public function bankaccount_select_all ()
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:".$const_dbpath);
+        $db = new PDO("sqlite:${const_dbpath}");
         
         $results = $db -> query("SELECT AccountName FROM Account_list ORDER BY AccountName;");    
         $resultarray = array();
@@ -539,7 +539,7 @@ class db_function
    public function payee_select_all ()
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:".$const_dbpath);
+        $db = new PDO("sqlite:${const_dbpath}");
         
         $results = $db -> query("SELECT PayeeName FROM Payee_List ORDER BY PayeeName;");    
         $resultarray = array();
@@ -558,7 +558,7 @@ class db_function
         {
             $const_dbpath = costant::database_path();
             db_function::payee_delete_all();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             for ($i = 0; $i < sizeof($payees_array); $i++)
                 {
@@ -580,7 +580,7 @@ class db_function
             
             if (!in_array($payee,$existent_payee) && $payee !== "None")
                 {
-                    $db = new PDO("sqlite:".$const_dbpath);
+                    $db = new PDO("sqlite:${const_dbpath}");
                     $statement = $db -> prepare("INSERT INTO Payee_list (PayeeName) VALUES (:PayeeName);");
                     $statement->bindParam(":PayeeName",$payee);
                     $statement-> execute ();
@@ -594,7 +594,7 @@ class db_function
     function payee_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $db->exec   ("DELETE FROM Payee_list;");
             
@@ -677,7 +677,7 @@ class db_upgrade
                             case $app_version;
                                 break;
                             default:
-                                various::send_alert_and_redirect("Database version not compliant: DB Version = ".db_function::db_version()." - APP Version = ".$app_version,"error.php");
+                                various::send_alert_and_redirect("Database version not compliant: DB Version = ".db_function::db_version()." - APP Version = ${app_version}","error.php");
                                 break 2;
                         }
                 }
@@ -693,7 +693,7 @@ class db_upgrade
     function to_0_9_3 ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:".$const_dbpath);
+            $db = new PDO("sqlite:${const_dbpath}");
             
             $db->exec   ("ALTER TABLE New_Transaction RENAME TO New_Transaction_Old");
             db_function::db_create();
@@ -728,7 +728,7 @@ class various
                 echo "<script language='javascript'>";
                 if ($AlertRedirect <> "None")
                 {
-                    echo "send_alert_and_redirect ('".$AlertMessage."','".$AlertRedirect."')";
+                    echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";
                 }
                 echo "</script>";
         }
@@ -751,7 +751,7 @@ class various
                 
                 foreach ($ParameterArray as $key => $value)
                     {
-                        fwrite($fileopen, "$".$key." = ".'"'.$value.'";'."\n");   
+                        fwrite($fileopen, "\$${key} = \"${value}\";\n");   
                     }
                     
                 fwrite($fileopen, "?>");
