@@ -31,8 +31,6 @@ security::redirect_if_not_loggedin();
             <h3 align="center">Insert new transaction</h3>
             <br />
             <?php
-                #Import common file
-                require_once "functions.php";
                 $const_defaultaccountname = costant::transaction_account_default();
                 
                 design::input_date("2014-01-01");

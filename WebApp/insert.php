@@ -20,8 +20,6 @@ security::redirect_if_not_loggedin();
     
     <body>
         <?php
-        #Import common file
-        require_once "functions.php";
         
         #Get variables
         $TrDate = $_POST["Date"];

@@ -25,10 +25,7 @@ security::redirect_if_not_loggedin();
 	<script>
         test_html5();
 	</script>
-    <?php
-    #Import common file
-    require_once "functions.php";
-    
+    <?php   
     if (isset($_GET['tredit']))
         {
             $TrEditNr = $_GET['tredit'];

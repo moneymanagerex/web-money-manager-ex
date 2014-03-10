@@ -26,8 +26,6 @@ security::redirect_if_not_loggedin();
 <body>
 
 <?php
-#Import common file
-require_once "functions.php";
 
 $recordmaxid = db_function::transaction_select_maxid();
 if ($recordmaxid > 0 )
@@ -123,6 +121,8 @@ if ($recordmaxid > 0 )
             echo "<br />";
             echo "<br />";
         echo "</div>";
+        
+        #JavaScript for notes tooltip
         echo "<script type='text/javascript'>\n";
             echo "$(window).load(function(){\n";
                     echo "$(document).ready(function() {\n";

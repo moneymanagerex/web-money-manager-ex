@@ -114,7 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <br />
         <form id="login" method="post" action="settings.php">
             <?php
-                require_once "functions.php";
                 $const_disable_authentication = costant::disable_authentication();
                 $const_username = costant::login_username();
                 $const_password = costant::login_password();
