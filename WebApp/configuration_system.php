@@ -4,5 +4,5 @@
 ##         don't touch              ##
 ######################################
 $dbpath = "MMEX_New_Transaction.db";
-$app_version = "0.9.4"
+$app_version = "0.9.5"
 ?>

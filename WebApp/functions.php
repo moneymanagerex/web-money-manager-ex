@@ -299,7 +299,14 @@ class design
                 echo "<h4>$Text</h4>";
                 echo "<hr>";
         }
-    
+        
+    //Design table cell
+    function table_cell ($value)
+        {
+            echo "<td>";
+            echo $value;
+            echo "</td>";
+        }
 }
 
 
@@ -430,7 +437,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT Id, Date, Type, Account, Amount, Notes FROM New_Transaction;");
+            $results = $db -> query("SELECT Id, Date, Type, Account, Payee, Amount, Notes FROM New_Transaction;");
             $resultarray = array();
             if($results !== false)
                 {
@@ -690,7 +697,11 @@ class db_upgrade
                                 db_upgrade::to_0_9_3();
                                 break;
                             case "0.9.3":
-                                db_upgrade::to_0_9_4();
+                                db_upgrade::upgrade_version("0.9.4");
+                                break;
+                            case "0.9.4":
+                                db_upgrade::upgrade_version("0.9.5");
+                                break;
                             case $app_version;
                                 break;
                             default:
@@ -732,12 +743,12 @@ class db_upgrade
             various::update_configuration_file($parameterarray);
         }
 
-    function to_0_9_4 ()
+    function upgrade_version ($version)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $db->exec   ("UPDATE Parameters SET Value = '0.9.4' WHERE Parameter = 'Version';");           
+            $db->exec   ("UPDATE Parameters SET Value = '${version}' WHERE Parameter = 'Version';");           
             $db = null;
         }
 }

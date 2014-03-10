@@ -17,6 +17,10 @@ security::redirect_if_not_loggedin();
     <link rel="stylesheet" href="res\bootstrap-theme.min.css" />
     <link rel="stylesheet" type="text/css" href="style_global.css" />
 
+    <script src="res\jquery.min.js" type="text/javascript"></script>
+    <script src="res\bootstrap.min.js" type="text/javascript"></script>
+    <script src="functions.js" type="text/javascript"></script>
+
 </head>
 
 <body>
@@ -43,6 +47,10 @@ if ($recordmaxid > 0 )
                             echo "<th>Type</th>";
                             echo "<th>Account</th>";
                             #echo "<th>ToAccount</th>";
+                            if (costant::disable_payee() == False)
+                            {
+                                echo "<th>Payee</th>";
+                            }
                             echo "<th>Amount</th>";
                             echo "<th>Notes</th>";
                             echo "<th>Delete</th>";
@@ -62,25 +70,34 @@ if ($recordmaxid > 0 )
                                             switch ($colname)
                                             {
                                                 case "Amount":
-                                                    $value = number_format($value,2,",","");
+                                                    design::table_cell(number_format($value,2,",",""));
                                                     break;
                                                 case "Status":
-                                                        if ($value == "")
-                                                            $value = "None";
-                                                        if ($value == "R")
-                                                            $value = "Reconciled";
-                                                        if ($value == "V")
-                                                            $value = "Void";
-                                                        if ($value == "F")
-                                                            $value = "Follow Up";                                                                                                 
-                                                        if ($value == "D")
-                                                            $value = "Duplicate"; 
+                                                    if ($value == "")
+                                                        $value = "None";
+                                                    if ($value == "R")
+                                                        $value = "Reconciled";
+                                                    if ($value == "V")
+                                                        $value = "Void";
+                                                    if ($value == "F")
+                                                        $value = "Follow Up";                                                                                                 
+                                                    if ($value == "D")
+                                                        $value = "Duplicate";
+                                                    design::table_cell($value);
+                                                    break;
+                                                case "Payee":
+                                                    if (costant::disable_payee() == False)
+                                                        {
+                                                            design::table_cell($value);
+                                                        }
+                                                    break;
+                                                case "Notes":
+                                                    design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${value}' id='tooltip${lineid}'></span>");
+                                                    break;
                                                 default:
-                                                    $value = $value;
+                                                    design::table_cell($value);
+                                                    break;
                                             }
-                                            echo "<td>";
-                                            echo $value;
-                                            echo "</td>";
                                         }
                                         echo "<td>";
                                             echo "<input type='checkbox' name='TrDelete[]' value='${lineid}' >";
@@ -88,6 +105,7 @@ if ($recordmaxid > 0 )
                                         echo "<td>";
                                             echo "<input type='radio' name='TrEdit[]' value='${lineid}' >";
                                         echo "</td>";
+                                        
                                     echo "</tr>";
                                 }
                         }
@@ -105,6 +123,18 @@ if ($recordmaxid > 0 )
             echo "<br />";
             echo "<br />";
         echo "</div>";
+        echo "<script type='text/javascript'>\n";
+            echo "$(window).load(function(){\n";
+                    echo "$(document).ready(function() {\n";
+                        for ($i = 0; $i <= $recordmaxid; $i++)
+                            if (isset($resultarray[$i]['ID']))
+                            {
+                                $lineid = $resultarray[$i]['ID'];
+                                echo "$('#tooltip${lineid}').tooltip();\n";
+                            }
+                    echo "});\n";
+            echo "});\n";
+        echo "</script>\n";
     }
 else
     {

@@ -36,6 +36,8 @@ require_once "functions.php";
                 <br />
                 <a href="http://getbootstrap.com/">Bootstrap</a>
                 <br />
+                <a href="http://jquery.com//">jQuery</a>
+                <br />
                 <a href="http://modernizr.com/">Modernizr</a>
                 <br />
                 <a href="http://www.sqlite.org/">SQLite</a>
