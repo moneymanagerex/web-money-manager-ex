@@ -32,7 +32,7 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Status'>Status</label>";
-                echo "<select id ='Status' name='Status' class='form-control' required>";
+                echo "<select id ='Status' name='Status' class='form-control'>";
                 for ($i = 0; $i < sizeof($StatusArrayDesc); $i++)
                 {
                         if ($StatusArrayDB[$i] == $TrStatusDefault)
@@ -58,12 +58,12 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Type'>Type</label>";
-                echo "<select id ='Type' name='Type' class='form-control'  onchange='enable_element(\"ToAccount\",\"Type\",\"Transfer\"); disable_element(\"Payee\",\"Type\",\"Transfer\")' required>";
+                echo "<select id ='Type' name='Type' class='form-control'  onchange='enable_element(\"ToAccount\",\"Type\",\"Transfer\"); disable_element(\"Payee\",\"Type\",\"Transfer\")'>";
                 for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
                 {
                         if ($TypeArrayDesc[$i] == $TrTypeDefault)
                             {
-                                echo "<option value='${TypeArrayDesc[$i]}'selected> ${TypeArrayDesc[$i]} </option>";
+                                echo "<option value='${TypeArrayDesc[$i]}' selected> ${TypeArrayDesc[$i]} </option>";
                             }
                         else
                             {
@@ -85,7 +85,7 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Account'>Account</label>";
-                echo "<select id ='Account' name='Account' class='form-control' required>";
+                echo "<select id ='Account' name='Account' class='form-control'>";
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
                         if ($AccountArrayDesc[$i] == $TrAccountDefault)
@@ -112,7 +112,7 @@ class design
 
             echo "<div class='form-group'>";
                 echo "<label for='ToAccount'>To Account</label>";
-                echo "<select id ='ToAccount' name='ToAccount' class='form-control' required>";
+                echo "<select id ='ToAccount' name='ToAccount' class='form-control'>";
                 for ($i = 0; $i < sizeof($ToAccountArrayDesc); $i++)
                 {
                         if ($ToAccountArrayDesc[$i] == $TrToAccountDefault)
@@ -150,7 +150,7 @@ class design
                 echo "<datalist id='PayeeList'>";
                     for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
                     {
-                        echo "<option value='${PayeeArrayDesc[$i]}'>";
+                        echo "<option value='${PayeeArrayDesc[$i]}'>${PayeeArrayDesc[$i]}</option>";
                     }
                 echo "</datalist>";
                 echo "<span class='help-block'></span>";
@@ -275,7 +275,7 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Default_Account'> Default Account</label>";
-                echo "<select id ='Default_Account' name='Default_Account' class='form-control' required>";
+                echo "<select id ='Default_Account' name='Default_Account' class='form-control'>";
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
                         if ($AccountArrayDesc[$i] == $TrAccountDefault)
@@ -296,14 +296,14 @@ class design
     //Design section legend
     function section_legened ($Text)
         {
-                echo "<h4>$Text</h4>";
+                echo "<h4>${Text}</h4>";
                 echo "<hr>";
         }
         
     //Design table cell
-    function table_cell ($value)
+    function table_cell ($value,$css_class)
         {
-            echo "<td>";
+            echo "<td class='${css_class}'>";
             echo $value;
             echo "</td>";
         }

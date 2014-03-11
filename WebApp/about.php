@@ -11,17 +11,17 @@ require_once "functions.php";
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     	
         <title>Money Manager EX</title>
-        <link rel="icon" href="res\favicon.ico" />
+        <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" href="res\bootstrap.min.css" />
-        <link rel="stylesheet" href="res\bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="style_global.css" />
     </head>
     
     <body>
-        <div class="container" align="center">
+        <div class="container text_align_center">
             <br />
-            <img src="res\mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
+            <img src="res/mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
             <br />
             <h2><strong>Money Manager Ex - Web App</strong></h2>
             <?php
@@ -42,6 +42,8 @@ require_once "functions.php";
                 <br />
                 <a href="http://www.sqlite.org/">SQLite</a>
             </p>
+            <img src="res/html5.png" alt="HTML5 Logo" height="100" width="100"/>
+            <br />
             <br />
             <input type="button" class="btn btn-lg btn-success btn-block" value="Return" onclick="top.location.href = 'landing.php'" />
             <br />

@@ -11,24 +11,24 @@ security::redirect_if_not_loggedin();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
     <title>New Transaction</title>
-    <link rel="icon" href="res\favicon.ico" />
+    <link rel="icon" href="res/favicon.ico" />
     
-    <link rel="stylesheet" href="res\bootstrap.min.css" />
-    <link rel="stylesheet" href="res\bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
     <link rel="stylesheet" type="text/css" href="style_global.css" />
     
-    <script src="res\modernizr.js" type="text/javascript"></script>
+    <script src="res/modernizr.js" type="text/javascript"></script>
     <script src="functions.js" type="text/javascript"></script>
 </head>
 
 <body>
-	<script>
+	<script type="text/javascript">
         test_html5();
 	</script>
 
     <div class="container">
         <form id="New_Transaction" class="form-new-transaction" method="post" action = "insert.php" onsubmit="return confirm_if_not_present_in_datalist('Payee','PayeeList','Do you want to add the new payee')">
-            <h3 align="center">Insert new transaction</h3>
+            <h3 class="text_align_center">Insert new transaction</h3>
             <br />
             <?php
                 $const_defaultaccountname = costant::transaction_account_default();

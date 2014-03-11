@@ -11,17 +11,17 @@ require_once "functions.php";
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     	
         <title>Money Manager EX</title>
-        <link rel="icon" href="res\favicon.ico" />
+        <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" href="res\bootstrap.min.css" />
-        <link rel="stylesheet" href="res\bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="style_global.css" />
     </head>
     
     <body>
-        <div class="container" align="center">
+        <div class="container text_align_center">
             <br />
-            <img src="res\mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
+            <img src="res/mmex.ico" alt="Money Manager Ex Logo" height="150" width="150"/>
             <br />
             <h3><strong>Internal Error</strong></h3>
             <?php

@@ -47,3 +47,24 @@ hr
         border: 0; border-top: 1px solid #ccc;
         margin: 1em 0; padding: 0; 
     }
+
+    
+.tooltip-inner
+    {
+        white-space:pre-wrap;
+    }
+
+.text_align_center
+    {
+        text-align:center; 
+    }
+
+.text_align_right
+    {
+        text-align:right;
+    }
+
+.td_size_5
+    {
+        width: 5%;
+    }

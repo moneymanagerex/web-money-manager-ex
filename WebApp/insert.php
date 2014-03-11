@@ -11,10 +11,10 @@ security::redirect_if_not_loggedin();
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     	
         <title>Insert Transaction</title>
-        <link rel="icon" href="res\favicon.ico" />
+        <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" href="res\bootstrap.min.css" />
-        <link rel="stylesheet" href="res\bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="style_global.css" />
     </head>
     
@@ -50,7 +50,7 @@ security::redirect_if_not_loggedin();
         db_function::payee_insert(array($TrPayee));
         ?>
         
-        <div class="container" align="center">
+        <div class="container text_align_center">
             <br />
             <br />
             <h3>Transaction inserted successfully</h3>

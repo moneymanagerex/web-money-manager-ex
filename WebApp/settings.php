@@ -88,10 +88,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     	
         <title>Money Manager EX</title>
-        <link rel="icon" href="res\favicon.ico" />
+        <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" href="res\bootstrap.min.css" />
-        <link rel="stylesheet" href="res\bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="style_global.css" />
         
         <script src="functions.js" type="text/javascript"></script>
@@ -102,13 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <?php
         if (isset($const_username) AND isset($const_password))
             {
-                echo "<h3 align = 'center'>Edit settings</h3>";
+                echo "<h3 class='text_align_center'>Edit settings</h3>";
             }
         else
             {
                 echo "<br />";
                 echo "<p style='text-align:center'><img src='res\mmex.ico' alt='Money Manager EX Logo' height='150' width='150' /></p>";
-                echo "<h3 align = 'center'>Insert new settings to start use Money Manager</h3>";
+                echo "<h3 class='text_align_center'>Insert new settings to start use Money Manager</h3>";
             }
         ?>
         <br />
@@ -228,5 +228,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             ?>
             <br />
         </form>
+    </div>
     </body>
 </html>
