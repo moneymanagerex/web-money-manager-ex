@@ -5,10 +5,10 @@ require_once "functions.php";
 if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
     {   
         #Delete all transaction
-        if (isset($_GET["deleteall"]))
+        if (isset($_GET["delete_all"]))
             {
                 db_function::transaction_delete_all();
-                echo "All transaction deleted succesfully!";
+                echo "Operation has succeeded";
             }
         
         #Delete transaction group
@@ -17,7 +17,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                 $deletegroup_string = $_GET["deletegroup"];
                 $deletegroup_array = explode(",",$deletegroup_string);
                 db_function::transaction_delete_group($deletegroup_array);
-                echo "Transaction deleted succesfully!";
+                echo "Operation has succeeded";
             }
 
         #Import BankAccount
@@ -25,10 +25,10 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
         if (isset($_GET["import_bankaccount"]))
             {
                 $bankaccounts_string = $_GET["import_bankaccount"];
-                $bankaccounts_array = explode(";;", $bankaccounts_string);
+                $bankaccounts_array = explode(costant::import_delimiter(), $bankaccounts_string);
                 db_function::bankaccount_delete_all();
                 db_function::bankaccount_insert($bankaccounts_array);
-                echo "All accounts imported succesfully!";
+                echo "Operation has succeeded";
             }
         
         #Import Payee
@@ -36,10 +36,10 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
         if (isset($_GET["import_payee"]))
             {
                 $payees_string = $_GET["import_payee"];
-                $payees_array = explode(";;", $payees_string);
+                $payees_array = explode(costant::import_delimiter(), $payees_string);
                 db_function::payee_delete_all();
                 db_function::payee_insert ($payees_array);
-                echo "All payees imported succesfully!";
+                echo "Operation has succeeded";
             }
         
         #Download New_Transaction
@@ -55,6 +55,6 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
     }
 else
     {
-        echo "Wrong guid!";
+        echo "Wrong GUID";
     }
     ?>

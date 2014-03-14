@@ -4,5 +4,6 @@
 ##         don't touch              ##
 ######################################
 $dbpath = "MMEX_New_Transaction.db";
-$app_version = "0.9.5"
+$app_version = "0.9.5";
+$import_delimiter = ";;";
 ?>

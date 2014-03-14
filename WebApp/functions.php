@@ -81,7 +81,10 @@ class design
     function input_account ($TrAccountDefault)
         {
             $AccountArrayDesc = db_function::bankaccount_select_all();
-            $AccountArrayDesc[sizeof($AccountArrayDesc)] = "None";
+            if (sizeof($AccountArrayDesc) == 0)
+                {
+                    $AccountArrayDesc[sizeof($AccountArrayDesc)] = "None";
+                }
             
             echo "<div class='form-group'>";
                 echo "<label for='Account'>Account</label>";
@@ -271,7 +274,10 @@ class design
     function settings_default_account ($TrAccountDefault)
         {
             $AccountArrayDesc = db_function::bankaccount_select_all();
-            $AccountArrayDesc[sizeof($AccountArrayDesc)] = "None";
+            if (sizeof($AccountArrayDesc) == 0)
+                {
+                    $AccountArrayDesc[sizeof($AccountArrayDesc)] = "None";
+                }
             
             echo "<div class='form-group'>";
                 echo "<label for='Default_Account'> Default Account</label>";
@@ -562,7 +568,7 @@ class db_function
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
         
-        $results = $db -> query("SELECT AccountName FROM Account_list ORDER BY AccountName;");    
+        $results = $db -> query("SELECT AccountName FROM Account_list ORDER BY AccountName COLLATE nocase;");    
         $resultarray = array();
         if($results !== false)
             {
@@ -580,7 +586,7 @@ class db_function
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
         
-        $results = $db -> query("SELECT PayeeName FROM Payee_List ORDER BY PayeeName;");    
+        $results = $db -> query("SELECT PayeeName FROM Payee_List ORDER BY PayeeName COLLATE nocase;");    
         $resultarray = array();
         if($results !== false)
             {
@@ -836,6 +842,12 @@ class costant
             {
                 global $app_version;
                 return $app_version;
+            }
+        
+        function import_delimiter ()
+            {
+                global $import_delimiter;
+                return $import_delimiter;
             }
         
         function disable_authentication ()
