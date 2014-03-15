@@ -379,6 +379,17 @@ class db_function
             return $db_version;
         }
         
+    // Vacuum database
+    function db_vacuum ()
+        {
+            $const_dbpath = costant::database_path();
+            $db = new PDO("sqlite:${const_dbpath}");
+            
+            $db->exec ("VACUUM");
+            
+            $db = null;
+        }
+        
         
     // Insert transaction 
     function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrAmount, $TrNotes)
@@ -707,6 +718,9 @@ class db_upgrade
                                 break;
                             case "0.9.4":
                                 db_upgrade::upgrade_version("0.9.5");
+                                break;
+                            case "0.9.5":
+                                db_upgrade::upgrade_version("0.9.6");
                                 break;
                             case $app_version;
                                 break;

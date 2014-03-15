@@ -4,6 +4,12 @@ require_once "functions.php";
 
 if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
     {   
+        #Test guid
+        if (isset($_GET["check_guid"]))
+            {
+                db_function::transaction_delete_all();
+                echo "Operation has succeeded";
+            }
         #Delete all transaction
         if (isset($_GET["delete_all"]))
             {
@@ -46,6 +52,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
         if (isset($_GET["download_db"]))
             {
                 $const_dbpath = costant::database_path();
+                db_function::db_vacuum();
                 header("Cache-Control: public");
                 header("Content-Description: File Transfer");
                 header("Content-Disposition: attachment; filename= " . $const_dbpath);
