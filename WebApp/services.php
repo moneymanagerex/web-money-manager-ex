@@ -2,28 +2,31 @@
 # Import configuration file
 require_once "functions.php";
 
+$api_version = "0.9.0";
+$operation_succeded = "Operation has succeeded";
+$wrong_guid = "Wrong GUID";
+
 if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
     {   
         #Test guid
         if (isset($_GET["check_guid"]))
             {
-                db_function::transaction_delete_all();
-                echo "Operation has succeeded";
+                echo $operation_succeded;
             }
         #Delete all transaction
         if (isset($_GET["delete_all"]))
             {
                 db_function::transaction_delete_all();
-                echo "Operation has succeeded";
+                echo $operation_succeded;
             }
         
         #Delete transaction group
-        if (isset($_GET["deletegroup"]))
+        if (isset($_GET["delete_group"]))
             {
-                $deletegroup_string = $_GET["deletegroup"];
+                $deletegroup_string = $_GET["delete_group"];
                 $deletegroup_array = explode(",",$deletegroup_string);
                 db_function::transaction_delete_group($deletegroup_array);
-                echo "Operation has succeeded";
+                echo $operation_succeded;
             }
 
         #Import BankAccount
@@ -34,7 +37,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                 $bankaccounts_array = explode(costant::import_delimiter(), $bankaccounts_string);
                 db_function::bankaccount_delete_all();
                 db_function::bankaccount_insert($bankaccounts_array);
-                echo "Operation has succeeded";
+                echo $operation_succeded;
             }
         
         #Import Payee
@@ -43,9 +46,15 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
             {
                 $payees_string = $_GET["import_payee"];
                 $payees_array = explode(costant::import_delimiter(), $payees_string);
-                db_function::payee_delete_all();
                 db_function::payee_insert ($payees_array);
-                echo "Operation has succeeded";
+                echo $operation_succeded;
+            }
+        
+        #Delete Payee
+        if (isset($_GET["delete_payee"]))
+            {
+                db_function::payee_delete_all();
+                echo $operation_succeded;
             }
         
         #Download New_Transaction
@@ -59,9 +68,29 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                 header("Content-Transfer-Encoding: binary");
                 readfile($const_dbpath);
             }
+        
+        #Check New Transaction
+        if (isset($_GET["check_new_transaction"]))
+            {
+                $maxid = db_function::transaction_select_maxid();
+                if ($maxid > 0)
+                {
+                    echo "True";
+                }
+                else
+                {
+                    echo "False";
+                }
+            }
+            
+        #Return WebApp Version
+        if (isset($_GET["check_api_version"]))
+            {
+                echo $api_version;
+            }
     }
 else
     {
-        echo "Wrong GUID";
+        echo $wrong_guid;
     }
     ?>

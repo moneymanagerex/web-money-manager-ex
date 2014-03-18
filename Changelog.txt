@@ -1,3 +1,12 @@
+Version 0.9.7
+- First beta version with full transaction insert in desktop WebApp
+
+Version 0.9.6
+- W3C validation passed
+- Small layout change on show transaction
+- Fixed payee & account sort
+- First sync with desktop version
+
 Version 0.9.5
 - Fixed error that prevent from change password
 - Added full payee support also in show transaction

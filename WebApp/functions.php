@@ -153,7 +153,7 @@ class design
                 echo "<datalist id='PayeeList'>";
                     for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
                     {
-                        echo "<option value='${PayeeArrayDesc[$i]}'>${PayeeArrayDesc[$i]}</option>";
+                        echo "<option value='${PayeeArrayDesc[$i]}'></option>";
                     }
                 echo "</datalist>";
                 echo "<span class='help-block'></span>";
@@ -341,6 +341,8 @@ class db_function
                                             Status      TEXT        NOT NULL,
                                             Type        TEXT        NOT NULL,
                                             Payee       TEXT,
+                                            Category    TEXT,
+                                            SubCategory TEXT,
                                             Amount      NUMERIC     NOT NULL,
                                             Notes       TEXT
                                         );");
@@ -394,17 +396,20 @@ class db_function
     // Insert transaction 
     function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrAmount, $TrNotes)
         {
+            $none = "None";
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $statement = $db -> prepare("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Amount, Notes)
-                                        VALUES(:TrDate, :TrStatus, :TrType, :TrAccount, :TrToAccount, :TrPayee, :TrAmount, :TrNotes);");
+            $statement = $db -> prepare("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Category, SubCategory, Amount, Notes)
+                                        VALUES(:TrDate, :TrStatus, :TrType, :TrAccount, :TrToAccount, :TrPayee, :TrCategory, :TrSubCategory, :TrAmount, :TrNotes);");
                 $statement->bindParam(":TrDate",$TrDate);
                 $statement->bindParam(":TrStatus",$TrStatus);
                 $statement->bindParam(":TrType",$TrType);
                 $statement->bindParam(":TrAccount",$TrAccount);
                 $statement->bindParam(":TrToAccount",$TrToAccount);
                 $statement->bindParam(":TrPayee",$TrPayee);
+                $statement->bindParam(":TrCategory",$none);
+                $statement->bindParam(":TrSubCategory",$none);
                 $statement->bindParam(":TrAmount",$TrAmount);
                 $statement->bindParam(":TrNotes",$TrNotes);
             $statement-> execute ();
@@ -436,7 +441,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Amount, Notes FROM New_Transaction;");
+            $results = $db -> query("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Category, SubCategory, Amount, Notes FROM New_Transaction;");
             $resultarray = array();
             if($results !== false)
                 {
@@ -722,6 +727,9 @@ class db_upgrade
                             case "0.9.5":
                                 db_upgrade::upgrade_version("0.9.6");
                                 break;
+                            case "0.9.6":
+                                db_upgrade::to_0_9_7();
+                                break;
                             case $app_version;
                                 break;
                             default:
@@ -761,6 +769,20 @@ class db_upgrade
                     "defaultaccountname"    => costant::transaction_account_default()
                 );
             various::update_configuration_file($parameterarray);
+        }
+    
+    function to_0_9_7 ()
+        {
+            $const_dbpath = costant::database_path();
+            $db = new PDO("sqlite:${const_dbpath}");
+            
+            $db->exec   ("ALTER TABLE New_Transaction RENAME TO New_Transaction_Old");
+            db_function::db_create();
+            $db->exec   ("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Category, SubCategory, Amount, Notes)
+                            SELECT Date, Status, Type, Account, ToAccount, Payee, 'None', 'None', Amount, Notes FROM New_Transaction_Old");
+            $db->exec   ("DROP TABLE New_Transaction_Old");
+            $db->exec   ("UPDATE Parameters SET Value = '0.9.7' WHERE Parameter = 'Version';");           
+            $db = null;
         }
 
     function upgrade_version ($version)
