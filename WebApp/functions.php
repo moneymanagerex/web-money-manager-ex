@@ -503,7 +503,7 @@ class db_function
         
         
         
-    //Delete group of transaction
+    //Delete group transaction
     function transaction_delete_group ($TrDeleteArr)
         {
             $const_dbpath = costant::database_path();
