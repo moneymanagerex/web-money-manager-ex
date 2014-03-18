@@ -1,5 +1,5 @@
 Version 0.9.7
-- First beta version with full transaction insert in desktop WebApp
+- First beta version with full management of WebApp inserted transactions in desktop version
 
 Version 0.9.6
 - W3C validation passed
