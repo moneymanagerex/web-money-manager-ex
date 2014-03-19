@@ -26,6 +26,7 @@ require_once "functions.php";
             <h2><strong>Money Manager Ex - Web App</strong></h2>
             <?php
 	           echo "<h4> Version ".costant::app_version()."</h4>";
+               echo "<h5> API Version ".costant::api_version()."</h5>";
             ?>
             <br />
             <h4> Developer: Gabriele [Gabriele-V]</h4>

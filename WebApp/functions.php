@@ -879,6 +879,12 @@ class costant
                 global $app_version;
                 return $app_version;
             }
+            
+        function api_version ()
+            {
+                global $api_version;
+                return $api_version;
+            }
         
         function import_delimiter ()
             {

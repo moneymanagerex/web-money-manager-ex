@@ -2,7 +2,6 @@
 # Import configuration file
 require_once "functions.php";
 
-$api_version = "0.9.0";
 $operation_succeded = "Operation has succeeded";
 $wrong_guid = "Wrong GUID";
 
@@ -86,7 +85,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
         #Return WebApp Version
         if (isset($_GET["check_api_version"]))
             {
-                echo $api_version;
+                echo costant::api_version();
             }
     }
 else
