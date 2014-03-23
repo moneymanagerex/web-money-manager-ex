@@ -95,7 +95,7 @@ function confirm_if_not_present_in_datalist (Field,Datalist,Confirm_Question)
                         ifound = true;
                     }
             }
-        if (ifound == true)
+        if (ifound == true || !Boolean(field_value))
             {
                 return true;
             }
