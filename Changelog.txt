@@ -1,3 +1,9 @@
+Version 0.9.8
+- Fixed confirm on transfer insert with payees enabled
+- Order show transactions by date insted of ID
+- New tooltip on account with to account in case of transfer
+- Added transaction status in show
+
 Version 0.9.7
 - First beta version with full management of WebApp inserted transactions in desktop version
 

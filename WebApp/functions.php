@@ -730,6 +730,9 @@ class db_upgrade
                             case "0.9.6":
                                 db_upgrade::to_0_9_7();
                                 break;
+                            case "0.9.7":
+                                db_upgrade::upgrade_version("0.9.8");
+                                break;
                             case $app_version;
                                 break;
                             default:
