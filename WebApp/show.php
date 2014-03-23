@@ -30,7 +30,7 @@ security::redirect_if_not_loggedin();
 $recordmaxid = db_function::transaction_select_maxid();
 if ($recordmaxid > 0 )
     {
-        $resultarray = db_function::transaction_select_all_show();
+        $resultarray = db_function::transaction_select_all_order_by_date();
         echo "<div class='container'>";
             echo "<h3 class='text_align_center'>Current pending transaction</h3>";
             echo "<br/>";
@@ -50,10 +50,10 @@ if ($recordmaxid > 0 )
                             {
                                 echo "<th>Payee</th>";
                             }
-                            echo "<th class = 'text_align_right'>   Amount</th>";
-                            echo "<th class = 'text_align_center'>  Notes</th>";
-                            echo "<th class = 'text_align_center'>  Delete</th>";
-                            echo "<th class = 'text_align_center'>  Edit</th>";
+                            echo "<th class = 'text_align_right'>Amount</th>";
+                            echo "<th class = 'text_align_center'>Notes</th>";
+                            echo "<th class = 'text_align_center'>Delete</th>";
+                            echo "<th class = 'text_align_center'>Edit</th>";
                         echo "</tr>";
                     echo "</thead>";
                     
@@ -63,45 +63,50 @@ if ($recordmaxid > 0 )
                             if (isset($resultarray[$i]['ID']))
                                 {
                                     echo "<tr>";
+                                        //TRANSACTION ID
                                         $lineid = $resultarray[$i]['ID'];
-                                        foreach (array_slice($resultarray[$i],1) as $colname => $value)
-                                        {
-                                            switch ($colname)
+                                        
+                                        //DATE
+                                        design::table_cell($resultarray[$i]['Date'],"");
+                                        
+                                        //TYPE
+                                        $TrStatusShow = $resultarray[$i]['Status'];
+                                        $TrTypeShow = $resultarray[$i]['Type'];
+                                            if ($TrTypeShow == "Withdrawal")
+                                                $TrTypeShow = "With.";
+                                            if ($TrTypeShow == "Deposit")
+                                                $TrTypeShow = "Dep.";
+                                            if ($TrTypeShow == "Transfer")
+                                                $TrTypeShow = "Tran.";
+                                        design::table_cell("${TrStatusShow} - ${TrTypeShow}","");
+                                        
+                                        //ACCOUNT
+                                        design::table_cell($resultarray[$i]['Account'],"");
+                                        
+                                        //PAYEE
+                                        if (costant::disable_payee() == False)
                                             {
-                                                case "Amount":
-                                                    design::table_cell(number_format($value,2,",",""),"text_align_right td_size_5");
-                                                    break;
-                                                    
-                                                case "Type":
-                                                      if ($value == "Withdrawal")
-                                                          $value = "With.";
-                                                      if ($value == "Deposit")
-                                                          $value = "Dep";
-                                                      if ($value == "Transfer")
-                                                          $value = "Tran.";
-                                                      design::table_cell($value,"");
-                                                      break;
-                                                case "Payee":
-                                                    if (costant::disable_payee() == False)
-                                                        {
-                                                            design::table_cell($value,"");
-                                                        }
-                                                    break;
-                                                case "Notes":
-                                                    design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${value}' id='tooltip${lineid}'></span>","text_align_center");
-                                                    break;
-                                                default:
-                                                    design::table_cell($value,"");
-                                                    break;
+                                                design::table_cell($resultarray[$i]['Payee'],"");
                                             }
-                                        }
+                                            
+                                        //AMOUNT
+                                        $TrAmountShow = number_format($resultarray[$i]['Amount'],2,",","");
+                                        design::table_cell($TrAmountShow,"text_align_right td_size_5");
+                                        
+                                        //NOTES
+                                        $TrNotesShow = $resultarray[$i]['Notes'];
+                                        design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip${lineid}'></span>","text_align_center");
+                                        
+                                        //DELETE
                                         echo "<td class ='text_align_center'>";
                                             echo "<input type='checkbox' name='TrDelete[]' value='${lineid}' />";
                                         echo "</td>";
+                                        
+                                        //EDIT
                                         echo "<td class ='text_align_center'>";
                                             echo "<input type='radio' name='TrEdit[]' value='${lineid}' />";
                                         echo "</td>";
-                                        
+
                                     echo "</tr>";
                                 }
                         }

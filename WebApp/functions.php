@@ -441,7 +441,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Category, SubCategory, Amount, Notes FROM New_Transaction;");
+            $results = $db -> query("SELECT * FROM New_Transaction;");
             $resultarray = array();
             if($results !== false)
                 {
@@ -453,13 +453,13 @@ class db_function
         
         
         
-    // Select all transaction for show
-    function transaction_select_all_show ()
+    // Select all transaction order by date
+    function transaction_select_all_order_by_date ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT Id, Date, Type, Account, Payee, Amount, Notes FROM New_Transaction;");
+            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date;");
             $resultarray = array();
             if($results !== false)
                 {
@@ -477,7 +477,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $statement = $db-> prepare("SELECT Id, Date, Status, Type, Account, ToAccount, Payee, Amount, Notes FROM New_Transaction WHERE ID = :TrEditNr;");
+            $statement = $db-> prepare("SELECT * FROM New_Transaction WHERE ID = :TrEditNr;");
                     $statement->bindParam(":TrEditNr",$TrEditNr);
             $statement-> execute ();
             $resultarray = array();
