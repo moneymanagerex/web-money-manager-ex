@@ -40,12 +40,9 @@ if ($recordmaxid > 0 )
                 #echo "<table class = 'table table-hover table-condensed table-bordered'>"; //TABLE BORDERED FOR DEBUG
                     echo "<thead>";
                         echo "<tr>";
-                            #echo "<th>Nr.</th>";
                             echo "<th>Date</th>";
-                            #echo "<th>Status</th>";
                             echo "<th>Type</th>";
                             echo "<th>Account</th>";
-                            #echo "<th>ToAccount</th>";
                             if (costant::disable_payee() == False)
                             {
                                 echo "<th>Payee</th>";
@@ -67,26 +64,36 @@ if ($recordmaxid > 0 )
                                         $lineid = $resultarray[$i]['ID'];
                                         
                                         //DATE
-                                        design::table_cell($resultarray[$i]['Date'],"");
+                                        $TrDateShow = $resultarray[$i]['Date'];
+                                        design::table_cell($TrDateShow,"");
                                         
                                         //TYPE
                                         $TrStatusShow = $resultarray[$i]['Status'];
                                         $TrTypeShow = $resultarray[$i]['Type'];
                                             if ($TrTypeShow == "Withdrawal")
-                                                $TrTypeShow = "With.";
+                                                $TrTypeShowFormatted = "With.";
                                             if ($TrTypeShow == "Deposit")
-                                                $TrTypeShow = "Dep.";
+                                                $TrTypeShowFormatted = "Dep.";
                                             if ($TrTypeShow == "Transfer")
-                                                $TrTypeShow = "Tran.";
-                                        design::table_cell("${TrStatusShow} - ${TrTypeShow}","");
+                                                $TrTypeShowFormatted = "Tran.";
+                                        design::table_cell("${TrStatusShow} - ${TrTypeShowFormatted}","");
                                         
                                         //ACCOUNT
-                                        design::table_cell($resultarray[$i]['Account'],"");
-                                        
+                                        $TrAccountShow = $resultarray[$i]['Account'];
+                                        $TrToAccountShow = $resultarray[$i]['ToAccount'];
+                                        if ($TrTypeShow == "Transfer")
+                                        {
+                                            design::table_cell("<span data-toggle='tooltip' title='Transfer to: ${TrToAccountShow}' id='tooltip_account_${lineid}'>${TrAccountShow}</span>","");
+                                        }
+                                        else
+                                        {
+                                            design::table_cell($TrAccountShow,"");
+                                        }
                                         //PAYEE
+                                        $TrPayeeShow = $resultarray[$i]['Payee'];
                                         if (costant::disable_payee() == False)
                                             {
-                                                design::table_cell($resultarray[$i]['Payee'],"");
+                                                design::table_cell($TrPayeeShow,"");
                                             }
                                             
                                         //AMOUNT
@@ -95,7 +102,7 @@ if ($recordmaxid > 0 )
                                         
                                         //NOTES
                                         $TrNotesShow = $resultarray[$i]['Notes'];
-                                        design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip${lineid}'></span>","text_align_center");
+                                        design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>","text_align_center");
                                         
                                         //DELETE
                                         echo "<td class ='text_align_center'>";
@@ -133,7 +140,11 @@ if ($recordmaxid > 0 )
                             if (isset($resultarray[$i]['ID']))
                             {
                                 $lineid = $resultarray[$i]['ID'];
-                                echo "$('#tooltip${lineid}').tooltip();\n";
+                                if ($resultarray[$i]['Type'] == "Transfer")
+                                        {
+                                            echo "$('#tooltip_account_${lineid}').tooltip();\n";
+                                        }
+                                echo "$('#tooltip_notes_${lineid}').tooltip();\n";
                             }
                     echo "});\n";
             echo "});\n";
