@@ -13,13 +13,13 @@ security::redirect_if_not_loggedin();
     <title>Show Transaction</title>
     <link rel="icon" href="res/favicon.ico" />
     
-    <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="style_global.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
 
-    <script src="res/jquery.min.js" type="text/javascript"></script>
-    <script src="res/bootstrap.min.js" type="text/javascript"></script>
-    <script src="functions.js" type="text/javascript"></script>
+    <script src="res/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="res/bootstrap-3.1.1.min.js" type="text/javascript"></script>
+    <script src="res/functions-0.9.9.js" type="text/javascript"></script>
 
 </head>
 
@@ -44,9 +44,9 @@ if ($recordmaxid > 0 )
                             echo "<th>Type</th>";
                             echo "<th>Account</th>";
                             if (costant::disable_payee() == False)
-                            {
-                                echo "<th>Payee</th>";
-                            }
+                                {echo "<th>Payee</th>";}
+                            if (costant::disable_category() == False)
+                                {echo "<th>Category</th>";}
                             echo "<th class = 'text_align_right'>Amount</th>";
                             echo "<th class = 'text_align_center'>Notes</th>";
                             echo "<th class = 'text_align_center'>Delete</th>";
@@ -57,19 +57,19 @@ if ($recordmaxid > 0 )
                     echo "<tbody>";
                     for ($i = 0; $i <= $recordmaxid; $i++)
                         {
-                            if (isset($resultarray[$i]['ID']))
+                            if (isset($resultarray[$i]["ID"]))
                                 {
                                     echo "<tr>";
                                         //TRANSACTION ID
-                                        $lineid = $resultarray[$i]['ID'];
+                                        $lineid = $resultarray[$i]["ID"];
                                         
                                         //DATE
-                                        $TrDateShow = $resultarray[$i]['Date'];
+                                        $TrDateShow = $resultarray[$i]["Date"];
                                         design::table_cell($TrDateShow,"");
                                         
                                         //TYPE
-                                        $TrStatusShow = $resultarray[$i]['Status'];
-                                        $TrTypeShow = $resultarray[$i]['Type'];
+                                        $TrStatusShow = $resultarray[$i]["Status"];
+                                        $TrTypeShow = $resultarray[$i]["Type"];
                                             if ($TrTypeShow == "Withdrawal")
                                                 $TrTypeShowFormatted = "With.";
                                             if ($TrTypeShow == "Deposit")
@@ -79,30 +79,42 @@ if ($recordmaxid > 0 )
                                         design::table_cell("${TrStatusShow} - ${TrTypeShowFormatted}","");
                                         
                                         //ACCOUNT
-                                        $TrAccountShow = $resultarray[$i]['Account'];
-                                        $TrToAccountShow = $resultarray[$i]['ToAccount'];
+                                        $TrAccountShow = $resultarray[$i]["Account"];
+                                        $TrToAccountShow = $resultarray[$i]["ToAccount"];
                                         if ($TrTypeShow == "Transfer")
                                         {
                                             design::table_cell("<span data-toggle='tooltip' title='Transfer to: ${TrToAccountShow}' id='tooltip_account_${lineid}'>${TrAccountShow}</span>","");
                                         }
                                         else
-                                        {
-                                            design::table_cell($TrAccountShow,"");
-                                        }
+                                            {design::table_cell($TrAccountShow,"");}
+                                            
                                         //PAYEE
-                                        $TrPayeeShow = $resultarray[$i]['Payee'];
+                                        $TrPayeeShow = $resultarray[$i]["Payee"];
                                         if (costant::disable_payee() == False)
+                                            {design::table_cell($TrPayeeShow,"");}
+                                        
+                                        //CATEGORY
+                                        $TrCategoryShow = $resultarray[$i]["Category"];
+                                        $TrSubCategoryShow = $resultarray[$i]["SubCategory"];
+                                            if (costant::disable_category() == False && $TrSubCategoryShow != "None")
                                             {
-                                                design::table_cell($TrPayeeShow,"");
+                                                design::table_cell("<span data-toggle='tooltip' title='Subcategory: ${TrSubCategoryShow}' id='tooltip_category_${lineid}'>${TrCategoryShow}*</span>","");
                                             }
+                                        else if (costant::disable_category() == False)
+                                                {design::table_cell($TrCategoryShow,"");}
                                             
                                         //AMOUNT
-                                        $TrAmountShow = number_format($resultarray[$i]['Amount'],2,",","");
+                                        $TrAmountShow = number_format($resultarray[$i]["Amount"],2,",","");
                                         design::table_cell($TrAmountShow,"text_align_right td_size_5");
                                         
                                         //NOTES
-                                        $TrNotesShow = $resultarray[$i]['Notes'];
-                                        design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>","text_align_center");
+                                        $TrNotesShow = $resultarray[$i]["Notes"];
+                                        if ($TrNotesShow != "" && $TrNotesShow != "None")
+                                            {
+                                                design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>","text_align_center");
+                                            }
+                                        else
+                                            {design::table_cell("","");}
                                         
                                         //DELETE
                                         echo "<td class ='text_align_center'>";
@@ -135,18 +147,19 @@ if ($recordmaxid > 0 )
         #JavaScript for notes tooltip
         echo "<script type='text/javascript'>\n";
             echo "$(window).load(function(){\n";
-                    echo "$(document).ready(function() {\n";
-                        for ($i = 0; $i <= $recordmaxid; $i++)
-                            if (isset($resultarray[$i]['ID']))
-                            {
-                                $lineid = $resultarray[$i]['ID'];
-                                if ($resultarray[$i]['Type'] == "Transfer")
-                                        {
-                                            echo "$('#tooltip_account_${lineid}').tooltip();\n";
-                                        }
-                                echo "$('#tooltip_notes_${lineid}').tooltip();\n";
-                            }
-                    echo "});\n";
+                echo "$(document).ready(function() {\n";
+                    for ($i = 0; $i <= $recordmaxid; $i++)
+                        if (isset($resultarray[$i]["ID"]))
+                        {
+                            $lineid = $resultarray[$i]["ID"];
+                            if ($resultarray[$i]["Type"] == "Transfer")
+                                {echo "$('#tooltip_account_${lineid}').tooltip();\n";}
+                            if ($resultarray[$i]["SubCategory"] != "None")
+                                {echo "$('#tooltip_category_${lineid}').tooltip();\n";}
+                            if ($resultarray[$i]["Notes"] != "" && $resultarray[$i]["Notes"] != "None" )
+                                {echo "$('#tooltip_notes_${lineid}').tooltip();\n";}
+                        }
+                echo "});\n";
             echo "});\n";
         echo "</script>\n";
     }

@@ -1,3 +1,10 @@
+Version 0.9.9
+- Categories and SubCategories management
+- Rewrite all integration with desktop to improve performance
+- DataSync now uses JSON so PHP > 5.2 is needed
+- Changed input for Payee because HTML5 Datalist isn't supported on all browser
+- Add version of JS and CSS to force recreation on new version
+
 Version 0.9.8
 - Fixed confirm on transfer insert with payees enabled
 - Order show transactions by date insted of ID

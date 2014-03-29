@@ -10,59 +10,150 @@ security::redirect_if_not_loggedin();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
-    <title>New Transaction</title>
+    <title>Transaction</title>
     <link rel="icon" href="res/favicon.ico" />
     
-    <link rel="stylesheet" type="text/css" href="res/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="style_global.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.9.9.css" />
+    <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
     
-    <script src="res/modernizr.js" type="text/javascript"></script>
-    <script src="functions.js" type="text/javascript"></script>
+    <script src="res/modernizr-2.7.1.js" type="text/javascript"></script>
+    <script src="res/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="res/typeahead.bundle-0.10.2.min.js" type="text/javascript"></script>
+    <script src="res/functions-0.9.9.js" type="text/javascript"></script>
 </head>
 
 <body>
 	<script type="text/javascript">
         test_html5();
 	</script>
-
-    <div class="container">
-        <form id="New_Transaction" class="form-new-transaction" method="post" action = "insert.php" onsubmit="return confirm_if_not_present_in_datalist('Payee','PayeeList','Do you want to add the new payee')">
-            <h3 class="text_align_center">Insert new transaction</h3>
-            <br />
-            <?php
-                $const_defaultaccountname = costant::transaction_account_default();
-                
-                design::input_date("2014-01-01");
-                design::input_status("R");
-                design::input_type("Withdrawal");
-                design::input_account($const_defaultaccountname);
-                design::input_toaccount("None");
-                if (costant::disable_payee() !== True)
-                    {
-                        design::input_payee("None");
-                    }
-                else
-                    {
-                        design::input_hidden("Payee","None");
-                    }
-                design::input_amount("0");
-                design::input_notes("Empty");
-                
-            ?>
-            <script type="text/javascript">
-            var date_today = get_today();
-            document.getElementById('Date').value=date_today;
-            enable_element ("ToAccount","Type","Transfer");
-            disable_element ("Payee","Type","Transfer");
-            </script>  
-            <!--
-                <button type="button" id="Insert" name="Insert" class="btn btn-lg btn-success btn-block" onclick="confirm_if_not_present_in_datalist ('Payee','PayeeList')">Insert</button>
-            -->
-            <button type="submit" id="Insert" name="Insert" class="btn btn-lg btn-success btn-block">Insert</button>
-            <br />
-            <br />
-        </form>
-    </div>
+    
+    <?php   
+    if (isset($_GET["TrEditNr"]))
+        {
+            $TrEditNr = $_GET["TrEditNr"];
+            $FlagNew = False;
+        }
+    else
+        {
+            $FlagNew = True;
+        }
+    
+    if($FlagNew)
+        {
+            $resultarray = array();
+            $TransactionHeaderText = "Insert new transcation";
+            $TransactionDate = "2014-01-01";
+            $TransactionStatus = costant::transaction_default_status();
+            $TransactionType = costant::transaction_default_type();
+            $TransactionAccount = costant::transaction_default_account();
+            $TransactionToAccount = "None";
+            $TransactionPayee = "";
+            $TransactionCategory = "";
+            $TransactionSubCategory = "";
+            $TransactionAmount = "0";
+            $TransactionNotes = "Empty";
+            $TransactionSubmit = "Insert transaction";
+        }
+        else
+        {
+            $resultarray = db_function::transaction_select_one($TrEditNr);
+            $TransactionHeaderText = "Edit transcation";
+            $TransactionDate = $resultarray["Date"];
+            $TransactionStatus = $resultarray["Status"];
+            $TransactionType = $resultarray["Type"];
+            $TransactionAccount = $resultarray["Account"];
+            $TransactionToAccount = $resultarray["ToAccount"];
+            $TransactionPayee = $resultarray["Payee"];
+            $TransactionCategory = $resultarray["Category"];
+            $TransactionSubCategory = $resultarray["SubCategory"];
+            $TransactionAmount = $resultarray["Amount"];
+            $TransactionNotes = $resultarray["Notes"];
+            $TransactionSubmit = "Edit transaction";
+        }
+    if (sizeof($resultarray) > 0 || $FlagNew == True)
+        {
+            echo "<div class='container'>";
+                echo "<form id='Transaction' class='form-transaction' method='post' action = 'insert.php'
+                onsubmit='return confirm_if_not_present_in_datalist(\"Payee\",\"PayeeList\",\"Do you want to add the new payee\")'>";
+    
+                    echo "<h3 class='text_align_center'>${TransactionHeaderText}</h3>";
+                    echo "<br />";
+                    
+                    design::input_date($TransactionDate);
+                    design::input_status($TransactionStatus);
+                    design::input_type($TransactionType);
+                    design::input_account($TransactionAccount);
+                    design::input_toaccount($TransactionToAccount);
+                    if (costant::disable_payee() !== True)
+                        {
+                            design::input_payee($TransactionPayee);
+                        }
+                    else
+                        {
+                            design::input_hidden("Payee","None");
+                        }
+                    if (costant::disable_category() !== True)
+                        {
+                            design::input_category($TransactionCategory);
+                            design::input_subcategory($TransactionSubCategory);
+                        }
+                    else
+                        {
+                            design::input_hidden("Category","None");
+                            design::input_hidden("SubCategory","None");
+                        }
+                    design::input_amount($TransactionAmount);
+                    design::input_notes($TransactionNotes);
+                    
+                    
+                    if ($FlagNew)
+                        {
+                            echo "<script type='text/javascript'>";
+                                echo "var date_today = get_today();";
+                                echo "document.getElementById('Date').value=date_today;";
+                            echo "</script>";  
+                        }
+                    else
+                        {
+                            design::input_hidden("TrEditedNr",$TrEditNr);
+                            echo "<script type='text/javascript'>";
+                                echo "populate_sub_category();";
+                            echo "</script>";  
+                        }
+                    echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";
+                    echo "<br />";
+                    echo "<br />";
+                echo "</form>";
+            echo "</div>";
+            
+            echo "<script type='text/javascript'>";
+                //Manager trasnfer disable field
+                echo "enable_element ('ToAccount','Type','Transfer');";
+                echo "disable_element ('Payee','Type','Transfer');";
+                //Manage default category
+                echo "$('#Payee').bind('input', set_default_category);";
+                echo "$('#Payee').bind('typeahead:selected', set_default_category);";
+                //Manage subcategory
+                echo "$('#Category').bind('input', populate_sub_category);";
+                echo "$('#Category').bind('typeahead:selected', populate_sub_category);";
+            echo "</script>";  
+        }
+    else
+        {
+            //Transaction not found
+            echo "<div class='container'>";
+                echo "<br />";
+                echo "<br />";
+                echo "<h3 class='text_align_center'>Wrong transaction ID</h3>";
+                echo "<br />";
+                echo "<br />";
+                echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Insert new' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
+                echo "<br />";
+                echo "<br />";
+            echo "</div>";
+        }
+    ?>
 </body>
 </html>
