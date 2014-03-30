@@ -8,7 +8,6 @@ function test_html5 ()
         if  (      !Modernizr.inputtypes.date
                 || !Modernizr.inputtypes.number
                 || !Modernizr.input.required
-                //|| !Modernizr.input.autocomplete  //Used but not prerequisite 
                 //|| !Modernizr.input.placeholder   //Used but not prerequisite
                 || !Modernizr.input.min
                 //|| !Modernizr.input.step          //Used but not prerequisite
@@ -127,8 +126,10 @@ function set_default_category ()
         $.getJSON("query.php?get_default_category="+PayeeName, function(json) {
             if (!jQuery.isEmptyObject(json))
             {
-                document.getElementById("Category").value = json.DefCateg;
-                document.getElementById("SubCategory").value = json.DefSubCateg;
+                if (json.DefCateg != "None")
+                    document.getElementById("Category").value = json.DefCateg;
+                if (json.DefSubCateg != "None")
+                    document.getElementById("SubCategory").value = json.DefSubCateg;
                 populate_sub_category();
             }
             else
