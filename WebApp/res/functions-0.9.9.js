@@ -143,6 +143,7 @@ function set_default_category ()
 function populate_sub_category ()
     {
         CategoryName = document.getElementById("Category").value;
+        document.getElementById("SubCategory").value = "";
         var SubCategoryList = [];
         $('#SubCategory').typeahead('destroy');
         $.getJSON("query.php?get_subcategory="+CategoryName, function(json) {
