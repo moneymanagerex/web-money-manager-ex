@@ -27,7 +27,10 @@ security::redirect_if_not_loggedin();
             </p>
             <?php
                 echo "<p>WebApp URL:</p>";
-                echo "<p><strong>".str_replace("/guide.php","",costant::current_page_url())."</strong></p>";
+                    $CurrentPage = str_replace("/guide.php","",costant::current_page_url());
+                    $CurrentPage = str_replace("https://","http://",$CurrentPage);
+                    $CurrentPage = str_replace(":443","",$CurrentPage);
+                echo "<p><strong>".$CurrentPage."</strong></p>";
                 echo "<br />";
                 echo "<p>Desktop GUID:</p>";
                 echo "<p><strong>".costant::desktop_guid()."</strong></p>";
