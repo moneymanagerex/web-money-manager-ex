@@ -30,7 +30,7 @@ require_once "functions.php";
             ?>
             <br />
             <h4> Developer: Gabriele [Gabriele-V]</h4>
-            <a href="https://sourceforge.net/projects/moneymanagerex-webapp"><h4> Sourceforge WebPage</h4></a>
+            <a href="https://github.com/moneymanagerex/web-money-manager-ex"><h4> GitHub WebPage</h4></a>
             <br />
             <p>
                 Used components:

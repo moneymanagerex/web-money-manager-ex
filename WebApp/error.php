@@ -29,7 +29,7 @@ require_once "functions.php";
             ?>
             <br />
             <h4> Please contact developer Gabriele [Gabriele-V]</h4>
-            <a href="https://sourceforge.net/projects/moneymanagerex-webapp"><h4> on Sourceforge WebPage</h4></a>
+            <a href="https://github.com/moneymanagerex/web-money-manager-ex"><h4> on GitHub WebPage</h4></a>
             <br />
             <br />
         </div>
