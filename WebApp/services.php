@@ -61,7 +61,8 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
         if (isset($_GET["download_transaction"]))
             {
                 $TransactionsArr = db_function::transaction_select_all_order_by_date();
-                echo (json_encode($TransactionsArr[0]));     
+                if( !empty($TransactionsArr) )
+                    echo (json_encode($TransactionsArr[0]));     
             }
         
         #Delete transaction group
