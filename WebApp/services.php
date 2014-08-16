@@ -63,7 +63,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
             {
                 $TransactionsArr = db_function::transaction_select_all_order_by_date();
                 if( !empty($TransactionsArr) )
-                    echo (json_encode($TransactionsArr[0]));     
+                    echo (json_encode($TransactionsArr[0],JSON_UNESCAPED_UNICODE));     
             }
         
         #Delete transaction group
