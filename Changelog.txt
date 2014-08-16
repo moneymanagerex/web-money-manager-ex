@@ -1,3 +1,7 @@
+Version 1.0.0
+- Support wide characters
+- PHP > 5.4 is needed
+
 Version 0.9.9
 - Categories and SubCategories management
 - Rewrite all integration with desktop to improve performance

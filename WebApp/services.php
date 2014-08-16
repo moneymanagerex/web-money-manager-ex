@@ -4,6 +4,7 @@ require_once "functions.php";
 
 $operation_succeded = "Operation has succeeded";
 $wrong_guid = "Wrong GUID";
+header("Content-Type: text/plain; charset=utf-8");
 
 if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
     {   

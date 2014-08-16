@@ -8,7 +8,7 @@ All transaction will be in fact downloaded at first startup of MoneyManagerEx de
 <h4>Requirements server side</h4>
 
 <ul>
-	<li>Webserver with PHP &gt; 5.2 (tested on Apache and IIS)</li>
+	<li>Webserver with PHP &gt; 5.4 (tested on Apache and IIS)</li>
 	<li>PDO_SQLite extension (enabled by default on PHP &gt; 5.2)</li>
 	<li>Full rights on the WebApp subfolder</li>
 </ul>
