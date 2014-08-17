@@ -3,6 +3,8 @@ require_once "functions.php";
 session_start();
 security::redirect_if_not_loggedin();
 
+$Guid = costant::desktop_guid();
+
 if (isset($_GET["DeleteAttach"]))
     {
         attachments::delete_attachment_by_name($_GET["DeleteAttach"]);
@@ -20,7 +22,7 @@ if (isset($_FILES['UploadedAttachments']))
     
 if (isset($_GET["AttachmentsTable"]))
     {
-        $Attachments = attachments::get_attachments_filename_array($_GET["AttachmentsTable"]);
+        $Attachments = attachments::get_attachments_filename_array($_GET["AttachmentsTable"],true);
         echo "<table class = 'table'>";
             echo "<tbody>";
                 for ($i = 0; $i < sizeof($Attachments); $i++)
@@ -28,8 +30,10 @@ if (isset($_GET["AttachmentsTable"]))
                     echo "<tr>";
                         $File = $Attachments[$i];
                         design::table_cell(substr($File,strpos($File,"Attach"),strlen($File)),"");
-                        design::table_cell("<a href='#' onclick='attachment_delete(\"${File}\");return false;'><span class='glyphicon glyphicon-download-alt'> </span> Open</a>","text_align_right");
-                        design::table_cell("<a href='#' onclick='attachment_delete(\"${File}\");return false;'><span class='glyphicon glyphicon-remove'> </span> Delete</a>","text_align_right");
+                        design::table_cell("<a href='services.php?guid=${Guid}&download_attachments_by_name=${File}'>
+                            <span class='glyphicon glyphicon-download-alt'> </span> Open</a>","text_align_right");
+                        design::table_cell("<a href='#' onclick='attachment_delete(\"${File}\");return false;'>
+                            <span class='glyphicon glyphicon-remove'> </span> Delete</a>","text_align_right");
                     echo "</tr>";
                 }
             echo "</tbody>";

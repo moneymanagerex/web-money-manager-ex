@@ -66,6 +66,46 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                     echo (json_encode($TransactionsArr[0],JSON_UNESCAPED_UNICODE));     
             }
         
+        #Download Attachments
+        if (isset($_GET["download_attachments"]))
+            {
+                $AttachmentsArr = attachments::get_attachments_filename_array((int)$_GET["download_attachments"],false);
+                if ( !empty ($AttachmentsArr) )
+                    {
+                        $FullPath = costant::attachments_folder()."/".$AttachmentsArr[0];
+                        header("Content-Type:");
+                        header("Cache-Control: public");
+                        header("Content-Description: File Transfer");
+                        header("Content-Disposition: attachment; filename= ".$AttachmentsArr[0]);
+                        header("Content-Transfer-Encoding: binary");
+                        readfile($FullPath);
+                    }     
+            }
+        
+        #Download Attachments by name
+        if (isset($_GET["download_attachments_by_name"]))
+            {
+                $AttachmentFileName = $_GET["download_attachments_by_name"];
+                if ( !empty ($AttachmentFileName) )
+                    {
+                        $FullPath = costant::attachments_folder()."/".$AttachmentFileName;
+                        header("Content-Type:");
+                        header("Cache-Control: public");
+                        header("Content-Description: File Transfer");
+                        header("Content-Disposition: attachment; filename= ".$AttachmentFileName);
+                        header("Content-Transfer-Encoding: binary");
+                        readfile($FullPath);
+                    }     
+            }
+        
+        #Delete Attachments
+        if (isset($_GET["delete_attachment"]))
+            {
+                $AttachmentFileName = $_GET["delete_attachment"];
+                if (!empty ($AttachmentFileName))
+                    {attachments::delete_attachment_by_name($AttachmentFileName);}
+            }
+        
         #Delete transaction group
         if (isset($_GET["delete_group"]))
             {

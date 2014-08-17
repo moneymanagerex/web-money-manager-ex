@@ -1055,7 +1055,7 @@ class various
 ##########################
 class attachments
 {
-    function get_attachments_filename_array($TrID)
+    function get_attachments_filename_array($TrID,$bIncludeZero)
         {
             $i=0;
             $AttachmentsArray = array();
@@ -1064,11 +1064,16 @@ class attachments
                 {
                     while (false !== ($entry = readdir($handle)))
                     {
-                        if (strpos($entry,"Transaction_".$TrID) == 0 && strpos($entry,"Transaction_".$TrID) !== false)
-                        {
+                        if
+                        (
+                            (strpos($entry,"Transaction_".$TrID) == 0 && strpos($entry,"Transaction_".$TrID) !== false)
+                            ||
+                            ($bIncludeZero && strpos($entry,"Transaction_0") == 0 && strpos($entry,"Transaction_0") !== false)
+                        )
+                            {
                             $AttachmentsArray[$i] = $entry;
                             $i++;
-                        }
+                            }
                     }
                     closedir($handle);
                 }
@@ -1150,7 +1155,7 @@ class attachments
     function delete_attachment_by_name($FileName)
         {
             $FullPath = costant::attachments_folder()."/".$FileName;
-            if (file_exists($FullPath))
+            if (!empty($FileName) && file_exists($FullPath))
                 unlink($FullPath);
         }
 }    
