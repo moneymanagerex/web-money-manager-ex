@@ -152,7 +152,7 @@ function set_default_category ()
                     document.getElementById("Category").value = json.DefCateg;
                 if (json.DefSubCateg != "None")
                     document.getElementById("SubCategory").value = json.DefSubCateg;
-                populate_sub_category();
+                populate_sub_category(false);
             }
             else
             {
@@ -162,10 +162,11 @@ function set_default_category ()
         });
     }
 
-function populate_sub_category ()
+function populate_sub_category (bCleanInput)
     {
         CategoryName = document.getElementById("Category").value;
-        document.getElementById("SubCategory").value = "";
+        if(bCleanInput == true || typeof bCleanInput == "object")
+            {document.getElementById("SubCategory").value = "";}
         var SubCategoryList = [];
         $('#SubCategory').typeahead('destroy');
         $.getJSON("query.php?get_subcategory="+CategoryName, function(json) {
@@ -184,7 +185,7 @@ function attachment_RefreshTable(TrID)
         document.getElementById('attachments_table').innerHTML = get_php_page('attachments.php?AttachmentsTable='+TrID);
     }
  
-function attachment_uploadFile()
+function attachment_uploadFile(TrId)
     {
         var fd = new FormData();
         var count = document.getElementById('fileToUpload').files.length;
@@ -193,7 +194,9 @@ function attachment_uploadFile()
                 var file = document.getElementById('fileToUpload').files[index];
                 fd.append('UploadedAttachments', file);
             }
+        fd.append('Attachment_TrId',TrId);
         var xhr = new XMLHttpRequest();
+        xhr.TrId = TrId;
         xhr.addEventListener("load", attachment_uploadComplete, false);
         xhr.addEventListener("error", attachment_uploadFailed, false);
         xhr.addEventListener("abort", attachment_uploadCanceled, false);
@@ -203,7 +206,7 @@ function attachment_uploadFile()
  
 function attachment_uploadComplete(evt)
     {
-        attachment_RefreshTable(0);
+        attachment_RefreshTable(evt.target.TrId);
     }
  
 function attachment_uploadFailed(evt)

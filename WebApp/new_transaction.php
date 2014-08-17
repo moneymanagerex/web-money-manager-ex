@@ -112,7 +112,7 @@ security::redirect_if_not_loggedin();
                     
                     echo "<div class='form-group'>";
                         echo "<label for='fileToUpload'>Take a picture or upload attachments</label><br />";
-                        echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile();' />";
+                        echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile(${TrEditNr});' />";
                         echo "<span class='help-block'></span>";
                     echo "</div>";
                     
@@ -131,7 +131,7 @@ security::redirect_if_not_loggedin();
                         {
                             design::input_hidden("TrEditedNr",$TrEditNr);
                             echo "<script type='text/javascript'>";
-                                echo "populate_sub_category();";
+                                echo "populate_sub_category(false);";
                             echo "</script>";  
                         }
                     echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";

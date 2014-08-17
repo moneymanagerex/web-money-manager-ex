@@ -152,7 +152,7 @@ class design
                 echo "];";
                 echo "$('#Category').typeahead({hint: true, highlight: true, minLength: 1},{name: 'CategoryList', displayKey: 'value',source: substringMatcher(CategoryList)});";
                 if ($TrCategoryDefault != "")
-                    {echo "document.getElementById('Category').value='${TrCategoryDefault}'";}
+                    {echo "document.getElementById('Category').value='${TrCategoryDefault}';";}
             echo "</script>";
         }
         
@@ -162,20 +162,13 @@ class design
         {
             echo "<div class='form-group'>";
                 echo "<label for='SubCategory'>SubCategory</label>";
-                if ($TrSubCategoryDefault == "")
-                    {
-                        echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
-                    }
-                else
-                    {
-                        echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' value='${TrSubCategoryDefault}' required />";
-                    }
+                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
                 echo "<span class='help-block'></span>";
             echo "</div>";
             
             echo "<script type='text/javascript'>";
                 if ($TrSubCategoryDefault != "")
-                {echo "document.getElementById('SubCategory').value='${TrSubCategoryDefault}'";}
+                    {echo "document.getElementById('SubCategory').value='${TrSubCategoryDefault}';";}
             echo "</script>";
         }
         
