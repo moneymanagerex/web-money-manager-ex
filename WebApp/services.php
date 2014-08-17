@@ -72,6 +72,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                 $deletegroup_string = $_GET["delete_group"];
                 $deletegroup_array = explode(",",$deletegroup_string);
                 db_function::transaction_delete_group($deletegroup_array);
+                attachments::delete_group($deletegroup_array);
                 echo $operation_succeded;
             }
     }

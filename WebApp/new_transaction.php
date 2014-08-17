@@ -13,15 +13,15 @@ security::redirect_if_not_loggedin();
     <title>Transaction</title>
     <link rel="icon" href="res/favicon.ico" />
     
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
     <link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.9.9.css" />
     <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
     
-    <script src="res/modernizr-2.7.1.js" type="text/javascript"></script>
-    <script src="res/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="res/modernizr-2.8.3.js" type="text/javascript"></script>
+    <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="res/typeahead.bundle-0.10.2.min.js" type="text/javascript"></script>
-    <script src="res/functions-0.9.9.js" type="text/javascript"></script>
+    <script src="res/functions-1.0.1.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -29,7 +29,9 @@ security::redirect_if_not_loggedin();
         test_html5();
 	</script>
     
-    <?php   
+    <?php
+    attachments::delete_zero();
+       
     if (isset($_GET["TrEditNr"]))
         {
             $TrEditNr = $_GET["TrEditNr"];
@@ -37,6 +39,7 @@ security::redirect_if_not_loggedin();
         }
     else
         {
+            $TrEditNr = 0;
             $FlagNew = True;
         }
     
@@ -107,6 +110,15 @@ security::redirect_if_not_loggedin();
                     design::input_amount($TransactionAmount);
                     design::input_notes($TransactionNotes);
                     
+                    echo "<div class='form-group'>";
+                        echo "<label for='fileToUpload'>Take a picture or upload attachments</label><br />";
+                        echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile();' />";
+                        echo "<span class='help-block'></span>";
+                    echo "</div>";
+                    
+                    echo "<div class='table-responsive' id='attachments_table'>";
+                    echo "</div>";
+                    echo "<br />";  
                     
                     if ($FlagNew)
                         {
@@ -129,6 +141,8 @@ security::redirect_if_not_loggedin();
             echo "</div>";
             
             echo "<script type='text/javascript'>";
+                //Refresh Attachments table
+                echo "attachment_RefreshTable(${TrEditNr});";
                 //Manager trasnfer disable field
                 echo "enable_element ('ToAccount','Type','Transfer');";
                 echo "disable_element ('Payee','Type','Transfer');";

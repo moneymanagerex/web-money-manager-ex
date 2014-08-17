@@ -78,12 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <title>Money Manager EX</title>
         <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
         
-        <script src="res/functions-0.9.9.js" type="text/javascript"></script>
-        <script src="res/jquery-2.1.0.min.js" type="text/javascript"></script>
+        <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+        <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
         
     </head>
     

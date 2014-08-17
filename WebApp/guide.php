@@ -13,8 +13,8 @@ security::redirect_if_not_loggedin();
         <title>Money Manager EX</title>
         <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
     </head>
     
@@ -28,8 +28,6 @@ security::redirect_if_not_loggedin();
             <?php
                 echo "<p>WebApp URL:</p>";
                     $CurrentPage = str_replace("/guide.php","",costant::current_page_url());
-                    $CurrentPage = str_replace("https://","http://",$CurrentPage);
-                    $CurrentPage = str_replace(":443","",$CurrentPage);
                 echo "<p><strong>".$CurrentPage."</strong></p>";
                 echo "<br />";
                 echo "<p>Desktop GUID:</p>";
