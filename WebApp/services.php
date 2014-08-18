@@ -63,29 +63,16 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
             {
                 $TransactionsArr = db_function::transaction_select_all_order_by_date();
                 if( !empty($TransactionsArr) )
-                    echo (json_encode($TransactionsArr[0],JSON_UNESCAPED_UNICODE));     
-            }
-        
-        #Download Attachments
-        if (isset($_GET["download_attachments"]))
-            {
-                $AttachmentsArr = attachments::get_attachments_filename_array((int)$_GET["download_attachments"],false);
-                if ( !empty ($AttachmentsArr) )
                     {
-                        $FullPath = costant::attachments_folder()."/".$AttachmentsArr[0];
-                        header("Content-Type:");
-                        header("Cache-Control: public");
-                        header("Content-Description: File Transfer");
-                        header("Content-Disposition: attachment; filename= ".$AttachmentsArr[0]);
-                        header("Content-Transfer-Encoding: binary");
-                        readfile($FullPath);
+                        $TransactionsArr[0]['Attachments'] = implode(";",attachments::get_attachments_filename_array((int)$TransactionsArr[0]['ID']));
+                        echo (json_encode($TransactionsArr[0],JSON_UNESCAPED_UNICODE));
                     }     
             }
         
         #Download Attachments by name
-        if (isset($_GET["download_attachments_by_name"]))
+        if (isset($_GET["download_attachment"]))
             {
-                $AttachmentFileName = $_GET["download_attachments_by_name"];
+                $AttachmentFileName = $_GET["download_attachment"];
                 if ( !empty ($AttachmentFileName) )
                     {
                         $FullPath = costant::attachments_folder()."/".$AttachmentFileName;

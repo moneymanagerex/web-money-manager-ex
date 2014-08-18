@@ -1082,7 +1082,7 @@ class attachments
                     {
                         if (strpos($entry,"Transaction_".$TrID) == 0 && strpos($entry,"Transaction_".$TrID) !== false)
                         {
-                            $AttachNumb = substr($entry,strpos($entry,"Attach")+6,strpos($entry,".")-1);
+                            $AttachNumb = substr($entry,strpos($entry,"Attach")+6,strpos($entry,".")-(strpos($entry,"Attach")+6));
                             if ($AttachNumb > $LastAttachNum)
                                 $LastAttachNum = $AttachNumb;
                         }
