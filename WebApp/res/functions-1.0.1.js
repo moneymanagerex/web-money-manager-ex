@@ -13,7 +13,7 @@ function test_html5 ()
                 //|| !Modernizr.input.step          //Used but not prerequisite
             )
             {
-                alert("Seems that the browser doesn't fully supports HTML5" + '\n' + '\n' + "Please make attention because it doesn't validate filed!");
+                alert("Seems that the browser doesn't fully supports HTML5" + '\n' + '\n' + "Please make attention because it doesn't validate fielda!");
                 //close();
             }
     }

@@ -64,8 +64,12 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                 $TransactionsArr = db_function::transaction_select_all_order_by_date();
                 if( !empty($TransactionsArr) )
                     {
-                        $TransactionsArr[0]['Attachments'] = implode(";",attachments::get_attachments_filename_array((int)$TransactionsArr[0]['ID']));
-                        echo (json_encode($TransactionsArr[0],JSON_UNESCAPED_UNICODE));
+                        for ($i = 0; $i < sizeof($TransactionsArr); $i++)
+                        {
+                            $TransactionsArr[$i]['Attachments'] =
+                            implode(";",attachments::get_attachments_filename_array((int)$TransactionsArr[$i]['ID']));
+                        }
+                        echo (json_encode($TransactionsArr,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_FORCE_OBJECT));
                     }     
             }
         
