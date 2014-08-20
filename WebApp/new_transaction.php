@@ -114,10 +114,10 @@ security::redirect_if_not_loggedin();
                         echo "<label for='fileToUpload'>Take a picture or upload attachments</label><br />";
                         echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile(${TrEditNr});' />";
                         echo "<span class='help-block'></span>";
-                    echo "</div>";
+                    echo "</div>\n";
                     
                     echo "<div class='table-responsive' id='attachments_table'>";
-                    echo "</div>";
+                    echo "</div>\n";
                     echo "<br />";  
                     
                     if ($FlagNew)
@@ -138,7 +138,7 @@ security::redirect_if_not_loggedin();
                     echo "<br />";
                     echo "<br />";
                 echo "</form>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
                 //Refresh Attachments table
@@ -166,7 +166,7 @@ security::redirect_if_not_loggedin();
                 echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Insert new' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
                 echo "<br />";
                 echo "<br />";
-            echo "</div>";
+            echo "</div>\n";
         }
     ?>
 </body>

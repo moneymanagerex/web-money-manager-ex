@@ -16,7 +16,7 @@ class design
                 echo "<label for='Date'>Date</label>";
                 echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '${TrDateDefault}'/>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
                 
         }
         
@@ -39,7 +39,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";        
+            echo "</div>\n";        
         }
     
                 
@@ -60,7 +60,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";        
+            echo "</div>\n";        
         }
                 
         
@@ -83,7 +83,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";              
+            echo "</div>\n";              
         }
     
     
@@ -105,7 +105,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";              
+            echo "</div>\n";              
         }
         
         
@@ -119,13 +119,10 @@ class design
                 echo "<label for='Payee'>Payee</label>";
                 echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' autocomplete = 'off' required />";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
-                echo "var PayeeList = [";
-                    for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
-                        {echo "'${PayeeArrayDesc[$i]}',";}
-                echo "];";
+                echo "var PayeeList = " . json_encode($PayeeArrayDesc) . ";";
                 echo "$('#Payee').typeahead({hint: true, highlight: true, minLength: 1},{name: 'PayeeList', displayKey: 'value',source: substringMatcher(PayeeList)});";
                 if ($TrPayeeDefault != "")
                     {echo "document.getElementById('Payee').value='${TrPayeeDefault}'";}
@@ -143,13 +140,10 @@ class design
                 echo "<label for='Category'>Category</label>";
                 echo "<input id='Category' type='text' name='Category' class='form-control' placeholder='Choose a category' autocomplete = 'off' required />";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
-                echo "var CategoryList = [";
-                    for ($i = 0; $i < sizeof($CategoryArrayDesc); $i++)
-                        {echo "'${CategoryArrayDesc[$i]}',";}
-                echo "];";
+                echo "var CategoryList = " . json_encode($CategoryArrayDesc) . ";";
                 echo "$('#Category').typeahead({hint: true, highlight: true, minLength: 1},{name: 'CategoryList', displayKey: 'value',source: substringMatcher(CategoryList)});";
                 if ($TrCategoryDefault != "")
                     {echo "document.getElementById('Category').value='${TrCategoryDefault}';";}
@@ -164,7 +158,7 @@ class design
                 echo "<label for='SubCategory'>SubCategory</label>";
                 echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
                 if ($TrSubCategoryDefault != "")
@@ -187,7 +181,7 @@ class design
                         echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='New transaction amount' min='0.01' step ='0.01' required />";
                     }
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
                 
         }
     
@@ -206,7 +200,7 @@ class design
                         echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'></textarea>";
                     }
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
                 
         }
         
@@ -244,7 +238,7 @@ class design
                             } 
                     }
                 echo "<span class='help-block'></span>";
-            echo "</div>";    
+            echo "</div>\n";    
         }
         
     //Create seting checkbox element        
@@ -257,7 +251,7 @@ class design
                     else
                         {echo "<input id='${VarName}' type='checkbox' name='${VarName}' value='True'>${VarDescription}";}
                 echo "</label>";
-            echo "</div>";        
+            echo "</div>\n";        
         }
 
 
@@ -273,7 +267,7 @@ class design
                     elseif ($Required == False)
                         {echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' />";}
                 echo "<span class='help-block'></span>";
-            echo "</div>";  
+            echo "</div>\n";  
         }
         
         
@@ -296,7 +290,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";              
+            echo "</div>\n";              
         }
         
         

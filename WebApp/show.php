@@ -136,7 +136,7 @@ if ($recordmaxid > 0 )
                         }
                     echo "</tbody>";
                 echo "</table>";
-            echo "</div>";
+            echo "</div>\n";
                 echo "<br />";
                 echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-success btn-block'>Delete selected</button>";
                 echo "<br />";
@@ -147,7 +147,7 @@ if ($recordmaxid > 0 )
                 echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
                 echo "<br />";
                 echo "<br />";
-        echo "</div>";
+        echo "</div>\n";
         
         #JavaScript for notes tooltip
         echo "<script type='text/javascript'>\n";
@@ -181,7 +181,7 @@ else
             echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
             echo "<br />";
             echo "<br />";
-        echo "</div>";
+        echo "</div>\n";
     }
 ?>
 </body>
