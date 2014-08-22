@@ -13,8 +13,8 @@ security::redirect_if_not_loggedin();
         <title>Insert Transaction</title>
         <link rel="icon" href="res/favicon.ico" />
         
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
+        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
     </head>
     
@@ -62,8 +62,11 @@ security::redirect_if_not_loggedin();
             }
         else
             {
-                db_function::transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrCategory, $TrSubCategory, $TrAmount, $TrNotes);
+                $TrEditedNr = db_function::transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrCategory, $TrSubCategory, $TrAmount, $TrNotes);
             }
+        
+        attachments::rename_zero($TrEditedNr);
+        
         ?>
         
         <div class="container text_align_center">

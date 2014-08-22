@@ -16,7 +16,7 @@ class design
                 echo "<label for='Date'>Date</label>";
                 echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '${TrDateDefault}'/>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
                 
         }
         
@@ -39,7 +39,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";        
+            echo "</div>\n";        
         }
     
                 
@@ -60,7 +60,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";        
+            echo "</div>\n";        
         }
                 
         
@@ -83,7 +83,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";              
+            echo "</div>\n";              
         }
     
     
@@ -105,7 +105,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";              
+            echo "</div>\n";              
         }
         
         
@@ -119,13 +119,10 @@ class design
                 echo "<label for='Payee'>Payee</label>";
                 echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' autocomplete = 'off' required />";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
-                echo "var PayeeList = [";
-                    for ($i = 0; $i < sizeof($PayeeArrayDesc); $i++)
-                        {echo "'${PayeeArrayDesc[$i]}',";}
-                echo "];";
+                echo "var PayeeList = " . json_encode($PayeeArrayDesc) . ";";
                 echo "$('#Payee').typeahead({hint: true, highlight: true, minLength: 1},{name: 'PayeeList', displayKey: 'value',source: substringMatcher(PayeeList)});";
                 if ($TrPayeeDefault != "")
                     {echo "document.getElementById('Payee').value='${TrPayeeDefault}'";}
@@ -143,16 +140,13 @@ class design
                 echo "<label for='Category'>Category</label>";
                 echo "<input id='Category' type='text' name='Category' class='form-control' placeholder='Choose a category' autocomplete = 'off' required />";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
-                echo "var CategoryList = [";
-                    for ($i = 0; $i < sizeof($CategoryArrayDesc); $i++)
-                        {echo "'${CategoryArrayDesc[$i]}',";}
-                echo "];";
+                echo "var CategoryList = " . json_encode($CategoryArrayDesc) . ";";
                 echo "$('#Category').typeahead({hint: true, highlight: true, minLength: 1},{name: 'CategoryList', displayKey: 'value',source: substringMatcher(CategoryList)});";
                 if ($TrCategoryDefault != "")
-                    {echo "document.getElementById('Category').value='${TrCategoryDefault}'";}
+                    {echo "document.getElementById('Category').value='${TrCategoryDefault}';";}
             echo "</script>";
         }
         
@@ -162,20 +156,13 @@ class design
         {
             echo "<div class='form-group'>";
                 echo "<label for='SubCategory'>SubCategory</label>";
-                if ($TrSubCategoryDefault == "")
-                    {
-                        echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
-                    }
-                else
-                    {
-                        echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' value='${TrSubCategoryDefault}' required />";
-                    }
+                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
             
             echo "<script type='text/javascript'>";
                 if ($TrSubCategoryDefault != "")
-                {echo "document.getElementById('SubCategory').value='${TrSubCategoryDefault}'";}
+                    {echo "document.getElementById('SubCategory').value='${TrSubCategoryDefault}';";}
             echo "</script>";
         }
         
@@ -194,7 +181,7 @@ class design
                         echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='New transaction amount' min='0.01' step ='0.01' required />";
                     }
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
                 
         }
     
@@ -213,7 +200,7 @@ class design
                         echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'></textarea>";
                     }
                 echo "<span class='help-block'></span>";
-            echo "</div>";
+            echo "</div>\n";
                 
         }
         
@@ -251,7 +238,7 @@ class design
                             } 
                     }
                 echo "<span class='help-block'></span>";
-            echo "</div>";    
+            echo "</div>\n";    
         }
         
     //Create seting checkbox element        
@@ -264,7 +251,7 @@ class design
                     else
                         {echo "<input id='${VarName}' type='checkbox' name='${VarName}' value='True'>${VarDescription}";}
                 echo "</label>";
-            echo "</div>";        
+            echo "</div>\n";        
         }
 
 
@@ -280,7 +267,7 @@ class design
                     elseif ($Required == False)
                         {echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' />";}
                 echo "<span class='help-block'></span>";
-            echo "</div>";  
+            echo "</div>\n";  
         }
         
         
@@ -303,7 +290,7 @@ class design
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
-            echo "</div>";              
+            echo "</div>\n";              
         }
         
         
@@ -412,6 +399,7 @@ class db_function
     // Insert transaction 
     function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrCategory, $TrSubCategory, $TrAmount, $TrNotes)
         {
+            $ID = 0;
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
@@ -429,7 +417,9 @@ class db_function
                 $statement->bindParam(":TrNotes",$TrNotes);
             $statement-> execute ();
             
+            $ID = $db->lastInsertId();
             $db = null;
+            return $ID;
         }
     
     
@@ -903,6 +893,9 @@ class db_upgrade
                             case "0.9.9":
                                 db_upgrade::upgrade_version("1.0.0");
                                 break;
+                            case "1.0.0":
+                                db_upgrade::upgrade_version("1.0.1");
+                                break;
                             case $app_version;
                                 break;
                             default:
@@ -1000,7 +993,7 @@ class various
 {
     function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
-            echo "<script src='res/functions-0.9.9.js' type='text/javascript'></script>";
+            echo "<script src='res/functions-1.0.1.js' type='text/javascript'></script>";
             echo "<script language='javascript'>";
             if ($AlertRedirect <> "None")
                 {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
@@ -1045,6 +1038,118 @@ class various
 
 
 ##########################
+#  Attachments function  #
+##########################
+class attachments
+{
+    function get_attachments_filename_array($TrID,$bIncludeZero)
+        {
+            $i=0;
+            $AttachmentsArray = array();
+
+            if ($handle = opendir(costant::attachments_folder()))
+                {
+                    while (false !== ($entry = readdir($handle)))
+                    {
+                        if
+                        (
+                            (strpos($entry,"Transaction_".$TrID) == 0 && strpos($entry,"Transaction_".$TrID) !== false)
+                            ||
+                            ($bIncludeZero && strpos($entry,"Transaction_0") == 0 && strpos($entry,"Transaction_0") !== false)
+                        )
+                            {
+                            $AttachmentsArray[$i] = $entry;
+                            $i++;
+                            }
+                    }
+                    closedir($handle);
+                }
+            return $AttachmentsArray;
+        }
+  
+    function get_number_of_attachments($TrID)
+        {
+            $LastAttachNum = 0;
+            if ($handle = opendir(costant::attachments_folder()))
+                {
+                    while (false !== ($entry = readdir($handle)))
+                    {
+                        if (strpos($entry,"Transaction_".$TrID) == 0 && strpos($entry,"Transaction_".$TrID) !== false)
+                        {
+                            $AttachNumb = substr($entry,strpos($entry,"Attach")+6,strpos($entry,".")-(strpos($entry,"Attach")+6));
+                            if ($AttachNumb > $LastAttachNum)
+                                $LastAttachNum = $AttachNumb;
+                        }
+                    }
+                    closedir($handle);
+                }
+            return $LastAttachNum;
+        }
+    
+    function delete_zero()
+        {
+            if ($handle = opendir(costant::attachments_folder()))
+                {
+                    while (false !== ($entry = readdir($handle)))
+                    {
+                        if (strpos($entry,"Transaction_0") == 0 && strpos($entry,"Transaction_0") !== false)
+                        {
+                            unlink(costant::attachments_folder()."/".$entry);
+                        }
+                    }
+                    closedir($handle);
+                }
+            return true;
+        }
+        
+    function rename_zero($TrID)
+        {
+            if ($handle = opendir(costant::attachments_folder()))
+                {
+                    while (false !== ($entry = readdir($handle)))
+                    {
+                        if (strpos($entry,"Transaction_0") == 0 && strpos($entry,"Transaction_0") !== false)
+                        {
+                            $NewFileName = str_replace("Transaction_0","Transaction_".$TrID,$entry);
+                            rename(costant::attachments_folder()."/".$entry,costant::attachments_folder()."/".$NewFileName);
+                        }
+                    }
+                    closedir($handle);
+                }
+            return true;
+        }
+    
+    function delete_group($TrID_Array)
+        {
+            $N = count($TrID_Array);
+            if ($handle = opendir(costant::attachments_folder()))
+            {
+                while (false !== ($entry = readdir($handle)))
+                {
+                    for($i=0; $i < $N; $i++)
+                    {
+                        $TrID = $TrID_Array[$i];
+                        if (strpos($entry,"Transaction_".$TrID) == 0 && strpos($entry,"Transaction_".$TrID) !== false)
+                        {
+                            unlink(costant::attachments_folder()."/".$entry);
+                        }
+                    }
+                }
+                closedir($handle);
+            }
+            return true;
+        }
+    function delete_attachment_by_name($FileName)
+        {
+            $FullPath = costant::attachments_folder()."/".$FileName;
+            if (!empty($FileName) && file_exists($FullPath))
+                unlink($FullPath);
+        }
+}    
+
+
+   
+##########################
 ### Constant  function ###
 ##########################
 class costant
@@ -1078,7 +1183,11 @@ class costant
                 global $tr_default_type;
                 return $tr_default_type;
             }
-        
+        function attachments_folder ()
+            {
+                global $attachments_folder;
+                return $attachments_folder;
+            }
         function database_path ()
             {
                 global $dbpath;
@@ -1133,12 +1242,10 @@ class costant
         function current_page_url ()
             {
              $pageURL = 'http';
-             #if ($_SERVER["HTTPS"] == "on")
-             #    {
-             #       $pageURL .= "s";
-             #    }
+             if ($_SERVER["HTTPS"] == "on")
+                $pageURL .= "s";
              $pageURL .= "://";
-             if ($_SERVER["SERVER_PORT"] != "80")
+             if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443")
                 {$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
              else
                 {$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];}

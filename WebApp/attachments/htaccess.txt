@@ -1,0 +1,10 @@
+#######################################
+## htaccess for block important file ##
+#######################################
+
+# Block folder list
+Options All -Indexes
+
+# Block entire folder
+Order deny,allow
+Deny from all

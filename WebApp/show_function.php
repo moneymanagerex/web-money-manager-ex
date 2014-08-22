@@ -13,6 +13,7 @@ if(isset($_POST["TrModify"]))
             {
                 $TrDeleteArr = $_POST["TrDelete"];
                 db_function::transaction_delete_group ($TrDeleteArr);
+                attachments::delete_group($TrDeleteArr);
                 
                 header("Location: show.php");
             }

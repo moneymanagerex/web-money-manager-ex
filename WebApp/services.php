@@ -63,7 +63,38 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
             {
                 $TransactionsArr = db_function::transaction_select_all_order_by_date();
                 if( !empty($TransactionsArr) )
-                    echo (json_encode($TransactionsArr[0],JSON_UNESCAPED_UNICODE));     
+                    {
+                        for ($i = 0; $i < sizeof($TransactionsArr); $i++)
+                        {
+                            $TransactionsArr[$i]['Attachments'] =
+                            implode(";",attachments::get_attachments_filename_array((int)$TransactionsArr[$i]['ID']));
+                        }
+                        echo (json_encode($TransactionsArr,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_FORCE_OBJECT));
+                    }     
+            }
+        
+        #Download Attachments by name
+        if (isset($_GET["download_attachment"]))
+            {
+                $AttachmentFileName = $_GET["download_attachment"];
+                if ( !empty ($AttachmentFileName) )
+                    {
+                        $FullPath = costant::attachments_folder()."/".$AttachmentFileName;
+                        header("Content-Type:");
+                        header("Cache-Control: public");
+                        header("Content-Description: File Transfer");
+                        header("Content-Disposition: attachment; filename= ".$AttachmentFileName);
+                        header("Content-Transfer-Encoding: binary");
+                        readfile($FullPath);
+                    }     
+            }
+        
+        #Delete Attachments
+        if (isset($_GET["delete_attachment"]))
+            {
+                $AttachmentFileName = $_GET["delete_attachment"];
+                if (!empty ($AttachmentFileName))
+                    {attachments::delete_attachment_by_name($AttachmentFileName);}
             }
         
         #Delete transaction group
@@ -72,6 +103,7 @@ if (isset($_GET["guid"]) && $_GET["guid"] == costant::desktop_guid())
                 $deletegroup_string = $_GET["delete_group"];
                 $deletegroup_array = explode(",",$deletegroup_string);
                 db_function::transaction_delete_group($deletegroup_array);
+                attachments::delete_group($deletegroup_array);
                 echo $operation_succeded;
             }
     }

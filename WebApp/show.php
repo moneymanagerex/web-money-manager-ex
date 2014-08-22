@@ -13,13 +13,13 @@ security::redirect_if_not_loggedin();
     <title>Show Transaction</title>
     <link rel="icon" href="res/favicon.ico" />
     
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.1.1.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.1.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
     <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
 
-    <script src="res/jquery-2.1.0.min.js" type="text/javascript"></script>
-    <script src="res/bootstrap-3.1.1.min.js" type="text/javascript"></script>
-    <script src="res/functions-0.9.9.js" type="text/javascript"></script>
+    <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="res/bootstrap-3.2.0.min.js" type="text/javascript"></script>
+    <script src="res/functions-1.0.1.js" type="text/javascript"></script>
 
 </head>
 
@@ -111,7 +111,12 @@ if ($recordmaxid > 0 )
                                         $TrNotesShow = $resultarray[$i]["Notes"];
                                         if ($TrNotesShow != "" && $TrNotesShow != "None")
                                             {
-                                                design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>","text_align_center");
+                                                if (attachments::get_number_of_attachments($lineid) > 0)
+                                                    design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>
+                                                        <span class='glyphicon glyphicon-paperclip'></span>","text_align_center");
+                                                else
+                                                    design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>",
+                                                        "text_align_center");
                                             }
                                         else
                                             {design::table_cell("","");}
@@ -131,7 +136,7 @@ if ($recordmaxid > 0 )
                         }
                     echo "</tbody>";
                 echo "</table>";
-            echo "</div>";
+            echo "</div>\n";
                 echo "<br />";
                 echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-success btn-block'>Delete selected</button>";
                 echo "<br />";
@@ -142,7 +147,7 @@ if ($recordmaxid > 0 )
                 echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
                 echo "<br />";
                 echo "<br />";
-        echo "</div>";
+        echo "</div>\n";
         
         #JavaScript for notes tooltip
         echo "<script type='text/javascript'>\n";
@@ -176,7 +181,7 @@ else
             echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
             echo "<br />";
             echo "<br />";
-        echo "</div>";
+        echo "</div>\n";
     }
 ?>
 </body>
