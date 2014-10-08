@@ -193,7 +193,7 @@ class design
                 echo "<label for='Notes'>Notes</label>";
                 if ($TrNotesDefault <> "Empty")
                     {
-                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'> ${TrNotesDefault} </textarea>";
+                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'>${TrNotesDefault}</textarea>";
                     }
                 else
                     {

@@ -109,17 +109,12 @@ if ($recordmaxid > 0 )
                                         
                                         //NOTES
                                         $TrNotesShow = $resultarray[$i]["Notes"];
+                                        $NotesHTMLCode = "";
                                         if ($TrNotesShow != "" && $TrNotesShow != "None")
-                                            {
-                                                if (attachments::get_number_of_attachments($lineid) > 0)
-                                                    design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>
-                                                        <span class='glyphicon glyphicon-paperclip'></span>","text_align_center");
-                                                else
-                                                    design::table_cell("<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span>",
-                                                        "text_align_center");
-                                            }
-                                        else
-                                            {design::table_cell("","");}
+                                            $NotesHTMLCode .= "<span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' title='${TrNotesShow}' id='tooltip_notes_${lineid}'></span> ";
+                                        if (attachments::get_number_of_attachments($lineid) > 0)
+                                            $NotesHTMLCode .= "<span class='glyphicon glyphicon-paperclip'></span>";
+                                        design::table_cell($NotesHTMLCode,"text_align_center");
                                         
                                         //DELETE
                                         echo "<td class ='text_align_center'>";

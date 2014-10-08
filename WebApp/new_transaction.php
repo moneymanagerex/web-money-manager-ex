@@ -142,16 +142,16 @@ security::redirect_if_not_loggedin();
             
             echo "<script type='text/javascript'>";
                 //Refresh Attachments table
-                echo "attachment_RefreshTable(${TrEditNr});";
+                echo "attachment_RefreshTable(${TrEditNr});\n";
                 //Manager trasnfer disable field
-                echo "enable_element ('ToAccount','Type','Transfer');";
-                echo "disable_element ('Payee','Type','Transfer');";
+                echo "enable_element ('ToAccount','Type','Transfer');\n";
+                echo "disable_element ('Payee','Type','Transfer');\n";
                 //Manage default category
-                echo "$('#Payee').bind('input', set_default_category);";
-                echo "$('#Payee').bind('typeahead:selected', set_default_category);";
+                echo "$('#Payee').bind('input', set_default_category);\n";
+                echo "$('#Payee').bind('typeahead:selected', set_default_category);\n";
                 //Manage subcategory
-                echo "$('#Category').bind('input', populate_sub_category);";
-                echo "$('#Category').bind('typeahead:selected', populate_sub_category);";
+                echo "$('#Category').bind('input', populate_sub_category);\n";
+                echo "$('#Category').bind('typeahead:selected', populate_sub_category);\n";
             echo "</script>";  
         }
     else
