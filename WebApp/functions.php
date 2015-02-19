@@ -10,7 +10,7 @@ if (file_exists("configuration_user.php"))
 class design
 {
     //Create date input element
-    function input_date ($TrDateDefault)
+    public static function input_date ($TrDateDefault)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Date'>Date</label>";
@@ -22,7 +22,7 @@ class design
         
         
     //Create status input element
-    function input_status ($TrStatusDefault)
+    public static function input_status ($TrStatusDefault)
         {
             $StatusArrayDesc = array ("None", "Reconciled", "Void", "Follow Up", "Duplicate");
             $StatusArrayDB = array ("", "R", "V", "F", "D");
@@ -44,7 +44,7 @@ class design
     
                 
     //Create type input element
-    function input_type ($TrTypeDefault)
+    public static function input_type ($TrTypeDefault)
         {
             $TypeArrayDesc = array ("Withdrawal", "Deposit", "Transfer");
             
@@ -65,7 +65,7 @@ class design
                 
         
     //Create account input element
-    function input_account ($TrAccountDefault)
+    public static function input_account ($TrAccountDefault)
         {
             $AccountArrayDesc = db_function::bankaccount_select_all();
             if (sizeof($AccountArrayDesc) == 0)
@@ -88,7 +88,7 @@ class design
     
     
     //Create toaccount input element
-    function input_toaccount ($TrToAccountDefault)
+    public static function input_toaccount ($TrToAccountDefault)
         {
             $ToAccountArrayDesc = db_function::bankaccount_select_all();
             array_unshift($ToAccountArrayDesc,"None");
@@ -110,7 +110,7 @@ class design
         
         
     //Create payee input element
-    function input_payee ($TrPayeeDefault)
+    public static function input_payee ($TrPayeeDefault)
         {
             $PayeeArrayDesc = db_function::payee_select_all_name();
             array_unshift($PayeeArrayDesc,"None");
@@ -131,7 +131,7 @@ class design
     
     
     //Create category input element
-    function input_category ($TrCategoryDefault)
+    public static function input_category ($TrCategoryDefault)
         {
             $CategoryArrayDesc = db_function::category_select_distinct();
             array_unshift($CategoryArrayDesc,"None");
@@ -152,7 +152,7 @@ class design
         
         
     //Create subcategory input element
-    function input_subcategory ($TrSubCategoryDefault)
+    public static function input_subcategory ($TrSubCategoryDefault)
         {
             echo "<div class='form-group'>";
                 echo "<label for='SubCategory'>SubCategory</label>";
@@ -168,7 +168,7 @@ class design
         
         
     //Create amount input element
-    function input_amount ($TrAmountDefault)
+    public static function input_amount ($TrAmountDefault)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Amount'>Amount</label>";
@@ -187,7 +187,7 @@ class design
     
     
     //Create notes input element
-    function input_notes ($TrNotesDefault)
+    public static function input_notes ($TrNotesDefault)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Notes'>Notes</label>";
@@ -206,12 +206,12 @@ class design
         
         
     //Create Hidden Field    
-    function input_hidden ($FieldName,$Value)
+    public static function input_hidden ($FieldName,$Value)
         {echo "<input type='hidden' id = '${FieldName}' name='${FieldName}' value='${Value}' />";}
      
         
     //Create setting input element
-    function settings ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
+    public static function settings ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
@@ -242,7 +242,7 @@ class design
         }
         
     //Create seting checkbox element        
-    function settings_checkbox ($VarName,$VarValue,$VarDescription)
+    public static function settings_checkbox ($VarName,$VarValue,$VarDescription)
         {
             echo "<div class='checkbox'>";
                 echo "<label>";
@@ -256,7 +256,7 @@ class design
 
 
     //Create password input element    
-    function settings_password ($VarName,$PlaceHolder,$Required)
+    public static function settings_password ($VarName,$PlaceHolder,$Required)
         {
             echo "<div class='form-group'>";
                 echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
@@ -272,7 +272,7 @@ class design
         
         
     //Design setting default account
-    function settings_default_account ($TrAccountDefault)
+    public static function settings_default_account ($TrAccountDefault)
         {
             $AccountArrayDesc = db_function::bankaccount_select_all();
             if (sizeof($AccountArrayDesc) == 0)
@@ -295,7 +295,7 @@ class design
         
         
     //Design section legend
-    function section_legened ($Text)
+    public static function section_legened ($Text)
         {
                 echo "<h4>${Text}</h4>";
                 echo "<hr>";
@@ -303,7 +303,7 @@ class design
         
         
     //Design table cell
-    function table_cell ($value,$css_class)
+    public static function table_cell ($value,$css_class)
         {
             echo "<td class='${css_class}'>";
             echo $value;
@@ -319,7 +319,7 @@ class design
 class db_function
 {
     // Create database if not exist
-    public function db_create()
+    public static  function db_create()
         {
             $const_dbpath = costant::database_path();
             $const_app_version = costant::app_version();
@@ -371,7 +371,7 @@ class db_function
     
     
     // Get database version
-    function db_version ()
+    public static function db_version ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -385,7 +385,7 @@ class db_function
         
         
     // Vacuum database
-    function db_vacuum ()
+    public static function db_vacuum ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -397,7 +397,7 @@ class db_function
         
         
     // Insert transaction 
-    function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrCategory, $TrSubCategory, $TrAmount, $TrNotes)
+    public static function transaction_insert ($TrDate, $TrStatus, $TrType, $TrAccount, $TrToAccount, $TrPayee, $TrCategory, $TrSubCategory, $TrAmount, $TrNotes)
         {
             $ID = 0;
             $const_dbpath = costant::database_path();
@@ -424,7 +424,7 @@ class db_function
     
     
     // Get transaction Max ID
-    function transaction_select_maxid ()
+    public static function transaction_select_maxid ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -439,7 +439,7 @@ class db_function
     
     
     // Select all transaction
-    function transaction_select_all ()
+    public static function transaction_select_all ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -454,7 +454,7 @@ class db_function
         
         
     // Select all transaction order by date
-    function transaction_select_all_order_by_date ()
+    public static function transaction_select_all_order_by_date ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -469,7 +469,7 @@ class db_function
     
     
     // Select one transaction
-    function transaction_select_one ($TrEditNr)
+    public static function transaction_select_one ($TrEditNr)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -487,7 +487,7 @@ class db_function
     
     
     //Delete all transaction
-    function transaction_delete_all ()
+    public static function transaction_delete_all ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -499,7 +499,7 @@ class db_function
         
         
     //Delete group transaction
-    function transaction_delete_group ($TrDeleteArr)
+    public static function transaction_delete_group ($TrDeleteArr)
         {
             $const_dbpath = costant::database_path();
             $N = count($TrDeleteArr);
@@ -516,7 +516,7 @@ class db_function
     
     
     // Update transaction 
-    function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrCategory,$TrSubCategory,$TrAmount,$TrNotes)
+    public static function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrCategory,$TrSubCategory,$TrAmount,$TrNotes)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -543,7 +543,7 @@ class db_function
     
     
     // Insert bank accounts
-    function bankaccount_insert_json ($BankAccountJSON)
+    public static function bankaccount_insert_json ($BankAccountJSON)
         {
             $bankaccounts_json_list = json_decode ($BankAccountJSON,true);
             $BankAccountList = $bankaccounts_json_list["Accounts"];
@@ -568,7 +568,7 @@ class db_function
         
         
     //Delete all bank accounts
-    function bankaccount_delete_all ()
+    public static function bankaccount_delete_all ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -580,7 +580,7 @@ class db_function
    
    
    //Select all bank accounts
-   public function bankaccount_select_all ()
+   public static function bankaccount_select_all ()
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
@@ -595,7 +595,7 @@ class db_function
     
     
     //Select all payee
-   public function payee_select_all_name ()
+   public static function payee_select_all_name ()
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
@@ -611,7 +611,7 @@ class db_function
 
 
     //Select one payee
-   public function payee_select_one ($PayeeName)
+   public static function payee_select_one ($PayeeName)
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
@@ -629,7 +629,7 @@ class db_function
    
    
     // Insert single payee account
-    function payee_insert_single ($Payee,$Category,$SubCategory)
+    public static function payee_insert_single ($Payee,$Category,$SubCategory)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -645,7 +645,7 @@ class db_function
         }
         
     // Insert all payee account
-    function payee_insert_json ($PayeeJSON)
+    public static function payee_insert_json ($PayeeJSON)
         {
             $payees_json_list = json_decode ($PayeeJSON,true);
             $PayeeList = $payees_json_list["Payees"];
@@ -673,7 +673,7 @@ class db_function
     
     
     //Delete all payee
-    function payee_delete_all ()
+    public static function payee_delete_all ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -685,7 +685,7 @@ class db_function
         
         
     // Update single payee account
-    function payee_update_single ($Payee,$Category,$SubCategory)
+    public static function payee_update_single ($Payee,$Category,$SubCategory)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -702,7 +702,7 @@ class db_function
 
 
     //Delete all categories
-    function category_delete_all ()
+    public static function category_delete_all ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -714,7 +714,7 @@ class db_function
     
     
     //Select all categories
-    function category_select_all ()
+    public static function category_select_all ()
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
@@ -730,7 +730,7 @@ class db_function
    
    
     //Select distinct categories
-    function category_select_distinct ()
+    public static function category_select_distinct ()
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
@@ -746,7 +746,7 @@ class db_function
     
     
     //Select all subcategory
-    function subactegory_select_all ($Category)
+    public static function subactegory_select_all ($Category)
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");
@@ -764,7 +764,7 @@ class db_function
    
    
    // Insert all categories
-    function category_insert_json ($CategoryJSON)
+    public static function category_insert_json ($CategoryJSON)
         {
             $categories_json_list = json_decode ($CategoryJSON,true);
             $CategoryList = $categories_json_list["Categories"];
@@ -791,7 +791,7 @@ class db_function
     
     
     // Insert one category
-    function category_insert_single ($Category,$SubCategory)
+    public static function category_insert_single ($Category,$SubCategory)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -813,7 +813,7 @@ class db_function
 #########################
 class security
 {
-    function redirect_if_not_loggedin ()
+    public static function redirect_if_not_loggedin ()
         {
             $disable_authentication = costant::disable_authentication();
             if (($disable_authentication) == False)
@@ -835,7 +835,7 @@ class security
         }
         
         
-    function generate_guid()
+    public static function generate_guid()
         {
             if (function_exists('com_create_guid'))
                 {return com_create_guid();}
@@ -861,7 +861,7 @@ class security
 #########################
 class db_upgrade
 {
-    function upgrade_db ()
+    public static function upgrade_db ()
         {
             $start_db_version = db_function::db_version();
             $app_version = costant::app_version();
@@ -910,7 +910,7 @@ class db_upgrade
         }
         
         
-    function to_0_9_3 ()
+    public static function to_0_9_3 ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -935,7 +935,7 @@ class db_upgrade
         }
     
     
-    function to_0_9_7 ()
+    public static function to_0_9_7 ()
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -950,7 +950,7 @@ class db_upgrade
         }
         
         
-    function to_0_9_9 ()
+    public static function to_0_9_9 ()
         {
             $parameterarray = array
                 (
@@ -974,7 +974,7 @@ class db_upgrade
         }
 
 
-    function upgrade_version ($version)
+    public static function upgrade_version ($version)
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
@@ -991,7 +991,7 @@ class db_upgrade
 ##########################
 class various
 {
-    function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
+    public static function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
             echo "<script src='res/functions-1.0.1.js' type='text/javascript'></script>";
             echo "<script language='javascript'>";
@@ -1000,7 +1000,7 @@ class various
             echo "</script>";
         }
         
-    function update_configuration_file ($ParameterArray)
+    public static function update_configuration_file ($ParameterArray)
         {
             $configfile="configuration_user.php"; 
             
@@ -1021,7 +1021,7 @@ class various
             fclose($fileopen);
         }
         
-    function debug_to_file ($Value)
+    public static function debug_to_file ($Value)
         {
             ob_start();
             var_dump($Value);
@@ -1042,7 +1042,7 @@ class various
 ##########################
 class attachments
 {
-    function get_attachments_filename_array($TrID,$bIncludeZero)
+    public static function get_attachments_filename_array($TrID,$bIncludeZero=false)
         {
             $i=0;
             $AttachmentsArray = array();
@@ -1067,7 +1067,7 @@ class attachments
             return $AttachmentsArray;
         }
   
-    function get_number_of_attachments($TrID)
+    public static function get_number_of_attachments($TrID)
         {
             $LastAttachNum = 0;
             if ($handle = opendir(costant::attachments_folder()))
@@ -1086,7 +1086,7 @@ class attachments
             return $LastAttachNum;
         }
     
-    function delete_zero()
+    public static function delete_zero()
         {
             if ($handle = opendir(costant::attachments_folder()))
                 {
@@ -1102,7 +1102,7 @@ class attachments
             return true;
         }
         
-    function rename_zero($TrID)
+    public static function rename_zero($TrID)
         {
             if ($handle = opendir(costant::attachments_folder()))
                 {
@@ -1119,7 +1119,7 @@ class attachments
             return true;
         }
     
-    function delete_group($TrID_Array)
+    public static function delete_group($TrID_Array)
         {
             $N = count($TrID_Array);
             if ($handle = opendir(costant::attachments_folder()))
@@ -1139,7 +1139,7 @@ class attachments
             }
             return true;
         }
-    function delete_attachment_by_name($FileName)
+    public static function delete_attachment_by_name($FileName)
         {
             $FullPath = costant::attachments_folder()."/".$FileName;
             if (!empty($FileName) && file_exists($FullPath))
@@ -1154,65 +1154,65 @@ class attachments
 ##########################
 class costant
     {
-        function login_username ()
+        public static function login_username ()
             {
                 global $user_username;
                 return $user_username;
             }
         
-        function login_password ()
+        public static function login_password ()
             {
                 global $user_password;
                 return $user_password;
             }
         
-        function transaction_default_account ()
+        public static function transaction_default_account ()
             {
                 global $defaultaccountname;
                 return $defaultaccountname;
             }
             
-        function transaction_default_status ()
+        public static function transaction_default_status ()
             {
                 global $tr_default_status;
                 return $tr_default_status;
             }
             
-        function transaction_default_type ()
+        public static function transaction_default_type ()
             {
                 global $tr_default_type;
                 return $tr_default_type;
             }
-        function attachments_folder ()
+        public static function attachments_folder ()
             {
                 global $attachments_folder;
                 return $attachments_folder;
             }
-        function database_path ()
+        public static function database_path ()
             {
                 global $dbpath;
                 return $dbpath;
             }
              
-        function desktop_guid ()
+        public static function desktop_guid ()
             {
                 global $desktop_guid;
                 return $desktop_guid;
             }
             
-        function app_version ()
+        public static function app_version ()
             {
                 global $app_version;
                 return $app_version;
             }
             
-        function api_version ()
+        public static function api_version ()
             {
                 global $api_version;
                 return $api_version;
             }
         
-        function disable_authentication ()
+        public static function disable_authentication ()
             {
                 global $disable_authentication;
                 if ($disable_authentication == "True")
@@ -1221,7 +1221,7 @@ class costant
                     {return False;}
             }
         
-        function disable_payee ()
+        public static function disable_payee ()
             {
                 global $disable_payee;
                 if ($disable_payee == "True")
@@ -1230,7 +1230,7 @@ class costant
                     {return False;}
             }
         
-        function disable_category ()
+        public static function disable_category ()
             {
                 global $disable_category;
                 if ($disable_category == "True")
@@ -1239,10 +1239,10 @@ class costant
                     {return False;}
             }
             
-        function current_page_url ()
+        public static function current_page_url ()
             {
              $pageURL = 'http';
-             if ($_SERVER["HTTPS"] == "on")
+             if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")
                 $pageURL .= "s";
              $pageURL .= "://";
              if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443")
