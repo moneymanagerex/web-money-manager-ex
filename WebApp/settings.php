@@ -73,10 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
     	
         <title>Money Manager EX</title>
         <link rel="icon" href="res/favicon.ico" />
+        <link rel="apple-touch-icon" href="res/apple-touch-icon.png" />
         
         <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
