@@ -896,6 +896,9 @@ class db_upgrade
                             case "1.0.0":
                                 db_upgrade::upgrade_version("1.0.1");
                                 break;
+                            case "1.0.1":
+                                db_upgrade::upgrade_version("1.0.2");
+                                break;
                             case $app_version;
                                 break;
                             default:
