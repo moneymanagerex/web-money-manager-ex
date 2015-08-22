@@ -138,6 +138,8 @@ security::redirect_if_not_loggedin();
                         }
                     echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";
                     echo "<br />";
+                    echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
+                    echo "<br />";
                     echo "<br />";
                 echo "</form>";
             echo "</div>\n";
