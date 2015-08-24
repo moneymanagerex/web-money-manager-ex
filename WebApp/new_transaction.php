@@ -24,6 +24,7 @@ security::redirect_if_not_loggedin();
     <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="res/typeahead.bundle-0.10.2.min.js" type="text/javascript"></script>
     <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+    <script src="res/app/new_transaction.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -147,7 +148,7 @@ security::redirect_if_not_loggedin();
             echo "<script type='text/javascript'>";
                 //Refresh Attachments table
                 echo "attachment_RefreshTable(${TrEditNr});\n";
-                //Manager trasnfer disable field
+                //Manager transfer disable field
                 echo "enable_element ('ToAccount','Type','Transfer');\n";
                 echo "disable_element ('Payee','Type','Transfer');\n";
                 //Manage default category

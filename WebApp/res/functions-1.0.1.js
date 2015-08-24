@@ -7,7 +7,7 @@ function test_html5 ()
     {
         if  (      !Modernizr.inputtypes.date
                 || !Modernizr.inputtypes.number
-                || !Modernizr.input.required
+                || !Modernizr.input.required  // No submit disable support in Safari (Mac)
                 //|| !Modernizr.input.placeholder   //Used but not prerequisite
                 || !Modernizr.input.min
                 //|| !Modernizr.input.step          //Used but not prerequisite
