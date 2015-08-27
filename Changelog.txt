@@ -4,6 +4,9 @@ Version 1.0.2
 - Rewrite tooltip display (transaction list)
 - Show / hide edit and delete button (transaction list)
 
+Version 1.0.1
+- Added attachments support
+
 Version 1.0.0
 - Support wide characters
 - PHP > 5.4 is needed
