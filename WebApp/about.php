@@ -48,7 +48,7 @@ require_once "functions.php";
             <img src="res/html5.png" alt="HTML5 Logo" height="100" width="100"/>
             <br />
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Return" onclick="top.location.href = 'landing.php'" />
+            <input type="button" class="btn btn-lg btn-success btn-block" value="Return to menu" onclick="top.location.href = 'landing.php'" />
             <br />
             <br />
         </div>

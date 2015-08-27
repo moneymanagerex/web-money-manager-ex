@@ -22,6 +22,7 @@ security::redirect_if_not_loggedin();
     <script src="res/bootstrap-3.2.0.min.js" type="text/javascript"></script>
     <script src="res/functions-1.0.1.js" type="text/javascript"></script>
 
+    <script src="res/app/show.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -36,8 +37,8 @@ if ($recordmaxid > 0 )
             echo "<h3 class='text_align_center'>Current pending transaction</h3>";
             echo "<br/>";
             echo "<div class='table-responsive'>";
-                echo "<form id='Show_Function' class='form-show-function' method='post' action = 'show_function.php'>";
-                echo "<table class = 'table table-hover table-condensed'>";
+                echo "<form id='Show_Function' class='form-show-function' method='post' action='show_function.php'>";
+                echo "<table class='table table-hover table-condensed'>";
                 #echo "<table class = 'table table-hover table-condensed table-bordered'>"; //TABLE BORDERED FOR DEBUG
                     echo "<thead>";
                         echo "<tr>";
@@ -119,12 +120,12 @@ if ($recordmaxid > 0 )
                                         
                                         //DELETE
                                         echo "<td class ='text_align_center'>";
-                                            echo "<input type='checkbox' name='TrDelete[]' value='${lineid}' />";
+                                            echo "<input class='do-delete' type='checkbox' name='TrDelete[]' value='${lineid}' />";
                                         echo "</td>";
                                         
                                         //EDIT
                                         echo "<td class ='text_align_center'>";
-                                            echo "<input type='radio' name='TrEdit[]' value='${lineid}' />";
+                                            echo "<input class='do-edit' type='radio' name='TrEdit[]' value='${lineid}' />";
                                         echo "</td>";
 
                                     echo "</tr>";
@@ -133,36 +134,15 @@ if ($recordmaxid > 0 )
                     echo "</tbody>";
                 echo "</table>";
             echo "</div>\n";
-                echo "<br />";
                 echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-success btn-block'>Delete selected</button>";
-                echo "<br />";
                 echo "<button type='submit' id='TrModify' name='TrModify' value = 'Edit' class='btn btn-lg btn-success btn-block'>Edit selected</button>";
                 echo "</form>";
                 #echo "<input type='button' class='btn btn-lg btn-success btn-block' value='New transaction' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
                 echo "<br />";
-                echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
+                echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
                 echo "<br />";
                 echo "<br />";
         echo "</div>\n";
-        
-        #JavaScript for notes tooltip
-        echo "<script type='text/javascript'>\n";
-            echo "$(window).load(function(){\n";
-                echo "$(document).ready(function() {\n";
-                    for ($i = 0; $i <= $recordmaxid; $i++)
-                        if (isset($resultarray[$i]["ID"]))
-                        {
-                            $lineid = $resultarray[$i]["ID"];
-                            if ($resultarray[$i]["Type"] == "Transfer")
-                                {echo "$('#tooltip_account_${lineid}').tooltip();\n";}
-                            if ($resultarray[$i]["SubCategory"] != "None")
-                                {echo "$('#tooltip_category_${lineid}').tooltip();\n";}
-                            if ($resultarray[$i]["Notes"] != "" && $resultarray[$i]["Notes"] != "None" )
-                                {echo "$('#tooltip_notes_${lineid}').tooltip();\n";}
-                        }
-                echo "});\n";
-            echo "});\n";
-        echo "</script>\n";
     }
 else
     {

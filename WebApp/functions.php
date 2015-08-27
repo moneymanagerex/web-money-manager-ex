@@ -50,7 +50,7 @@ class design
             
             echo "<div class='form-group'>";
                 echo "<label for='Type'>Type</label>";
-                echo "<select id ='Type' name='Type' class='form-control'  onchange='enable_element(\"ToAccount\",\"Type\",\"Transfer\"); disable_element(\"Payee\",\"Type\",\"Transfer\")'>";
+                echo "<select id ='Type' name='Type' class='form-control' onchange='enable_element(\"ToAccount\",\"Type\",\"Transfer\"); disable_element(\"Payee\",\"Type\",\"Transfer\")'>";
                 for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
                 {
                     if ($TypeArrayDesc[$i] == $TrTypeDefault)
@@ -77,9 +77,9 @@ class design
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
                     if ($AccountArrayDesc[$i] == $TrAccountDefault)
-                        {echo "<option selected> ${AccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"${AccountArrayDesc[$i]}\" selected> ${AccountArrayDesc[$i]} </option>";}
                     else
-                        {echo "<option> ${AccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"${AccountArrayDesc[$i]}\"> ${AccountArrayDesc[$i]} </option>";}
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
@@ -99,9 +99,9 @@ class design
                 for ($i = 0; $i < sizeof($ToAccountArrayDesc); $i++)
                 {
                     if ($ToAccountArrayDesc[$i] == $TrToAccountDefault)
-                        {echo "<option selected> ${ToAccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"${ToAccountArrayDesc[$i]}\" selected> ${ToAccountArrayDesc[$i]} </option>";}
                     else
-                        {echo "<option> ${ToAccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"${ToAccountArrayDesc[$i]}\"> ${ToAccountArrayDesc[$i]} </option>";}
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
@@ -895,6 +895,9 @@ class db_upgrade
                                 break;
                             case "1.0.0":
                                 db_upgrade::upgrade_version("1.0.1");
+                                break;
+                            case "1.0.1":
+                                db_upgrade::upgrade_version("1.0.2");
                                 break;
                             case $app_version;
                                 break;
