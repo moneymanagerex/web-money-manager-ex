@@ -1,3 +1,9 @@
+Version 1.0.2
+- Added return to menu buttons
+- Added functionality to disable the same (To)Account when adding new transactions, prevent a transaction to be moved from account A to A
+- Rewrite tooltip display (transaction list)
+- Show / hide edit and delete button (transaction list)
+
 Version 1.0.0
 - Support wide characters
 - PHP > 5.4 is needed
