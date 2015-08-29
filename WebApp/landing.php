@@ -9,6 +9,7 @@ security::redirect_if_not_loggedin();
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-title" content="MMEX">
         <meta name="apple-mobile-web-app-capable" content="yes" />
     	
         <title>Money Manager EX</title>
@@ -18,6 +19,8 @@ security::redirect_if_not_loggedin();
         <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
+        
+        <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     </head>
     
     <body>
@@ -28,19 +31,20 @@ security::redirect_if_not_loggedin();
             <br />
             <br />
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="New transaction" onclick="top.location.href = 'new_transaction.php'" />
+            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">New transaction</a>
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Show transaction" onclick="top.location.href = 'show.php'" />
+            <a href="show.php" class="btn btn-lg btn-success btn-block">Show transaction</a>
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Edit settings" onclick="top.location.href = 'settings.php'" />
+            <a href="settings.php" class="btn btn-lg btn-success btn-block">Edit settings</a>
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Guide" onclick="top.location.href = 'guide.php'" />
+            <a href="guide.php" class="btn btn-lg btn-success btn-block">Guide</a>
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="About" onclick="top.location.href = 'about.php'" />
+            <a href="about.php" class="btn btn-lg btn-success btn-block">About</a>
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Logout" onclick="top.location.href = 'logout.php'" />
+            <a href="logout.php" class="btn btn-lg btn-success btn-block">Logout</a>
             <br />
         </div>
+        
+        <script src="res/app/base.js" type="text/javascript"></script>
     </body>
-
 </html>

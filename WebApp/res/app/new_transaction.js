@@ -1,8 +1,8 @@
-var app = {
+var transactions = {
     init: function(){
         $(function() {
-            app.monitorTypeSelector();
-            app.monitorAccountSelectors();
+            transactions.monitorTypeSelector();
+            transactions.monitorAccountSelectors();
         });
     },
     
@@ -13,8 +13,9 @@ var app = {
             // Reset disabled Account values
             if(type !== 'Transfer'){
                 $('#Account').find('option:disabled').prop('disabled', false);
-                
                 $('#ToAccount').val('None');
+            }else{
+                transactions._disableSelectValue($('#Account'));
             }
         });
     },
@@ -28,19 +29,19 @@ var app = {
             
             $('#Account, #ToAccount').find('option:disabled').prop('disabled', false);
             
-            //if(type === 'Transfer'){
-                if(current.prop('id') === 'Account') {
-                    $('#ToAccount option[value="' + current.val() + '"]').prop('disabled', true);
-                }
-                
-                if(current.prop('id') === 'ToAccount') {
-                    $('#Account option[value="' + current.val() + '"]').prop('disabled', true);                    
-                }
-                
-            //}           
-            
+            transactions._disableSelectValue(current);
         });
+    },
+    
+    _disableSelectValue: function(selected){
+        if(selected.prop('id') === 'Account') {
+            $('#ToAccount option[value="' + selected.val() + '"]').prop('disabled', true);
+        }
+        
+        if(selected.prop('id') === 'ToAccount') {
+            $('#Account option[value="' + selected.val() + '"]').prop('disabled', true);                    
+        }
     }
 };
 
-app.init();
+transactions.init();

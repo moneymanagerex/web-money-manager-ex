@@ -9,6 +9,7 @@ require_once "functions.php";
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-title" content="MMEX">
         <meta name="apple-mobile-web-app-capable" content="yes" />
     	
         <title>Money Manager EX</title>
@@ -18,6 +19,8 @@ require_once "functions.php";
         <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
+
+        <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     </head>
     
     <body>
@@ -32,26 +35,27 @@ require_once "functions.php";
             ?>
             <br />
             <h4> Developer: Gabriele [Gabriele-V]</h4>
-            <a href="https://github.com/moneymanagerex/web-money-manager-ex"><h4> GitHub WebPage</h4></a>
+            <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"><h4>GitHub WebPage</h4></a>
             <br />
             <p>
                 Used components:
                 <br />
-                <a href="http://getbootstrap.com/">Bootstrap</a>
+                <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>
                 <br />
-                <a href="http://jquery.com//">jQuery</a>
+                <a href="http://jquery.com/" target="_blank">jQuery</a>
                 <br />
-                <a href="http://modernizr.com/">Modernizr</a>
+                <a href="http://modernizr.com/" target="_blank">Modernizr</a>
                 <br />
-                <a href="http://www.sqlite.org/">SQLite</a>
+                <a href="http://www.sqlite.org/" target="_blank">SQLite</a>
             </p>
             <img src="res/html5.png" alt="HTML5 Logo" height="100" width="100"/>
             <br />
             <br />
-            <input type="button" class="btn btn-lg btn-success btn-block" value="Return to menu" onclick="top.location.href = 'landing.php'" />
+            <a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>
             <br />
             <br />
         </div>
+        
+        <script src="res/app/base.js" type="text/javascript"></script>
     </body>
-
 </html>
