@@ -20,6 +20,34 @@ var app = {
                 }
             });
         }
+    },
+
+    confirmIfNotPresentInDatalist: function(FieldId, Datalist, Confirm_Question){
+        var field_value = $('#' + FieldId).val(),
+            ifound = false;
+        
+        for (i=0; i < Datalist.length; i++){
+            if (Datalist[i].value == field_value){
+                ifound = true;
+                break;
+            }
+        }
+
+        if (ifound == true || !Boolean(field_value)){
+            return true;
+        }else{
+            return confirm (Confirm_Question+' "' + field_value + '"?');
+        }
+    },
+    
+    isValidForm: function(form){
+        var invalid = form.find(":invalid");
+
+        if(invalid.length == 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 };
 

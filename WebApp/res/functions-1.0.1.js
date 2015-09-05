@@ -5,7 +5,7 @@
 
 function test_html5 ()
     {
-        if  (      !Modernizr.inputtypes.date
+        if  (      !Modernizr.inputtypes.date  // Not working in Safari (Mac)
                 || !Modernizr.inputtypes.number
                 || !Modernizr.input.required  // No submit disable support in Safari (Mac)
                 //|| !Modernizr.input.placeholder   //Used but not prerequisite
@@ -124,7 +124,8 @@ function check_password_match_and_submit (Password1,Password2,formid)
         else
             {document.getElementById(formid).submit();}
     }
-    
+
+/*
 function confirm_if_not_present_in_datalist (Field,Datalist,Confirm_Question)
     {
         datalist_element = document.getElementById(Datalist);
@@ -141,6 +142,7 @@ function confirm_if_not_present_in_datalist (Field,Datalist,Confirm_Question)
         else
             {return confirm (Confirm_Question+' "'+field_value+'"?');}
     }
+*/
 
 function set_default_category ()
     {
