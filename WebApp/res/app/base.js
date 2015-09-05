@@ -27,7 +27,7 @@ var app = {
             ifound = false;
         
         for (i=0; i < Datalist.length; i++){
-            if (Datalist[i].value == field_value){
+            if (Datalist[i] == field_value){
                 ifound = true;
                 break;
             }

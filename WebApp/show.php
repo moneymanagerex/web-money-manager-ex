@@ -21,7 +21,7 @@ security::redirect_if_not_loggedin();
 
     <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="res/bootstrap-3.2.0.min.js" type="text/javascript"></script>
-    <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/functions.js'); ?>" type="text/javascript"></script>
 </head>
 
 <body>
@@ -160,7 +160,7 @@ else
     }
 ?>
 
-    <script src="res/app/base.js" type="text/javascript"></script>
-    <script src="res/app/show.js" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/app/show.js'); ?>" type="text/javascript"></script>
 </body>
 </html>

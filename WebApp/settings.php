@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
         
-        <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+        <script src="<?php various::add_version_to_path('res/functions.js'); ?>" type="text/javascript"></script>
         <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     </head>
     
@@ -203,6 +203,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         </form>
     </div>
     
-    <script src="res/app/base.js" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
     </body>
 </html>

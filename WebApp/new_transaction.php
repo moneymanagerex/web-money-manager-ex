@@ -24,7 +24,7 @@ security::redirect_if_not_loggedin();
     <script src="res/modernizr-2.8.3.js" type="text/javascript"></script>
     <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="res/typeahead.bundle-0.10.2.min.js" type="text/javascript"></script>
-    <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/functions.js'); ?>" type="text/javascript"></script>
 </head>
 
 <body>
@@ -174,7 +174,7 @@ security::redirect_if_not_loggedin();
             echo "</div>\n";
         }
     ?>
-    <script src="res/app/base.js" type="text/javascript"></script>
-    <script src="res/app/new_transaction.js" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/app/new_transaction.js'); ?>" type="text/javascript"></script>
 </body>
 </html>

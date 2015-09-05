@@ -902,6 +902,9 @@ class db_upgrade
                             case "1.0.2":
                                 db_upgrade::upgrade_version("1.0.3");
                                 break;
+                            case "1.0.3":
+                                db_upgrade::upgrade_version("1.0.4");
+                                break;
                             case $app_version;
                                 break;
                             default:
@@ -999,11 +1002,16 @@ class various
 {
     public static function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
-            echo "<script src='res/functions-1.0.1.js' type='text/javascript'></script>";
+            echo sprintf("<script src='%s' type='text/javascript'></script>", various::add_version_to_path('res/functions.js'));
             echo "<script language='javascript'>";
             if ($AlertRedirect <> "None")
                 {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
             echo "</script>";
+        }
+    
+    public static function add_version_to_path($Path)
+        {
+            echo sprintf('_%s/%s', costant::app_version(), ltrim($Path, '/'));
         }
         
     public static function update_configuration_file ($ParameterArray)

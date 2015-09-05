@@ -28,3 +28,6 @@ deny from all
 order allow,deny
 deny from all
 </files>
+
+RewriteEngine On
+RewriteRule ^[_\.0-9]+/(.*)$ $1 [L]

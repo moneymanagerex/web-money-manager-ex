@@ -89,6 +89,6 @@ security::redirect_if_not_loggedin();
             <br />
         </div>
         
-        <script src="res/app/base.js" type="text/javascript"></script>
+        <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
     </body>
 </html>

@@ -56,6 +56,6 @@ require_once "functions.php";
             <br />
         </div>
         
-        <script src="res/app/base.js" type="text/javascript"></script>
+        <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
     </body>
 </html>
