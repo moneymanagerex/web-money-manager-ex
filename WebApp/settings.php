@@ -74,6 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-title" content="MMEX">
         <meta name="apple-mobile-web-app-capable" content="yes" />
     	
         <title>Money Manager EX</title>
@@ -84,9 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
         
-        <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+        <script src="<?php various::add_version_to_path('res/functions.js'); ?>" type="text/javascript"></script>
         <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
-        
     </head>
     
     <body>
@@ -202,5 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             <br />
         </form>
     </div>
+    
+    <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
     </body>
 </html>

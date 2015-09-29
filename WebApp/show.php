@@ -8,6 +8,7 @@ security::redirect_if_not_loggedin();
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-title" content="MMEX">
     <meta name="apple-mobile-web-app-capable" content="yes" />
 	
     <title>Show Transaction</title>
@@ -20,9 +21,7 @@ security::redirect_if_not_loggedin();
 
     <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="res/bootstrap-3.2.0.min.js" type="text/javascript"></script>
-    <script src="res/functions-1.0.1.js" type="text/javascript"></script>
-
-    <script src="res/app/show.js" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/functions.js'); ?>" type="text/javascript"></script>
 </head>
 
 <body>
@@ -154,11 +153,14 @@ else
             echo "<br />";
             echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Insert new' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
             echo "<br />";
-            echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
+            echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
             echo "<br />";
             echo "<br />";
         echo "</div>\n";
     }
 ?>
+
+    <script src="<?php various::add_version_to_path('res/app/base.js'); ?>" type="text/javascript"></script>
+    <script src="<?php various::add_version_to_path('res/app/show.js'); ?>" type="text/javascript"></script>
 </body>
 </html>

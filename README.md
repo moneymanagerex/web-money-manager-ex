@@ -32,6 +32,7 @@ If you know what you are doing, you can install a webserver on your pc: after th
 	<li>Unzip last version in a folder on your webserver or upload files through FTP</li>
 	<li>Rename htaccess.txt in .htaccess (on Windows you need to do it from CMD and &quot;rename&quot; command)</li>
 	<li>Enable PDO_SQLite if disabled</li>
+    <li>Enable (Apache) mod_rewrite</li>
 </ul>
 </p>
 <p>

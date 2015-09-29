@@ -9,6 +9,7 @@ require_once "functions.php";
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-title" content="MMEX">
         <meta name="apple-mobile-web-app-capable" content="yes" />
     	
         <title>Money Manager EX</title>
@@ -31,10 +32,9 @@ require_once "functions.php";
             ?>
             <br />
             <h4> Please contact developer Gabriele [Gabriele-V]</h4>
-            <a href="https://github.com/moneymanagerex/web-money-manager-ex"><h4> on GitHub WebPage</h4></a>
+            <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"><h4> on GitHub WebPage</h4></a>
             <br />
             <br />
         </div>
     </body>
-
 </html>

@@ -66,6 +66,9 @@ else
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-title" content="MMEX">
+        <meta name="mobile-web-app-capable" content="yes">
+
         <meta name="apple-mobile-web-app-capable" content="yes" />
     	
         <title>Money Manager EX</title>
@@ -88,7 +91,7 @@ else
             <form id="login" method="post">
                 <div class="form-group">
                     <label for="Username">Username</label>
-                    <input id="Username" type="text" name="Username" class="form-control" placeholder="Insert Username" required />
+                    <input id="Username" type="text" name="Username" class="form-control" placeholder="Insert Username" autofocus required />
                     <span class="help-block"></span>
                 </div>
                 <div class="form-group">
