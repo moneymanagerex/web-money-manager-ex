@@ -8,7 +8,7 @@ All transaction will be in fact downloaded at first startup of MoneyManagerEx de
 <h4>Requirements server side</h4>
 
 <ul>
-	<li>Webserver with PHP &gt; 5.4 (tested on Apache and IIS)</li>
+	<li>Webserver with PHP &gt; 5.4 (tested on Apache, IIS and nginx)</li>
 	<li>PDO_SQLite extension (enabled by default on PHP &gt; 5.2)</li>
 	<li>Full rights on the WebApp subfolder</li>
 </ul>
@@ -23,7 +23,7 @@ All transaction will be in fact downloaded at first startup of MoneyManagerEx de
 <p>
 <strong>RECOMMENDED ADVICE</strong><br>
 We suggest using WebApp on a shared hosting service to greatly simplify installation process: most of free services meet the small requirements of WebApp.
-If you know what you are doing, youcan install a webserver on your pc: after that you also need to properly configure your router to forward webserver port and reachit with a static IP or DNS, but for these you can find lots of guide so we will not discuss it here.
+If you know what you are doing, you can install a webserver on your pc: after that you also need to properly configure your router to forward webserver port and reachit with a static IP or DNS, but for these you can find lots of guide so we will not discuss it here.
 </p>
 <p>
 <h3>How to install WebApp</h3>
