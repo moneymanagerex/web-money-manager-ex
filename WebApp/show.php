@@ -8,21 +8,21 @@ security::redirect_if_not_loggedin();
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="MMEX">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	
     <title>Show Transaction</title>
     <link rel="icon" href="res/favicon.ico" />
-    <link rel="apple-touch-icon" href="res/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="res/mmex.png" />
     
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.2.0.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.2.0.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
+    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
     <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
 
-    <script src="res/jquery-2.1.1.min.js" type="text/javascript"></script>
-    <script src="res/bootstrap-3.2.0.min.js" type="text/javascript"></script>
-    <script src="res/functions-1.0.1.js" type="text/javascript"></script>
+    <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="res/bootstrap-3.3.6.min.js" type="text/javascript"></script>
+    <script src="res/app/functions-1.0.3.js" type="text/javascript"></script>
 
-    <script src="res/app/show.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -152,13 +152,15 @@ else
             echo "<h3 class='text_align_center'>No transaction inserted</h3>";
             echo "<br />";
             echo "<br />";
-            echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Insert new' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
+			echo "<a href='new_transaction.php' class='btn btn-lg btn-success btn-block'>Insert new</a>";
             echo "<br />";
-            echo "<input type='button' class='btn btn-lg btn-success btn-block' value='Return to menu' onclick=".'"top.location.href = '."'landing.php'".'" />';
+            echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
             echo "<br />";
             echo "<br />";
         echo "</div>\n";
     }
 ?>
+	<script src="res/app/base-1.0.3.js" type="text/javascript"></script>
+	<script src="res/app/show-1.0.3.js" type="text/javascript"></script>
 </body>
 </html>

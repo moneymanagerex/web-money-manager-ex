@@ -1,3 +1,12 @@
+Version 1.0.3
+- iOS WebApp openend links in native browser instead of the App
+- Autofocus (HTML5) to username on login screen
+- New transaction: Account was not disabled in ToAccount (Transfer)
+- Changed links to other pages from button into href
+- Added validation all required fields are valid, this prevents the option to submit form in non-Chrome browser
+- Empty Payee value when changing type to Transfer
+- Upgrade 3rd part dependencies
+
 Version 1.0.2
 - Added return to menu buttons
 - Added functionality to disable the same (To)Account when adding new transactions, prevent a transaction to be moved from account A to A

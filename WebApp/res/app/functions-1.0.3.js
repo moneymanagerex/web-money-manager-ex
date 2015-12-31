@@ -5,11 +5,12 @@
 
 function test_html5 ()
     {
-        if  (      !Modernizr.inputtypes.date
+        if  (      !Modernizr.inputtypes.date  // Not working in Safari (Mac)
                 || !Modernizr.inputtypes.number
                 || !Modernizr.input.required  // No submit disable support in Safari (Mac)
-                //|| !Modernizr.input.placeholder   //Used but not prerequisite
                 || !Modernizr.input.min
+				//|| !Modernizr.input.placeholder   //Used but not prerequisite
+				//|| !Modernizr.input.autofocus     //Used but not prerequisite
                 //|| !Modernizr.input.step          //Used but not prerequisite
             )
             {
@@ -123,23 +124,6 @@ function check_password_match_and_submit (Password1,Password2,formid)
             {alert("Password doesn't match!");}
         else
             {document.getElementById(formid).submit();}
-    }
-    
-function confirm_if_not_present_in_datalist (Field,Datalist,Confirm_Question)
-    {
-        datalist_element = document.getElementById(Datalist);
-        datalist_node = datalist_element.getElementsByTagName("option"); 
-        field_value = document.getElementById(Field).value;
-        ifound = false;
-        for (i=0;i<datalist_node.length;i++)
-            {
-                if (datalist_node[i].value == field_value) 
-                    {ifound = true;}
-            }
-        if (ifound == true || !Boolean(field_value))
-            {return true;}
-        else
-            {return confirm (Confirm_Question+' "'+field_value+'"?');}
     }
 
 function set_default_category ()

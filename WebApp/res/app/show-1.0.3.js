@@ -1,9 +1,9 @@
-var app = {
+var show = {
     init: function(){
         $(function() {
-            app.activateTooltips();
-            app.monitorEditRadio();
-            app.monitorDeleteCheckboxes();
+            show.activateTooltips();
+            show.monitorEditRadio();
+            show.monitorDeleteCheckboxes();
         });
     },
     
@@ -39,4 +39,4 @@ var app = {
     
 };
 
-app.init();
+show.init();
