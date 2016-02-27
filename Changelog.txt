@@ -1,3 +1,6 @@
+Version 1.0.4
+- Add native Android mobile app tag
+
 Version 1.0.3
 - iOS WebApp openend links in native browser instead of the App
 - Autofocus (HTML5) to username on login screen

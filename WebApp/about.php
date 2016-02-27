@@ -9,6 +9,7 @@ require_once "functions.php";
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
+        <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="MMEX">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
     	
@@ -56,6 +57,6 @@ require_once "functions.php";
             <br />
         </div>
 		
-		<script src="res/app/base-1.0.3.js" type="text/javascript"></script>
+		<script src="res/app/base-1.0.4.js" type="text/javascript"></script>
 	</body>
 </html>
