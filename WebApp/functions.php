@@ -156,7 +156,7 @@ class design
         {
             echo "<div class='form-group'>";
                 echo "<label for='SubCategory'>SubCategory</label>";
-                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
+                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' />";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
             
