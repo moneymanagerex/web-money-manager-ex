@@ -19,6 +19,7 @@ When you start up the desktop version of Money Manager EX, it downloads all tran
  * Optimized for portrait view on mobile device
 
 ## Recommendations
+
 You can use WebApp on a shared hosting service to greatly simplify the installation process. Most free services meet the small requirements of the WebApp.
 
 If you know what you are doing, you can install a webserver on your PC. After that you also need to properly configure your router to forward the webserver port and reach it with a static IP or DNS. You can find many guides for this on the web.
@@ -33,7 +34,22 @@ If you know what you are doing, you can install a webserver on your PC. After th
 
 The GUID for data sync with the desktop version is auto-generated. We suggest not changing it.
 
+## Configure Desktop App
+
+ 1. Open desktop app.
+ 2. Options -> Newtwork -> WebApp Settings.
+ 3. Fill in Url and GUID.
+ 4. Hit OK
+
+## First run
+
+ 1. Open desktop app.
+ 2. Tools -> Refresh WebApp.
+ 3. Wait till it's over
+ 4. You're now ready to enter your first transaction.
+
 ## Upgrade
+
  1. Delete all file from webserver except:
     * configuration_user.php
     * MMEX_New_Transaction.db
