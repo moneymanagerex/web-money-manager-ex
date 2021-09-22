@@ -303,11 +303,11 @@ class design
         
         
     //Design table cell
-    public static function table_cell ($value,$css_class)
+    public static function table_cell ($value,$css_class,$s_extra='')
         {
-            echo "<td class='${css_class}'>";
+            echo '<td class="' . $css_class .'" ' . $s_extra . '>';
             echo $value;
-            echo "</td>";
+            echo '</td>';
         }
 }
 

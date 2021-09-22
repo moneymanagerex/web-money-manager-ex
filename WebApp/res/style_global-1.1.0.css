@@ -76,3 +76,25 @@ hr
     {
         width: 5%;
     }
+
+.td_size_100
+    {
+        width: 100%;
+    }
+
+.transaction-extra-columns {
+    display: none;
+    visibility: hidden;
+}
+
+@media only screen and (min-width: 1024px) {
+    th.transaction-extra-columns,
+    td.transaction-extra-columns {
+        display:  table-cell;
+        visibility: visible;
+    }
+    .transaction-extra-columns {
+        display: inline;
+        visibility: visible;
+    }
+}
