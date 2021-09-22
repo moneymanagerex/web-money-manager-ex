@@ -168,8 +168,8 @@ function populate_sub_category (bCleanInput)
             });
         });
         $('#SubCategory').typeahead(
-            {hint: true, highlight: true, minLength: 1},
-            {name: 'SubCategoryList', displayKey: 'value',source: substringMatcher(SubCategoryList)}
+            {hint: true, highlight: true, minLength: 0},
+            {name: 'SubCategoryList', limit:15, displayKey: 'value',source: substringMatcher(SubCategoryList)}
         );
     }
 
