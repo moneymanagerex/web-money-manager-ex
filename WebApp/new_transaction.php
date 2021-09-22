@@ -84,7 +84,6 @@ security::redirect_if_not_loggedin();
         {
             echo "<div class='container'>";
                 echo "<form id='Transaction' class='form-transaction' method='post' action='insert.php'>";
-                //onsubmit='return confirm_if_not_present_in_datalist(\"Payee\",\"PayeeList\",\"Do you want to add the new payee\")'>";
     
                     echo "<h3 class='text_align_center'>${TransactionHeaderText}</h3>";
                     echo "<br />";
