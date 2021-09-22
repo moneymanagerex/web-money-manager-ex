@@ -153,10 +153,10 @@ else
         echo "<div class='container'>";
             echo "<br />";
             echo "<br />";
-            echo "<h3 class='text_align_center'>No transaction inserted</h3>";
+            echo "<h3 class='text_align_center'>No pending transactions</h3>";
             echo "<br />";
             echo "<br />";
-			echo "<a href='new_transaction.php' class='btn btn-lg btn-success btn-block'>Insert new</a>";
+			echo "<a href='new_transaction.php' class='btn btn-lg btn-success btn-block'>Add new</a>";
             echo "<br />";
             echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
             echo "<br />";
