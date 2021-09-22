@@ -138,11 +138,6 @@ function set_default_category ()
                     document.getElementById("SubCategory").value = json.DefSubCateg;
                 populate_sub_category(false);
             }
-            else
-            {
-                document.getElementById("Category").value = "";
-                document.getElementById("SubCategory").value = "";
-            }
         });
     }
 
