@@ -132,9 +132,9 @@ function set_default_category ()
         $.getJSON("query.php?get_default_category="+PayeeName, function(json) {
             if (!jQuery.isEmptyObject(json))
             {
-                if (json.DefCateg != "None")
+                if (json.DefCateg != "None" && document.getElementById("Category").value == '')
                     document.getElementById("Category").value = json.DefCateg;
-                if (json.DefSubCateg != "None")
+                if (json.DefSubCateg != "None" && document.getElementById("SubCategory").value == '')
                     document.getElementById("SubCategory").value = json.DefSubCateg;
                 populate_sub_category(false);
             }
