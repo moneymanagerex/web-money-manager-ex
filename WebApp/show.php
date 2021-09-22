@@ -135,8 +135,8 @@ if ($recordmaxid > 0 )
                     echo "</tbody>";
                 echo "</table>";
             echo "</div>\n";
-                echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-success btn-block'>Delete selected</button>";
-                echo "<button type='submit' id='TrModify' name='TrModify' value = 'Edit' class='btn btn-lg btn-success btn-block'>Edit selected</button>";
+                echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-danger btn-block'>Delete all selected</button>";
+                echo "<button type='submit' id='TrModify' name='TrModify' value = 'Edit' class='btn btn-lg btn-primary btn-block'>Edit the chosen</button>";
                 echo "</form>";
                 #echo "<input type='button' class='btn btn-lg btn-success btn-block' value='New transaction' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
                 echo "<br />";
