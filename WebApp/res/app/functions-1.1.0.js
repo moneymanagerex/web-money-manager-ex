@@ -28,7 +28,7 @@ var substringMatcher = function(strs)
             substrRegex = new RegExp(q, 'i');
             $.each(strs, function(i, str)
                 {
-                    if (substrRegex.test(str))
+                    if (substrRegex.test(str) || q === '')
                         {matches.push({ value: str });}
                 });
             if (matches.length == 1 && matches[0].value == q)

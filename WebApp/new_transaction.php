@@ -25,7 +25,7 @@ security::redirect_if_not_loggedin();
     <script src="res/modernizr-3.2.0.js" type="text/javascript"></script>
     <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
     <script src="res/typeahead.bundle-0.11.1.min.js" type="text/javascript"></script>
-    <script src="res/app/functions-1.0.4.js" type="text/javascript"></script>
+    <script src="res/app/functions-1.1.0.js" type="text/javascript"></script>
     <script src="res/app/new_transaction-1.0.4.js" type="text/javascript"></script>
 </head>
 
