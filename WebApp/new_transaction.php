@@ -19,13 +19,13 @@ security::redirect_if_not_loggedin();
     
     <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
     <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.9.9.css" />
+    <link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.11.1.css" />
     <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
     
     <script src="res/modernizr-3.2.0.js" type="text/javascript"></script>
     <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
-    <script src="res/typeahead.bundle-0.10.2.min.js" type="text/javascript"></script>
-    <script src="res/app/functions-1.0.4.js" type="text/javascript"></script>
+    <script src="res/typeahead.bundle-0.11.1.min.js" type="text/javascript"></script>
+    <script src="res/app/functions-1.1.0.js" type="text/javascript"></script>
     <script src="res/app/new_transaction-1.0.4.js" type="text/javascript"></script>
 </head>
 
@@ -84,7 +84,6 @@ security::redirect_if_not_loggedin();
         {
             echo "<div class='container'>";
                 echo "<form id='Transaction' class='form-transaction' method='post' action='insert.php'>";
-                //onsubmit='return confirm_if_not_present_in_datalist(\"Payee\",\"PayeeList\",\"Do you want to add the new payee\")'>";
     
                     echo "<h3 class='text_align_center'>${TransactionHeaderText}</h3>";
                     echo "<br />";
@@ -146,7 +145,7 @@ security::redirect_if_not_loggedin();
                     echo "<br />";
                 echo "</form>";
             echo "</div>\n";
-            
+
             echo "<script type='text/javascript'>";
                 //Refresh Attachments table
                 echo "attachment_RefreshTable(${TrEditNr});\n";

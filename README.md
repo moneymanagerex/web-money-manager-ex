@@ -37,7 +37,7 @@ The GUID for data sync with the desktop version is auto-generated. We suggest no
 ## Configure Desktop App
 
  1. Open desktop app.
- 2. Options -> Newtwork -> WebApp Settings.
+ 2. Options -> Network -> WebApp Settings.
  3. Fill in Url and GUID.
  4. Hit OK
 
