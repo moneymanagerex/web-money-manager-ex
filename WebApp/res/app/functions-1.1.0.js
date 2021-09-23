@@ -132,16 +132,25 @@ function set_default_category ()
         $.getJSON("query.php?get_default_category="+PayeeName, function(json) {
             if (!jQuery.isEmptyObject(json))
             {
+                // if merely changing payee and no category selected before
+                // only then allow to change parent category and subcategory
                 if (json.DefCateg != "None" && document.getElementById("Category").value == '')
+                {
                     document.getElementById("Category").value = json.DefCateg;
-                if (json.DefSubCateg != "None" && document.getElementById("SubCategory").value == '')
-                    document.getElementById("SubCategory").value = json.DefSubCateg;
+
+                    // change subcategory only when parent category changed
+                    // …with a child that belongs to new parent
+                    if (json.DefSubCateg != "None")
+                    {
+                        document.getElementById("SubCategory").value = json.DefSubCateg;
+                    }
+                    // …otherwise reset child
+                    else
+                    {
+                        document.getElementById("SubCategory").value = '';
+                    }
+                }
                 populate_sub_category(false);
-            }
-            else
-            {
-                document.getElementById("Category").value = "";
-                document.getElementById("SubCategory").value = "";
             }
         });
     }
@@ -159,8 +168,8 @@ function populate_sub_category (bCleanInput)
             });
         });
         $('#SubCategory').typeahead(
-            {hint: true, highlight: true, minLength: 1},
-            {name: 'SubCategoryList', displayKey: 'value',source: substringMatcher(SubCategoryList)}
+            {hint: true, highlight: true, minLength: 0},
+            {name: 'SubCategoryList', limit:15, displayKey: 'value',source: substringMatcher(SubCategoryList)}
         );
     }
 

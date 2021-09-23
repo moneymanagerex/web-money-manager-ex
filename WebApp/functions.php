@@ -156,7 +156,7 @@ class design
         {
             echo "<div class='form-group'>";
                 echo "<label for='SubCategory'>SubCategory</label>";
-                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' required />";
+                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' />";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
             
@@ -303,11 +303,11 @@ class design
         
         
     //Design table cell
-    public static function table_cell ($value,$css_class)
+    public static function table_cell ($value,$css_class,$s_extra='')
         {
-            echo "<td class='${css_class}'>";
+            echo '<td class="' . $css_class .'" ' . $s_extra . '>';
             echo $value;
-            echo "</td>";
+            echo '</td>';
         }
 }
 
@@ -763,25 +763,54 @@ class db_function
     }
    
    
-   // Insert all categories
-    public static function category_insert_json ($CategoryJSON)
+    /**
+     *  Insert all categories
+     *
+     *  @param String           list of categories and subcategories
+     *
+     *  return void
+     */
+    public static function category_insert_json (String $CategoryJSON) : void
         {
             $categories_json_list = json_decode ($CategoryJSON,true);
-            $CategoryList = $categories_json_list["Categories"];
+            $CategoryList = $categories_json_list['Categories'];
             $const_dbpath = costant::database_path();
             
             $db = new PDO("sqlite:${const_dbpath}");
-            $statement = $db -> prepare("INSERT or IGNORE INTO Category_list (CategoryName,SubCategoryName)
-                                        VALUES (:CategoryName,:SubCategoryName);");
+            $statement = $db -> prepare('INSERT or IGNORE INTO Category_list (CategoryName,SubCategoryName)
+                                        VALUES (:CategoryName,:SubCategoryName);');
             $db->beginTransaction();
             $CategoryListSize = sizeof($CategoryList);
+            /**
+             *  keep list of inserted categories
+             */
+            $a_categories_done = [];
             for ($i = 0; $i < $CategoryListSize; $i++)
             {
-                if ($CategoryList[$i]["CategoryName"] != "")
+                $s_category = $CategoryList[$i]['CategoryName'];
+                if ($s_category != '')
                 {
-                    $statement->bindParam(":CategoryName",$CategoryList[$i]["CategoryName"]);
-                    $statement->bindParam(":SubCategoryName",$CategoryList[$i]["SubCategoryName"]);
-                    $statement->execute ();
+                    /**
+                     *  if category is inserted for the first time
+                     *  then also insert it without a subcategory
+                     *  so later can select only parent category
+                     */
+                    $s_subcategory = 'None';
+                    if (!in_array($s_category, $a_categories_done))
+                    {
+                        $statement->bindParam(':CategoryName',$s_category);
+                        $statement->bindParam(':SubCategoryName',$s_subcategory);
+                        $statement->execute();
+                        $a_categories_done[] = $s_category;
+                    }
+
+                    $s_subcategory = $CategoryList[$i]['SubCategoryName'];
+                    if ($s_subcategory != '' && $s_subcategory != 'None' && !is_null($s_subcategory))
+                    {
+                        $statement->bindParam(':CategoryName',$s_category);
+                        $statement->bindParam(':SubCategoryName',$s_subcategory);
+                        $statement->execute();
+                    }
                 }
             }
             
@@ -796,7 +825,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
 
-            $statement = $db -> prepare("INSERT or IGNORE INTO Category_List (CategoryName, SubCAtegoryName)
+            $statement = $db -> prepare("INSERT or IGNORE INTO Category_List (CategoryName, SubCategoryName)
                                         VALUES (:CategoryName, :SubCategoryName);");
             $statement->bindParam(":CategoryName",$Category);
             $statement->bindParam(":SubCategoryName",$SubCategory);
