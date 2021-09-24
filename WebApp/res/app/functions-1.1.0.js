@@ -68,10 +68,22 @@ function get_php_page (url)
         {// code for IE6, IE5
             xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
         }
-        
-        xmlhttp.open("GET",url,false);
-        xmlhttp.send();
-        return(xmlhttp.responseText);
+
+        s_response = '';
+
+        $.ajax({
+            url:    url,
+            type:   "GET"
+        }).done((data, status, xhr) => {
+            if (xhr.readyState == 4 && xhr.status == 200)
+            {
+                s_response = xhr.responseText;
+            }
+        }).fail((xhr) => {
+            //TODO need better UI
+            return ('<span style="color:red;">err</span>');
+        });
+        return (s_response);
     }
     
 function send_alert_and_redirect (alertmessage,newurl)
