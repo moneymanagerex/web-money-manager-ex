@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
     <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/style_global-1.1.0.css?<?php echo time(); ?>" />
+    <link rel="stylesheet" type="text/css" href="res/style_global-1.1.0.css" />
 
     <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
     <script src="res/bootstrap-3.3.6.min.js" type="text/javascript"></script>
@@ -22,5 +22,3 @@
 </head>
 
 <body>
-
-<?php
