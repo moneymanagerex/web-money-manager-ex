@@ -35,7 +35,7 @@ require_once "functions.php";
                echo "<h5> API Version ".costant::api_version()."</h5>";
             ?>
             <br />
-            <h4> Developer: Gabriele [Gabriele-V]</h4>
+            <h4> Developer 2014 &mdash; 2016: Gabriele [Gabriele-V]</h4>
             <h4>WebApp <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"> GitHub WebPage</a></h4>
             <br />
             <p>
