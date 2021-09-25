@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             {$username = "";}
         
         $default_account = $_POST["Default_Account"];
+        $default_account = $_POST["Default_Account"];
         
         if (isset ($_POST["Set_Disable_payee"]))
             {$disable_payee = $_POST["Set_Disable_payee"];}
@@ -86,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
         <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
         
-        <script src="res/app/functions-1.0.4.js" type="text/javascript"></script>
+        <script src="res/app/functions-1.1.0.js" type="text/javascript"></script>
         <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
         
     </head>
