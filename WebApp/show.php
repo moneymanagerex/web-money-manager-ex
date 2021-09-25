@@ -1,12 +1,8 @@
 <?php
 
-//TODO strict_types
-#declare(strict_types=1);
-
-require_once 'functions.php';
-session_start();
-security::redirect_if_not_loggedin();
-$s_title = 'Show Transaction';
+$b_restricted_auth  = true;
+$s_page_title       = 'Show Transaction';
+include_once '_common.php';
 include_once '_header.php';
 
 function drawRecordRow(Array $a_transaction, String $s_date) : void

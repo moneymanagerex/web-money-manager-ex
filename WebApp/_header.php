@@ -7,7 +7,8 @@
     <meta name="apple-mobile-web-app-title" content="MMEX">
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
-    <title><?php echo $s_title ?></title>
+    <title><?php echo $s_page_title ?></title>
+
     <link rel="icon" href="res/favicon.ico" />
     <link rel="apple-touch-icon" href="res/mmex.png" />
 
