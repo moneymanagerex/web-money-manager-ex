@@ -162,5 +162,6 @@ else
 ?>
 	<script src="res/app/base-1.0.4.js" type="text/javascript"></script>
 	<script src="res/app/show-1.0.4.js" type="text/javascript"></script>
-</body>
-</html>
+<?php
+
+include_once '_footer.php';
