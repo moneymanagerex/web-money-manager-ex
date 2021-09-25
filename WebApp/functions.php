@@ -894,57 +894,62 @@ class db_upgrade
         {
             $start_db_version = db_function::db_version();
             $app_version = costant::app_version();
+
             while (db_function::db_version() !== $app_version)
                 {
                     switch (db_function::db_version())
                         {
-                            case "0.9.2":
+                            case '1.0.4':
+                                db_upgrade::upgrade_version('1.1.0');
+                                break;
+
+                            case '0.9.2':
                                 db_upgrade::to_0_9_3();
                                 break;
-                            case "0.9.3":
-                                db_upgrade::upgrade_version("0.9.4");
+                            case '0.9.3':
+                                db_upgrade::upgrade_version('0.9.4');
                                 break;
-                            case "0.9.4":
-                                db_upgrade::upgrade_version("0.9.5");
+                            case '0.9.4':
+                                db_upgrade::upgrade_version('0.9.5');
                                 break;
-                            case "0.9.5":
-                                db_upgrade::upgrade_version("0.9.6");
+                            case '0.9.5':
+                                db_upgrade::upgrade_version('0.9.6');
                                 break;
-                            case "0.9.6":
+                            case '0.9.6':
                                 db_upgrade::to_0_9_7();
                                 break;
-                            case "0.9.7":
-                                db_upgrade::upgrade_version("0.9.8");
+                            case '0.9.7':
+                                db_upgrade::upgrade_version('0.9.8');
                                 break;
-                            case "0.9.8":
+                            case '0.9.8':
                                 db_upgrade::to_0_9_9();
                                 break;
-                            case "0.9.9":
-                                db_upgrade::upgrade_version("1.0.0");
+                            case '0.9.9':
+                                db_upgrade::upgrade_version('1.0.0');
                                 break;
-                            case "1.0.0":
-                                db_upgrade::upgrade_version("1.0.1");
+                            case '1.0.0':
+                                db_upgrade::upgrade_version('1.0.1');
                                 break;
-                            case "1.0.1":
-                                db_upgrade::upgrade_version("1.0.2");
+                            case '1.0.1':
+                                db_upgrade::upgrade_version('1.0.2');
                                 break;
-							case "1.0.2":
-                                db_upgrade::upgrade_version("1.0.3");
+							case '1.0.2':
+                                db_upgrade::upgrade_version('1.0.3');
                                 break;
-                            case "1.0.3":
-                                db_upgrade::upgrade_version("1.0.4");
+                            case '1.0.3':
+                                db_upgrade::upgrade_version('1.0.4');
                                 break;
                             case $app_version;
                                 break;
                             default:
-                                various::send_alert_and_redirect("Database version not compliant: DB Version = ".db_function::db_version()." - APP Version = ${app_version}","error.php");
+                                various::send_alert_and_redirect('Database version is not compatible: DB Version = '.db_function::db_version()." - APP Version = ${app_version}",'error.php');
                                 break 2;
                         }
                 }
             if ($start_db_version !== $app_version && db_function::db_version() == $app_version)
-                {return "update_done";}
+                {return 'update_done';}
             else
-                {return "update_not_need";}
+                {return 'update_not_need';}
         }
         
         
