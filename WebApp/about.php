@@ -36,7 +36,7 @@ require_once "functions.php";
             ?>
             <br />
             <h4> Developer: Gabriele [Gabriele-V]</h4>
-            <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"><h4> GitHub WebPage</h4></a>
+            <h4>WebApp <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"> GitHub WebPage</a></h4>
             <br />
             <p>
                 Used components:
