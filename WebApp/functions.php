@@ -1284,14 +1284,9 @@ class costant
             
         public static function current_page_url ()
             {
-             $pageURL = 'http';
-             if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")
-                $pageURL .= "s";
-             $pageURL .= "://";
+             $pageURL = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"];
              if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443")
-                {$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
-             else
-                {$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];}
+                {$pageURL .= ':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
              return $pageURL;
             }
     }
