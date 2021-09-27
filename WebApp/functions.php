@@ -459,7 +459,7 @@ class db_function
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date;");
+            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date DESC, id DESC;");
             $resultarray = array();
             if($results !== false)
                 {$resultarray = $results->fetchall(PDO::FETCH_ASSOC);}
