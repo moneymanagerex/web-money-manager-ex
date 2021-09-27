@@ -1036,7 +1036,7 @@ class various
 {
     public static function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
-            echo "<script src='res/app/functions-1.0.4.js' type='text/javascript'></script>";
+            echo "<script src='res/app/functions-1.1.0.js' type='text/javascript'></script>";
             echo "<script language='javascript'>";
             if ($AlertRedirect <> "None")
                 {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
