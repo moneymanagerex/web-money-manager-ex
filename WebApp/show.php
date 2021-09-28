@@ -85,10 +85,10 @@ function drawRecordRow(Array $a_transaction, String $s_date) : void
         //CATEGORY
         $TrCategoryShow = $a_transaction['Category'];
         $TrSubCategoryShow = $a_transaction['SubCategory'];
-            if (costant::disable_category() == False && $TrSubCategoryShow != 'None' && !empty($TrSubCategoryShow))
-            {
-                design::table_cell('<span data-toggle="tooltip" title="Subcategory: ' . $TrSubCategoryShow . '" id="tooltip_category_' . $lineid . '">' . $TrCategoryShow . '*</span>','');
-            }
+        if (costant::disable_category() == False && $TrSubCategoryShow != 'None' && !empty($TrSubCategoryShow))
+        {
+            design::table_cell('<span data-toggle="tooltip" title="Subcategory: ' . $TrSubCategoryShow . '" id="tooltip_category_' . $lineid . '">' . $TrCategoryShow . '&nbsp;<span class="glyphicon glyphicon-equalizer"></span></span></span>','');
+        }
         else if (costant::disable_category() == False)
                 {design::table_cell($TrCategoryShow,'');}
 
