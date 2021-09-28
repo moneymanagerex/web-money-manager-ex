@@ -1,35 +1,16 @@
 <?php
-require_once "functions.php";
-session_start();
-security::redirect_if_not_loggedin();
+
+$b_restricted_auth  = true;
+$s_page_title       = 'Transaction';
+include_once '_common.php';
+include_once '_header.php';
+
 ?>
-
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MMEX">
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	
-    <title>Transaction</title>
-    <link rel="icon" href="res/favicon.ico" />
-    <link rel="apple-touch-icon" href="res/mmex.png" />
-    
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
-    <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
     <link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.11.1.css" />
-    <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
-    
-    <script src="res/modernizr-3.2.0.js" type="text/javascript"></script>
-    <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="res/app/base-1.0.4.js" type="text/javascript"></script>
     <script src="res/typeahead.bundle-0.11.1.min.js" type="text/javascript"></script>
-    <script src="res/app/functions-1.1.0.js" type="text/javascript"></script>
+    <script src="res/modernizr-3.2.0.js" type="text/javascript"></script>
     <script src="res/app/new_transaction-1.0.4.js" type="text/javascript"></script>
-</head>
-
-<body>
 	<script type="text/javascript">
         test_html5();
 	</script>
@@ -176,6 +157,6 @@ security::redirect_if_not_loggedin();
         }
     ?>
 	
-	<script src="res/app/base-1.0.4.js" type="text/javascript"></script>
-</body>
-</html>
+<?php
+
+include_once '_footer.php';
