@@ -1,14 +1,8 @@
 <?php
-require_once "functions.php";
 
-$const_username = costant::login_username();
-$const_password = costant::login_password();
-            
-if (isset($const_username) AND isset($const_password))
-    {
-        session_start();
-        security::redirect_if_not_loggedin();
-    }
+$b_restricted_auth  = true;
+$s_page_title       = 'Settings';
+include_once '_common.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
     {        
@@ -69,30 +63,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 header("Location: guide.php");
             }
     }
+
+include_once '_header.php';
+
 ?>
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="MMEX">
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-    	
-        <title>Money Manager EX</title>
-        <link rel="icon" href="res/favicon.ico" />
-        <link rel="apple-touch-icon" href="res/mmex.png" />
-        
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
-        
-        <script src="res/app/functions-1.1.0.js" type="text/javascript"></script>
-        <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
-        
-    </head>
-    
-    <body>
     <div class="container">
         <?php
         if (isset($const_username) AND isset($const_password))
@@ -207,5 +181,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     </div>
 	
 	<script src="res/app/base-1.0.4.js" type="text/javascript"></script>
-    </body>
-</html>
+<?php
+
+include_once '_footer.php';
