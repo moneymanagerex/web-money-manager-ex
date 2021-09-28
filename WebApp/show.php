@@ -41,7 +41,7 @@ function drawRecordRow(Array $a_transaction, String $s_date) : void
         }
 
         //TYPE
-        switch ($a_transaction['Type'])
+        switch ($TrTypeShow = $a_transaction['Type'])
         {
             case 'Withdrawal': $TrTypeShowFormatted = 'minus'; break;
             case 'Deposit': $TrTypeShowFormatted = 'plus'; break;
