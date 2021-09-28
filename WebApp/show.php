@@ -99,74 +99,74 @@ $recordmaxid = db_function::transaction_select_maxid();
 if ($recordmaxid > 0 )
     {
         $resultarray = db_function::transaction_select_all_order_by_date();
-        echo "<div class='container'>";
+        echo '<div class="container">';
             echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? 'No' : 'Current'). ' pending transaction' . (count($resultarray) != 1 ? 's' : ''). '</h3>';
-            echo "<br/>";
-            echo "<div class='table-responsive'>";
+            echo '<br />';
+            echo '<div class="table-responsive">';
 
-                echo "<input type='button' class='btn btn-lg btn-success btn-block' value='New transaction' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
-                echo "<br />";
-                echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
-                echo "<br />";
+                echo '<input type="button" class="btn btn-lg btn-success btn-block" value="New transaction" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
+                echo '<br />';
+                echo '<a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>';
+                echo '<br />';
 
-                echo "<form id='Show_Function' class='form-show-function' method='post' action='show_function.php'>";
+                echo '<form id="Show_Function" class="form-show-function" method="post" action="show_function.php">';
 
                 /**
                  *  delete button
                  */
-                echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-danger btn-block'>Delete all selected</button>";
+                echo '<button type="submit" id="TrDelete" name="TrModify" value = "Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
                 /**
                  *  edit button
                  */
-                echo "<button type='submit' id='TrModify' name='TrModify' value = 'Edit' class='btn btn-lg btn-primary btn-block'>Edit the chosen</button>";
+                echo '<button type="submit" id="TrModify" name="TrModify" value = "Edit" class="btn btn-lg btn-primary btn-block">Edit the chosen</button>';
 
-                echo "<table class='table table-hover table-condensed'>";
-                #echo "<table class = 'table table-hover table-condensed table-bordered'>"; //TABLE BORDERED FOR DEBUG
-                    echo "<thead>";
-                        echo "<tr>";
-                            echo '<th class="text_align_center"><span class="glyphicon glyphicon-trash"></span> <span class="transaction-extra-columns">Delete</span></th>';
-                            echo '<th class="text_align_center"><span class="glyphicon glyphicon-edit"></span> <span class="transaction-extra-columns">Edit</span></th>';
-                            echo '<th class=""><span class="glyphicon glyphicon-info-sign"></span> <span class="transaction-extra-columns">Type</span></th>';
-                            echo "<th class='text_align_right'>Amount</th>";
-                            echo "<th class='text_align_center'>Notes</th>";
-                            echo "<th>Account</th>";
+                echo '<table class="table table-hover table-condensed">';
+                #echo '<table class = "table table-hover table-condensed table-bordered">'; //TABLE BORDERED FOR DEBUG
+                    echo '<thead>';
+                        echo '<tr>';
+                            echo "<th class='text_align_center'><span class='glyphicon glyphicon-trash'></span> <span class='transaction-extra-columns'>Delete</span></th>";
+                            echo "<th class='text_align_center'><span class='glyphicon glyphicon-edit'></span> <span class='transaction-extra-columns'>Edit</span></th>";
+                            echo "<th class=''><span class='glyphicon glyphicon-info-sign'></span> <span class='transaction-extra-columns'>Type</span></th>";
+                            echo '<th class="text_align_right">Amount</th>';
+                            echo '<th class="text_align_center">Notes</th>';
+                            echo '<th>Account</th>';
                             if (costant::disable_payee() == False)
-                                {echo '<th class="transaction-extra-columns">Payee</th>';}
+                                {echo "<th class='transaction-extra-columns'>Payee</th>";}
                             if (costant::disable_category() == False)
-                                {echo "<th>Category</th>";}
-                        echo "</tr>";
-                    echo "</thead>";
+                                {echo '<th>Category</th>';}
+                        echo '</tr>';
+                    echo '</thead>';
                     
-                    echo "<tbody>";
+                    echo '<tbody>';
                     $s_date = '';
                     for ($i = 0; $i <= $recordmaxid; $i++)
                     {
-                        if (isset($resultarray[$i]["ID"]))
+                        if (isset($resultarray[$i]['ID']))
                         {
                             drawRecordRow($resultarray[$i], $s_date);
                             $s_date = $resultarray[$i]['Date'];
                         }
                     }
-                    echo "</tbody>";
-                echo "</table>";
-            echo "</div>\n";
-                echo "</form>";
-        echo "</div>\n";
+                    echo '</tbody>';
+                echo '</table>';
+                echo '</form>';
+            echo '</div>';
+        echo '</div>';
     }
 else
     {
-        echo "<div class='container'>";
-            echo "<br />";
-            echo "<br />";
-            echo "<h3 class='text_align_center'>No pending transactions</h3>";
-            echo "<br />";
-            echo "<br />";
-			echo "<a href='new_transaction.php' class='btn btn-lg btn-success btn-block'>Add new</a>";
-            echo "<br />";
-            echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
-            echo "<br />";
-            echo "<br />";
-        echo "</div>\n";
+        echo '<div class="container">';
+            echo '<br />';
+            echo '<br />';
+            echo '<h3 class="text_align_center">No pending transactions</h3>';
+            echo '<br />';
+            echo '<br />';
+			echo '<a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Add new</a>';
+            echo '<br />';
+            echo '<a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>';
+            echo '<br />';
+            echo '<br />';
+        echo '</div>\n';
     }
 ?>
 	<script src="res/app/base-1.0.4.js" type="text/javascript"></script>
