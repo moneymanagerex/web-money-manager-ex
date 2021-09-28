@@ -1059,7 +1059,6 @@ class various
             foreach ($ParameterArray as $key => $value)
                 {fwrite($fileopen, "\$${key} = \"${value}\";\n");}
                 
-            fwrite($fileopen, "?>");
             fclose($fileopen);
 
             /**
