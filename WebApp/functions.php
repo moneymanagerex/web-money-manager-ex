@@ -3,7 +3,6 @@ require_once "configuration_system.php";
 if (file_exists("configuration_user.php"))
     {require_once "configuration_user.php";}
 
-
 #########################
 ###  Design function  ###
 #########################
@@ -1062,7 +1061,36 @@ class various
                 
             fwrite($fileopen, "?>");
             fclose($fileopen);
+
+            /**
+             *  prevent caching of params
+             *  force "refresh" loaded configuration after saving new data
+             */
+            self::clearCache( $configfile );
+
         }
+
+    /**
+     *  remove the cached version of the script from memory and force PHP to recompile
+     *  opcache_invalidate is not always available. So it is better to check if it exists. Also check both of opcache_invalidate and apc_compile_file.
+     *
+     *  @param  String      path of the file to check and clear the cache for
+     *  @return void
+     */
+    public static function clearCache(String $s_path_file) : void
+    {
+        if (file_exists($s_path_file))
+        {
+            if (function_exists('opcache_invalidate') && strlen(ini_get('opcache.restrict_api')) < 1)
+            {
+                opcache_invalidate($s_path_file, true);
+            }
+            elseif (function_exists('apc_compile_file'))
+            {
+                apc_compile_file($s_path_file);
+            }
+        }
+    }
         
     public static function debug_to_file ($Value)
         {
