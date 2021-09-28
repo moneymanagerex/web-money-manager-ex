@@ -165,7 +165,7 @@ include_once '_header.php';
             <?php
                 if (isset($const_username) AND isset($const_password))
                     {
-                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='check_password_match_and_submit(\"Set_Password\",\"Set_Confirm_Password\",\"login\")'>Edit Settings</button>");
+                        echo ("<button type='button' id='EditSettings' name='EditSettings' class='btn btn-lg btn-success btn-block' onclick='check_password_match_and_submit(\"Set_Password\",\"Set_Confirm_Password\",\"login\")'>Save Settings</button>");
                         echo "<br />";
                         echo ("<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>");
                     }
