@@ -1035,11 +1035,11 @@ class various
 {
     public static function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
-            echo "<script src='res/app/functions-1.1.0.js' type='text/javascript'></script>";
-            echo "<script language='javascript'>";
-            if ($AlertRedirect <> "None")
+            echo '<script src="res/app/functions-1.1.0.js" type="text/javascript"></script>';
+            echo '<script language="javascript">';
+            if ($AlertRedirect <> 'None')
                 {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
-            echo "</script>";
+            echo '</script>';
         }
         
     public static function update_configuration_file ($ParameterArray)
@@ -1050,10 +1050,10 @@ class various
                 {unlink($configfile);}
             
             $fileopen = fopen($configfile, 'w');
-            fwrite($fileopen, "<?php"."\n");
-            fwrite($fileopen, "#######################"."\n");
-            fwrite($fileopen, "##    User Setting   ##"."\n");
-            fwrite($fileopen, "#######################"."\n");
+            fwrite($fileopen, '<?php'."\n");
+            fwrite($fileopen, '#######################'."\n");
+            fwrite($fileopen, '##    User Setting   ##'."\n");
+            fwrite($fileopen, '#######################'."\n");
             fwrite($fileopen, "\n");
             
             foreach ($ParameterArray as $key => $value)
