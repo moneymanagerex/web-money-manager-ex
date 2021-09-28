@@ -103,7 +103,23 @@ if ($recordmaxid > 0 )
             echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? 'No' : 'Current'). ' pending transaction' . (count($resultarray) != 1 ? 's' : ''). '</h3>';
             echo "<br/>";
             echo "<div class='table-responsive'>";
+
+                echo "<input type='button' class='btn btn-lg btn-success btn-block' value='New transaction' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
+                echo "<br />";
+                echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
+                echo "<br />";
+
                 echo "<form id='Show_Function' class='form-show-function' method='post' action='show_function.php'>";
+
+                /**
+                 *  delete button
+                 */
+                echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-danger btn-block'>Delete all selected</button>";
+                /**
+                 *  edit button
+                 */
+                echo "<button type='submit' id='TrModify' name='TrModify' value = 'Edit' class='btn btn-lg btn-primary btn-block'>Edit the chosen</button>";
+
                 echo "<table class='table table-hover table-condensed'>";
                 #echo "<table class = 'table table-hover table-condensed table-bordered'>"; //TABLE BORDERED FOR DEBUG
                     echo "<thead>";
@@ -134,14 +150,7 @@ if ($recordmaxid > 0 )
                     echo "</tbody>";
                 echo "</table>";
             echo "</div>\n";
-                echo "<button type='submit' id='TrDelete' name='TrModify' value = 'Delete' class='btn btn-lg btn-danger btn-block'>Delete all selected</button>";
-                echo "<button type='submit' id='TrModify' name='TrModify' value = 'Edit' class='btn btn-lg btn-primary btn-block'>Edit the chosen</button>";
                 echo "</form>";
-                echo "<input type='button' class='btn btn-lg btn-success btn-block' value='New transaction' onclick=".'"top.location.href = '."'new_transaction.php'".'" />';
-                echo "<br />";
-                echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
-                echo "<br />";
-                echo "<br />";
         echo "</div>\n";
     }
 else
