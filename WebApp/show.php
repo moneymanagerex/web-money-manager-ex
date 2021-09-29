@@ -1,5 +1,5 @@
 <?php
-$b_debug=1;
+
 $b_restricted_auth  = true;
 $s_page_title       = 'Show Transaction';
 $a_head_js_add[]      = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
