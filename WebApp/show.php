@@ -3,7 +3,7 @@
 $b_restricted_auth  = true;
 $s_page_title       = 'Show Transaction';
 $a_head_js_add[]      = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
-$a_head_js_add[]      = '<script src="res/app/show-1.0.4.js" type="text/javascript"></script>';
+$a_head_js_add[]      = '<script src="res/app/show-1.1.0.js" type="text/javascript"></script>';
 include_once '_common.php';
 include_once '_header.php';
 
