@@ -1,12 +1,36 @@
 <?php
 
 $b_restricted_auth  = true;
-$s_page_title       = 'Transaction';
-$a_head_css_add[]     = '<link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.11.1.css" />';
-$a_head_js_add[]      = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
-$a_head_js_add[]      = '<script src="res/typeahead.bundle-0.11.1.min.js" type="text/javascript"></script>';
-$a_head_js_add[]      = '<script src="res/modernizr-3.2.0.js" type="text/javascript"></script>';
-$a_head_js_add[]      = '<script src="res/app/new_transaction-1.0.4.js" type="text/javascript"></script>';
+
+
+if (isset($_GET['TrEditNr']))
+{
+    $TrEditNr = $_GET['TrEditNr'];
+    $FlagNew = False;
+    $TransactionHeaderText = 'Editing transcation';
+    $TransactionSubmit = 'Update transcation';
+}
+elseif (isset($_GET['TrDuplicateNr']))
+{
+    $TrEditNr = $_GET['TrDuplicateNr'];
+    $FlagNew = True;
+    $TransactionHeaderText = 'Duplicating transcation';
+    $TransactionSubmit = 'Create duplicate';
+}
+else
+{
+    $TrEditNr = 0;
+    $FlagNew = True;
+    $TransactionHeaderText = 'Creating new transcation';
+    $TransactionSubmit = 'Create transaction';
+}
+
+$s_page_title           = $TransactionHeaderText;
+$a_head_css_add[]       = '<link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.11.1.css" />';
+$a_head_js_add[]        = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
+$a_head_js_add[]        = '<script src="res/typeahead.bundle-0.11.1.min.js" type="text/javascript"></script>';
+$a_head_js_add[]        = '<script src="res/modernizr-3.2.0.js" type="text/javascript"></script>';
+$a_head_js_add[]        = '<script src="res/app/new_transaction-1.0.4.js" type="text/javascript"></script>';
 
 include_once '_common.php';
 include_once '_header.php';
@@ -19,29 +43,7 @@ include_once '_header.php';
     
     <?php
     attachments::delete_zero();
-       
-    if (isset($_GET["TrEditNr"]))
-        {
-            $TrEditNr = $_GET["TrEditNr"];
-            $FlagNew = False;
-            $TransactionHeaderText = "Editing transcation";
-            $TransactionSubmit = "Update transcation";
-        }
-    elseif (isset($_GET["TrDuplicateNr"]))
-        {
-            $TrEditNr = $_GET["TrDuplicateNr"];
-            $FlagNew = True;
-            $TransactionHeaderText = "Duplicating transcation";
-            $TransactionSubmit = "Create duplicate";
-        }
-    else
-        {
-            $TrEditNr = 0;
-            $FlagNew = True;
-            $TransactionHeaderText = "Creating new transcation";
-            $TransactionSubmit = "Create transaction";
-        }
-    
+
     if($TrEditNr == 0)
         {
             $resultarray = array();
