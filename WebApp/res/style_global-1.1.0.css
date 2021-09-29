@@ -87,6 +87,10 @@ hr
     visibility: hidden;
 }
 
+.TrModify, .TrDuplicate {
+    cursor: pointer;
+}
+
 .btn-block+.btn-block {
     margin-top: 0px;
 }
