@@ -25,17 +25,6 @@ var show = {
         });
     },
 
-    monitorEditRadio: function(){
-        var btn_edit = $('#TrModify');
-        
-        // Default state button
-        btn_edit.hide();
-        
-        $('.do-edit').on('change', function(){
-            btn_edit.show();
-        });
-    },
-    
     monitorDeleteCheckboxes: function(){
         var btn_delete = $('#TrDelete');
         
