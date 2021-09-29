@@ -87,6 +87,10 @@ hr
     visibility: hidden;
 }
 
+.btn-block+.btn-block {
+    margin-top: 0px;
+}
+
 @media only screen and (min-width: 1024px) {
     th.transaction-extra-columns,
     td.transaction-extra-columns {
