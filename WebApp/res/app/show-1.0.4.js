@@ -2,9 +2,9 @@ var show = {
     init: function(){
         $(function() {
             show.activateTooltips();
-            show.monitorEditRadio();
             show.monitorEditTransaction();
             show.monitorDeleteCheckboxes();
+            show.monitorDuplicateTransaction();
         });
     },
     
@@ -12,16 +12,22 @@ var show = {
         $('*[data-toggle="tooltip"]').tooltip();
     },
 
+    monitorDuplicateTransaction: function(){
+        $('.TrDuplicate').on('click', function(){
+            i_id = $(this).attr('tr_id');
+            $("#TrEdit").val(i_id);
+            $("#btn_action").val("Duplicate");
+            $("#Show_Function").trigger( "submit" );
+        });
+    },
+
+
     monitorEditTransaction: function(){
         $('.TrModify').on('click', function(){
-            tr_id = $(this).attr('id').split('_');
-            i_id = tr_id[1];
+            i_id = $(this).attr('tr_id');
             $("#TrEdit").val(i_id);
-            $("#TrModify").val("Edit");
-            if (($('.do-delete:checked').length == 0))
-            {
-                $("#Show_Function").trigger( "submit" );
-            }
+            $("#btn_action").val("Edit");
+            $("#Show_Function").trigger( "submit" );
         });
     },
 
@@ -34,8 +40,10 @@ var show = {
         $('.do-delete').on('change', function(){
             if($('.do-delete:checked').length > 0){
                 btn_delete.show();
+                $('#btn_new').hide();
             }else{
                 btn_delete.hide();
+                $('#btn_new').show();
             }
         });
     }

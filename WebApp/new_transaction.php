@@ -24,17 +24,27 @@ include_once '_header.php';
         {
             $TrEditNr = $_GET["TrEditNr"];
             $FlagNew = False;
+            $TransactionHeaderText = "Editing transcation";
+            $TransactionSubmit = "Update transcation";
+        }
+    elseif (isset($_GET["TrDuplicateNr"]))
+        {
+            $TrEditNr = $_GET["TrDuplicateNr"];
+            $FlagNew = True;
+            $TransactionHeaderText = "Duplicating transcation";
+            $TransactionSubmit = "Create duplicate";
         }
     else
         {
             $TrEditNr = 0;
             $FlagNew = True;
+            $TransactionHeaderText = "Creating new transcation";
+            $TransactionSubmit = "Create transaction";
         }
     
-    if($FlagNew)
+    if($TrEditNr == 0)
         {
             $resultarray = array();
-            $TransactionHeaderText = "Insert new transcation";
             $TransactionDate = "2014-01-01";
             $TransactionStatus = costant::transaction_default_status();
             $TransactionType = costant::transaction_default_type();
@@ -45,12 +55,10 @@ include_once '_header.php';
             $TransactionSubCategory = "";
             $TransactionAmount = "0";
             $TransactionNotes = "Empty";
-            $TransactionSubmit = "Insert transaction";
         }
         else
         {
             $resultarray = db_function::transaction_select_one($TrEditNr);
-            $TransactionHeaderText = "Edit transcation";
             $TransactionDate = $resultarray["Date"];
             $TransactionStatus = $resultarray["Status"];
             $TransactionType = $resultarray["Type"];
@@ -61,7 +69,6 @@ include_once '_header.php';
             $TransactionSubCategory = $resultarray["SubCategory"];
             $TransactionAmount = $resultarray["Amount"];
             $TransactionNotes = $resultarray["Notes"];
-            $TransactionSubmit = "Edit transaction";
         }
     if (sizeof($resultarray) > 0 || $FlagNew == True)
         {

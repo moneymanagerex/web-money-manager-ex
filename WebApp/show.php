@@ -1,5 +1,5 @@
 <?php
-
+$b_debug=1;
 $b_restricted_auth  = true;
 $s_page_title       = 'Show Transaction';
 $a_head_js_add[]      = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
@@ -25,7 +25,8 @@ function drawRecordRow(Array $a_transaction, String $s_date) : void
         //DELETE
         echo '<td class="text_align_center">';
             echo '<input class="do-delete" type="checkbox" name="TrDelete[]" value="' . $lineid . '" />';
-            echo '&nbsp;<span class="glyphicon glyphicon-edit do-edit TrModify" id="tr_' . $lineid . '"></span>';
+            echo '&nbsp;<span class="glyphicon glyphicon-edit do-edit TrModify" tr_id="' . $lineid . '"></span>';
+            echo '&nbsp;<span class="glyphicon glyphicon-duplicate do-duplicate TrDuplicate" tr_id="' . $lineid . '"></span>';
         echo '</td>';
 
         //CONDITION
@@ -103,23 +104,27 @@ if ($recordmaxid > 0 )
             echo '<br />';
             echo '<div class="table-responsive">';
 
-                echo '<input type="button" class="btn btn-lg btn-success btn-block" value="New transaction" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
-                echo '<br />';
                 echo '<a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>';
                 echo '<br />';
 
                 echo '<form id="Show_Function" class="form-show-function" method="post" action="show_function.php">';
 
+                echo '<input class="btn-edit" type="hidden" id="btn_action" name="btn_action" value="" />';
                 /**
                  *  edit selected transaction
                  */
                 echo '<input class="do-edit" type="hidden" id="TrEdit" name="TrEdit[]" value="" />';
-                echo '<input class="btn-edit" type="hidden" id="TrModify" name="TrModify" value="" />';
 
                 /**
                  *  delete button
                  */
-                echo '<button type="submit" id="TrDelete" name="TrModify" value="Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
+                echo '<button type="submit" id="TrDelete" name="btn_action" value="Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
+
+                /**
+                 *  new button
+                 */
+                echo '<input type="button" class="btn btn-lg btn-success btn-block" id="btn_new" value="New transaction" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
+                echo '<br />';
 
                 echo '<table class="table table-hover table-condensed">';
                 #echo '<table class = "table table-hover table-condensed table-bordered">'; //TABLE BORDERED FOR DEBUG
