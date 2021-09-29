@@ -3,6 +3,7 @@ var show = {
         $(function() {
             show.activateTooltips();
             show.monitorEditRadio();
+            show.monitorEditTransaction();
             show.monitorDeleteCheckboxes();
         });
     },
@@ -10,7 +11,20 @@ var show = {
     activateTooltips: function(){
         $('*[data-toggle="tooltip"]').tooltip();
     },
-    
+
+    monitorEditTransaction: function(){
+        $('.TrModify').on('click', function(){
+            tr_id = $(this).attr('id').split('_');
+            i_id = tr_id[1];
+            $("#TrEdit").val(i_id);
+            $("#TrModify").val("Edit");
+            if (($('.do-delete:checked').length == 0))
+            {
+                $("#Show_Function").trigger( "submit" );
+            }
+        });
+    },
+
     monitorEditRadio: function(){
         var btn_edit = $('#TrModify');
         

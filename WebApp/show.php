@@ -13,22 +13,19 @@ function drawRecordRow(Array $a_transaction, String $s_date) : void
     {
         $TrDateShow = $a_transaction['Date'];
         echo '<tr>';
-        design::table_cell($TrDateShow,'td_size_100 text_align_center', 'colspan="9"');
+        design::table_cell($TrDateShow,'td_size_100 text_align_center', 'colspan="7"');
         echo '</tr>';
     }
 
+    //TRANSACTION ID
+    $lineid = $a_transaction['ID'];
+
     echo '<tr>';
-        //TRANSACTION ID
-        $lineid = $a_transaction['ID'];
 
         //DELETE
         echo '<td class="text_align_center">';
             echo '<input class="do-delete" type="checkbox" name="TrDelete[]" value="' . $lineid . '" />';
-        echo '</td>';
-
-        //EDIT
-        echo '<td class="text_align_center">';
-            echo '<input class="do-edit" type="radio" name="TrEdit[]" value="' . $lineid . '" />';
+            echo '&nbsp;<span class="glyphicon glyphicon-edit do-edit TrModify" id="tr_' . $lineid . '"></span>';
         echo '</td>';
 
         //CONDITION
@@ -114,20 +111,21 @@ if ($recordmaxid > 0 )
                 echo '<form id="Show_Function" class="form-show-function" method="post" action="show_function.php">';
 
                 /**
+                 *  edit selected transaction
+                 */
+                echo '<input class="do-edit" type="hidden" id="TrEdit" name="TrEdit[]" value="" />';
+                echo '<input class="btn-edit" type="hidden" id="TrModify" name="TrModify" value="" />';
+
+                /**
                  *  delete button
                  */
-                echo '<button type="submit" id="TrDelete" name="TrModify" value = "Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
-                /**
-                 *  edit button
-                 */
-                echo '<button type="submit" id="TrModify" name="TrModify" value = "Edit" class="btn btn-lg btn-primary btn-block">Edit the chosen</button>';
+                echo '<button type="submit" id="TrDelete" name="TrModify" value="Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
 
                 echo '<table class="table table-hover table-condensed">';
                 #echo '<table class = "table table-hover table-condensed table-bordered">'; //TABLE BORDERED FOR DEBUG
                     echo '<thead>';
                         echo '<tr>';
                             echo "<th class='text_align_center'><span class='glyphicon glyphicon-trash'></span> <span class='transaction-extra-columns'>Delete</span></th>";
-                            echo "<th class='text_align_center'><span class='glyphicon glyphicon-edit'></span> <span class='transaction-extra-columns'>Edit</span></th>";
                             echo "<th class=''><span class='glyphicon glyphicon-info-sign'></span> <span class='transaction-extra-columns'>Type</span></th>";
                             echo '<th class="text_align_right">Amount</th>';
                             echo '<th class="text_align_center">Notes</th>';
