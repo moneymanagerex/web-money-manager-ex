@@ -6,24 +6,23 @@ $b_restricted_auth  = true;
 if (isset($_GET['TrEditNr']))
 {
     $TrEditNr = $_GET['TrEditNr'];
-    $FlagNew = False;
     $TransactionHeaderText = 'Editing transcation';
     $TransactionSubmit = 'Update transcation';
 }
 elseif (isset($_GET['TrDuplicateNr']))
 {
     $TrEditNr = $_GET['TrDuplicateNr'];
-    $FlagNew = True;
     $TransactionHeaderText = 'Duplicating transcation';
     $TransactionSubmit = 'Create duplicate';
 }
 else
 {
     $TrEditNr = 0;
-    $FlagNew = True;
     $TransactionHeaderText = 'Creating new transcation';
     $TransactionSubmit = 'Create transaction';
 }
+$FlagNew = ($TrEditNr == 0);
+
 
 $s_page_title           = $TransactionHeaderText;
 $a_head_css_add[]       = '<link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.11.1.css" />';
@@ -44,7 +43,7 @@ include_once '_header.php';
     <?php
     attachments::delete_zero();
 
-    if($TrEditNr == 0)
+    if ($FlagNew)
         {
             $resultarray = array();
             $TransactionDate = "2014-01-01";
