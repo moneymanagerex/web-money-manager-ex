@@ -206,7 +206,9 @@ class design
         
     //Create Hidden Field    
     public static function input_hidden ($FieldName,$Value)
-        {echo "<input type='hidden' id = '${FieldName}' name='${FieldName}' value='${Value}' />";}
+    {
+        echo '<input type="hidden" id="' . $FieldName . '" name="' . $FieldName . '" value="' . $Value . '" />';
+    }
      
         
     //Create setting input element
