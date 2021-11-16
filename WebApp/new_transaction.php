@@ -2,12 +2,17 @@
 
 $b_restricted_auth  = true;
 
+$TrEditNr = 0;
+$TransactionHeaderText = 'Creating new transcation';
+$TransactionSubmit = 'Create transaction';
+$FlagNew = true;
 
 if (isset($_GET['TrEditNr']))
 {
     $TrEditNr = $_GET['TrEditNr'];
     $TransactionHeaderText = 'Editing transcation';
     $TransactionSubmit = 'Update transcation';
+    $FlagNew = false;
 }
 elseif (isset($_GET['TrDuplicateNr']))
 {
@@ -15,14 +20,6 @@ elseif (isset($_GET['TrDuplicateNr']))
     $TransactionHeaderText = 'Duplicating transcation';
     $TransactionSubmit = 'Create duplicate';
 }
-else
-{
-    $TrEditNr = 0;
-    $TransactionHeaderText = 'Creating new transcation';
-    $TransactionSubmit = 'Create transaction';
-}
-$FlagNew = ($TrEditNr == 0);
-
 
 $s_page_title           = $TransactionHeaderText;
 $a_head_css_add[]       = '<link rel="stylesheet" type="text/css" href="res/typeahead-bootstrap-0.11.1.css" />';
@@ -40,38 +37,40 @@ include_once '_header.php';
         test_html5();
 	</script>
     
-    <?php
+<?php
+
     attachments::delete_zero();
 
-    if ($FlagNew)
+    if ($TrEditNr == 0)
         {
             $resultarray = array();
-            $TransactionDate = "2014-01-01";
+            $TransactionDate = '2014-01-01';
             $TransactionStatus = costant::transaction_default_status();
             $TransactionType = costant::transaction_default_type();
             $TransactionAccount = costant::transaction_default_account();
-            $TransactionToAccount = "None";
-            $TransactionPayee = "";
-            $TransactionCategory = "";
-            $TransactionSubCategory = "";
-            $TransactionAmount = "0";
-            $TransactionNotes = "Empty";
+            $TransactionToAccount = 'None';
+            $TransactionPayee = '';
+            $TransactionCategory = '';
+            $TransactionSubCategory = '';
+            $TransactionAmount = '0';
+            $TransactionNotes = 'Empty';
         }
         else
         {
             $resultarray = db_function::transaction_select_one($TrEditNr);
-            $TransactionDate = $resultarray["Date"];
-            $TransactionStatus = $resultarray["Status"];
-            $TransactionType = $resultarray["Type"];
-            $TransactionAccount = $resultarray["Account"];
-            $TransactionToAccount = $resultarray["ToAccount"];
-            $TransactionPayee = $resultarray["Payee"];
-            $TransactionCategory = $resultarray["Category"];
-            $TransactionSubCategory = $resultarray["SubCategory"];
-            $TransactionAmount = $resultarray["Amount"];
-            $TransactionNotes = $resultarray["Notes"];
+            $TransactionDate = $resultarray['Date'];
+            $TransactionStatus = $resultarray['Status'];
+            $TransactionType = $resultarray['Type'];
+            $TransactionAccount = $resultarray['Account'];
+            $TransactionToAccount = $resultarray['ToAccount'];
+            $TransactionPayee = $resultarray['Payee'];
+            $TransactionCategory = $resultarray['Category'];
+            $TransactionSubCategory = $resultarray['SubCategory'];
+            $TransactionAmount = $resultarray['Amount'];
+            $TransactionNotes = $resultarray['Notes'];
         }
-    if (sizeof($resultarray) > 0 || $FlagNew == True)
+
+    if (sizeof($resultarray) > 0 || $FlagNew)
         {
             echo "<div class='container'>";
                 echo "<form id='Transaction' class='form-transaction' method='post' action='insert.php'>";
@@ -114,8 +113,8 @@ include_once '_header.php';
                     echo "<div class='table-responsive' id='attachments_table'>";
                     echo "</div>\n";
                     echo "<br />";  
-                    
-                    if ($FlagNew)
+
+                    if (!isset($_GET['TrEditNr']) && !(isset($_GET['TrDuplicateNr'])))
                         {
                             echo "<script type='text/javascript'>";
                                 echo "var date_today = get_today();";
@@ -124,10 +123,18 @@ include_once '_header.php';
                         }
                     else
                         {
-                            design::input_hidden("TrEditedNr",$TrEditNr);
+                            if (isset($_GET['TrDuplicateNr']))
+                            {
+                                design::input_hidden("TrEditedNr", 0);
+                            }
+                            elseif (isset($_GET['TrEditNr']))
+                            {
+                                design::input_hidden("TrEditedNr",$TrEditNr);
+                            }
+
                             echo "<script type='text/javascript'>";
                                 echo "populate_sub_category(false);";
-                            echo "</script>";  
+                            echo "</script>";
                         }
                     echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";
                     echo "<br />";
@@ -165,8 +172,5 @@ include_once '_header.php';
                 echo "<br />";
             echo "</div>\n";
         }
-    ?>
-	
-<?php
 
 include_once '_footer.php';
