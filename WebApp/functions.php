@@ -455,12 +455,12 @@ class db_function
         
         
     // Select all transaction order by date
-    public static function transaction_select_all_order_by_date ()
+    public static function transaction_select_all_order_by_date (String $s_direction = 'DESC')
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date DESC, id DESC;");
+            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date $s_direction, id $s_direction;");
             $resultarray = array();
             if($results !== false)
                 {$resultarray = $results->fetchall(PDO::FETCH_ASSOC);}
