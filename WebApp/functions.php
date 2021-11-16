@@ -3,7 +3,6 @@ require_once "configuration_system.php";
 if (file_exists("configuration_user.php"))
     {require_once "configuration_user.php";}
 
-
 #########################
 ###  Design function  ###
 #########################
@@ -207,7 +206,9 @@ class design
         
     //Create Hidden Field    
     public static function input_hidden ($FieldName,$Value)
-        {echo "<input type='hidden' id = '${FieldName}' name='${FieldName}' value='${Value}' />";}
+    {
+        echo '<input type="hidden" id="' . $FieldName . '" name="' . $FieldName . '" value="' . $Value . '" />';
+    }
      
         
     //Create setting input element
@@ -454,12 +455,12 @@ class db_function
         
         
     // Select all transaction order by date
-    public static function transaction_select_all_order_by_date ()
+    public static function transaction_select_all_order_by_date (String $s_direction = 'DESC')
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
             
-            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date;");
+            $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date $s_direction, id $s_direction;");
             $resultarray = array();
             if($results !== false)
                 {$resultarray = $results->fetchall(PDO::FETCH_ASSOC);}
@@ -894,57 +895,62 @@ class db_upgrade
         {
             $start_db_version = db_function::db_version();
             $app_version = costant::app_version();
+
             while (db_function::db_version() !== $app_version)
                 {
                     switch (db_function::db_version())
                         {
-                            case "0.9.2":
+                            case '1.0.4':
+                                db_upgrade::upgrade_version('1.1.0');
+                                break;
+
+                            case '0.9.2':
                                 db_upgrade::to_0_9_3();
                                 break;
-                            case "0.9.3":
-                                db_upgrade::upgrade_version("0.9.4");
+                            case '0.9.3':
+                                db_upgrade::upgrade_version('0.9.4');
                                 break;
-                            case "0.9.4":
-                                db_upgrade::upgrade_version("0.9.5");
+                            case '0.9.4':
+                                db_upgrade::upgrade_version('0.9.5');
                                 break;
-                            case "0.9.5":
-                                db_upgrade::upgrade_version("0.9.6");
+                            case '0.9.5':
+                                db_upgrade::upgrade_version('0.9.6');
                                 break;
-                            case "0.9.6":
+                            case '0.9.6':
                                 db_upgrade::to_0_9_7();
                                 break;
-                            case "0.9.7":
-                                db_upgrade::upgrade_version("0.9.8");
+                            case '0.9.7':
+                                db_upgrade::upgrade_version('0.9.8');
                                 break;
-                            case "0.9.8":
+                            case '0.9.8':
                                 db_upgrade::to_0_9_9();
                                 break;
-                            case "0.9.9":
-                                db_upgrade::upgrade_version("1.0.0");
+                            case '0.9.9':
+                                db_upgrade::upgrade_version('1.0.0');
                                 break;
-                            case "1.0.0":
-                                db_upgrade::upgrade_version("1.0.1");
+                            case '1.0.0':
+                                db_upgrade::upgrade_version('1.0.1');
                                 break;
-                            case "1.0.1":
-                                db_upgrade::upgrade_version("1.0.2");
+                            case '1.0.1':
+                                db_upgrade::upgrade_version('1.0.2');
                                 break;
-							case "1.0.2":
-                                db_upgrade::upgrade_version("1.0.3");
+							case '1.0.2':
+                                db_upgrade::upgrade_version('1.0.3');
                                 break;
-                            case "1.0.3":
-                                db_upgrade::upgrade_version("1.0.4");
+                            case '1.0.3':
+                                db_upgrade::upgrade_version('1.0.4');
                                 break;
                             case $app_version;
                                 break;
                             default:
-                                various::send_alert_and_redirect("Database version not compliant: DB Version = ".db_function::db_version()." - APP Version = ${app_version}","error.php");
+                                various::send_alert_and_redirect('Database version is not compatible: DB Version = '.db_function::db_version()." - APP Version = ${app_version}",'error.php');
                                 break 2;
                         }
                 }
             if ($start_db_version !== $app_version && db_function::db_version() == $app_version)
-                {return "update_done";}
+                {return 'update_done';}
             else
-                {return "update_not_need";}
+                {return 'update_not_need';}
         }
         
         
@@ -1031,11 +1037,11 @@ class various
 {
     public static function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
-            echo "<script src='res/app/functions-1.0.4.js' type='text/javascript'></script>";
-            echo "<script language='javascript'>";
-            if ($AlertRedirect <> "None")
+            echo '<script src="res/app/functions-1.1.0.js" type="text/javascript"></script>';
+            echo '<script language="javascript">';
+            if ($AlertRedirect <> 'None')
                 {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
-            echo "</script>";
+            echo '</script>';
         }
         
     public static function update_configuration_file ($ParameterArray)
@@ -1046,18 +1052,46 @@ class various
                 {unlink($configfile);}
             
             $fileopen = fopen($configfile, 'w');
-            fwrite($fileopen, "<?php"."\n");
-            fwrite($fileopen, "#######################"."\n");
-            fwrite($fileopen, "##    User Setting   ##"."\n");
-            fwrite($fileopen, "#######################"."\n");
+            fwrite($fileopen, '<?php'."\n");
+            fwrite($fileopen, '#######################'."\n");
+            fwrite($fileopen, '##    User Setting   ##'."\n");
+            fwrite($fileopen, '#######################'."\n");
             fwrite($fileopen, "\n");
             
             foreach ($ParameterArray as $key => $value)
                 {fwrite($fileopen, "\$${key} = \"${value}\";\n");}
                 
-            fwrite($fileopen, "?>");
             fclose($fileopen);
+
+            /**
+             *  prevent caching of params
+             *  force "refresh" loaded configuration after saving new data
+             */
+            self::clearCache( $configfile );
+
         }
+
+    /**
+     *  remove the cached version of the script from memory and force PHP to recompile
+     *  opcache_invalidate is not always available. So it is better to check if it exists. Also check both of opcache_invalidate and apc_compile_file.
+     *
+     *  @param  String      path of the file to check and clear the cache for
+     *  @return void
+     */
+    public static function clearCache(String $s_path_file) : void
+    {
+        if (file_exists($s_path_file))
+        {
+            if (function_exists('opcache_invalidate') && strlen(ini_get('opcache.restrict_api')) < 1)
+            {
+                opcache_invalidate($s_path_file, true);
+            }
+            elseif (function_exists('apc_compile_file'))
+            {
+                apc_compile_file($s_path_file);
+            }
+        }
+    }
         
     public static function debug_to_file ($Value)
         {
@@ -1279,14 +1313,9 @@ class costant
             
         public static function current_page_url ()
             {
-             $pageURL = 'http';
-             if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")
-                $pageURL .= "s";
-             $pageURL .= "://";
+             $pageURL = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"];
              if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443")
-                {$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
-             else
-                {$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];}
+                {$pageURL .= ':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
              return $pageURL;
             }
     }

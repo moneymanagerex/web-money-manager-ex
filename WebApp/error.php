@@ -32,7 +32,7 @@ require_once "functions.php";
 	           echo "<h4> Version ".costant::app_version()."</h4>";
             ?>
             <br />
-            <h4> Please contact developer Gabriele [Gabriele-V]</h4>
+            <h4> Please contact developer Max Dmitriev</h4>
             <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"><h4> on GitHub WebPage</h4></a>
             <br />
             <br />

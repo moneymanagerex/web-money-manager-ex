@@ -34,7 +34,7 @@ security::redirect_if_not_loggedin();
             <br />
             <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">New transaction</a>
             <br />
-            <a href="show.php" class="btn btn-lg btn-success btn-block">Show transaction</a>
+            <a href="show.php" class="btn btn-lg btn-success btn-block">Show transactions</a>
             <br />
             <a href="settings.php" class="btn btn-lg btn-success btn-block">Edit settings</a>
             <br />

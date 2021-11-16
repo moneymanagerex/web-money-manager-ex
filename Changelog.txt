@@ -1,3 +1,19 @@
+Version 1.1.0
+- ADD: Improve most obvious UX issues
+- ADD: Subcategory is optional
+- ADD: New Transaction with faster selection from dropdowns
+- ADD: Date in transaction list is a subheader instead of separate column
+- ADD: Hide some columns in transaction list for small screens e.g. smartphone portrait
+- FIX: Category without Subcategories is correctly sync'ed from Desktop
+- FIX: Change synchronous http request with async (BETA)
+- FIX: Change quotes to single for better performance (this will be continued and won't be announced separately)
+- DEL: Closing php tags for better security (this will be continued and won't be announced separately)
+- ADD: Unified header and footer
+- ADD: Default transaction status is now "None" instead of "Reconciled"
+- ADD: Edit transaction in 1 click
+- ADD: Duplicate transaction
+- ADD: sort list DESC for people and ASC for import in  Desktop
+
 Version 1.0.4
 - Add native Android mobile app tag
 
