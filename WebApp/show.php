@@ -98,7 +98,7 @@ function drawRecordRow(Array $a_transaction, String $s_date) : void
 $recordmaxid = db_function::transaction_select_maxid();
 if ($recordmaxid > 0 )
     {
-        $resultarray = db_function::transaction_select_all_order_by_date();
+        $resultarray = db_function::transaction_select_all_order_by_date('DESC');
         echo '<div class="container">';
             echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? 'No' : 'Current'). ' pending transaction' . (count($resultarray) != 1 ? 's' : ''). '</h3>';
             echo '<br />';
