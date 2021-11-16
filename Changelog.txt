@@ -8,6 +8,11 @@ Version 1.1.0
 - FIX: Change synchronous http request with async (BETA)
 - FIX: Change quotes to single for better performance (this will be continued and won't be announced separately)
 - DEL: Closing php tags for better security (this will be continued and won't be announced separately)
+- ADD: Unified header and footer
+- ADD: Default transaction status is now "None" instead of "Reconciled"
+- ADD: Edit transaction in 1 click
+- ADD: Duplicate transaction
+- ADD: sort list DESC for people and ASC for import in  Desktop
 
 Version 1.0.4
 - Add native Android mobile app tag
