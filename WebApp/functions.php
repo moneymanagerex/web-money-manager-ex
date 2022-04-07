@@ -459,6 +459,7 @@ class db_function
         {
             $const_dbpath = costant::database_path();
             $db = new PDO("sqlite:${const_dbpath}");
+            $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
             
             $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date $s_direction, id $s_direction;");
             $resultarray = array();
