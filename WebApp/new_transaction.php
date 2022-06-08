@@ -1,23 +1,24 @@
 <?php
 
 $b_restricted_auth  = true;
+$transaction_name   = '';
 
 $TrEditNr = 0;
-$TransactionHeaderText = 'Creating new transcation';
+$TransactionHeaderText = 'Creating new transaction';
 $TransactionSubmit = 'Create transaction';
 $FlagNew = true;
 
 if (isset($_GET['TrEditNr']))
 {
     $TrEditNr = $_GET['TrEditNr'];
-    $TransactionHeaderText = 'Editing transcation';
-    $TransactionSubmit = 'Update transcation';
+    $TransactionHeaderText = 'Editing transaction';
+    $TransactionSubmit = 'Update transaction';
     $FlagNew = false;
 }
 elseif (isset($_GET['TrDuplicateNr']))
 {
     $TrEditNr = $_GET['TrDuplicateNr'];
-    $TransactionHeaderText = 'Duplicating transcation';
+    $TransactionHeaderText = 'Duplicating transaction';
     $TransactionSubmit = 'Create duplicate';
 }
 
