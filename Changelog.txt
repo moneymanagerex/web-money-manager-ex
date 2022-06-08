@@ -1,3 +1,7 @@
+Version 1.1.1
+- FIX: Typo in spelling of "transaction" word.
+- FIX: New line character to be translated properly.
+
 Version 1.1.0
 - ADD: Improve most obvious UX issues
 - ADD: Subcategory is optional
