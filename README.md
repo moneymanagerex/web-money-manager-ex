@@ -50,7 +50,7 @@ The GUID for data sync with the desktop version is auto-generated. We suggest no
 
 ## Upgrade
 
- 1. Delete all file from webserver except:
+ 1. Delete all files from webserver except for:
     * configuration_user.php
     * MMEX_New_Transaction.db
  2. Unzip all files in the same folder as the original installation.

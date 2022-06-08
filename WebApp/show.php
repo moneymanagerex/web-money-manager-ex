@@ -171,7 +171,7 @@ else
             echo '<a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>';
             echo '<br />';
             echo '<br />';
-        echo '</div>\n';
+        echo '</div>'."\n";
     }
 
 include_once '_footer.php';
