@@ -748,7 +748,7 @@ class db_function
     
     
     //Select all subcategory
-    public static function subactegory_select_all ($Category)
+    public static function subcategory_select_all ($Category)
     {
         $const_dbpath = costant::database_path();
         $db = new PDO("sqlite:${const_dbpath}");

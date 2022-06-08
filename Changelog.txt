@@ -1,3 +1,6 @@
+Version 1.1.2
+- FIX function name "subactegory_select_all"
+
 Version 1.1.1
 - FIX: Typo in spelling of "transaction" word.
 - FIX: New line character to be translated properly.

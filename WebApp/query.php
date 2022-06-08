@@ -13,7 +13,7 @@ if (isset($_GET["get_default_category"]))
 #Return subcategory
 if (isset($_GET["get_subcategory"]))
     {
-        $ArrSubCategory = db_function::subactegory_select_all($_GET["get_subcategory"]);
+        $ArrSubCategory = db_function::subcategory_select_all($_GET["get_subcategory"]);
         echo json_encode($ArrSubCategory);
     }
 ?>
