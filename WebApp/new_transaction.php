@@ -76,8 +76,7 @@ include_once '_header.php';
             echo "<div class='container'>";
                 echo "<form id='Transaction' class='form-transaction' method='post' action='insert.php'>";
     
-                    echo "<h3 class='text_align_center'>${TransactionHeaderText}</h3>";
-                    echo "<br />";
+                    echo '<h3 class="text_align_center">' . $TransactionHeaderText . '</h3>';
                     
                     design::input_date($TransactionDate);
                     design::input_status($TransactionStatus);
@@ -106,14 +105,13 @@ include_once '_header.php';
                     design::input_notes($TransactionNotes);
                     
                     echo "<div class='form-group'>";
-                        echo "<label for='fileToUpload'>Take a picture or upload attachments</label><br />";
+                        echo '<label class="width100" for="fileToUpload">Take a picture or upload attachments</label><br />';
                         echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile(${TrEditNr});' />";
                         echo "<span class='help-block'></span>";
                     echo "</div>\n";
                     
                     echo "<div class='table-responsive' id='attachments_table'>";
                     echo "</div>\n";
-                    echo "<br />";  
 
                     if (!isset($_GET['TrEditNr']) && !(isset($_GET['TrDuplicateNr'])))
                         {
@@ -141,7 +139,6 @@ include_once '_header.php';
                     echo "<br />";
                     echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
                     echo "<br />";
-                    echo "<br />";
                 echo "</form>";
             echo "</div>\n";
 
@@ -149,8 +146,8 @@ include_once '_header.php';
                 //Refresh Attachments table
                 echo "attachment_RefreshTable(${TrEditNr});\n";
                 //Manager transfer disable field
-                echo "enable_element ('ToAccount','Type','Transfer');\n";
-                echo "disable_element ('Payee','Type','Transfer');\n";
+                echo "enable_element ('ToAccount','Type_Withdrawal','Transfer');\n";
+                echo "disable_element ('Payee','Type_Withdrawal','Transfer');\n";
                 //Manage default category
                 echo "$('#Payee').bind('input', set_default_category);\n";
                 echo "$('#Payee').bind('typeahead:selected', set_default_category);\n";
