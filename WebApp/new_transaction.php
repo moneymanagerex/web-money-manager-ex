@@ -76,8 +76,6 @@ include_once '_header.php';
             echo "<div class='container'>";
                 echo "<form id='Transaction' class='form-transaction' method='post' action='insert.php'>";
     
-                    echo '<h3 class="text_align_center">' . $TransactionHeaderText . '</h3>';
-                    
                     design::input_date($TransactionDate);
                     design::input_status($TransactionStatus);
                     design::input_type($TransactionType);
@@ -136,9 +134,9 @@ include_once '_header.php';
                             echo "</script>";
                         }
                     echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";
-                    echo "<br />";
-                    echo "<a href='landing.php' class='btn btn-lg btn-success btn-block'>Return to menu</a>";
-                    echo "<br />";
+
+                    include_once '_btn_back.php';
+
                 echo "</form>";
             echo "</div>\n";
 
