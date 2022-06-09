@@ -1,66 +1,44 @@
 <?php
-require_once "functions.php";
-#session_start();
-#security::redirect_if_not_loggedin();
+$b_restricted_auth      = false;
+
+$s_page_title           = 'About';
+$b_page_logo            = true;
+
+include_once '_common.php';
+include_once '_header.php';
 ?>
 
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="MMEX">
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-    	
-        <title>Money Manager EX</title>
-        <link rel="icon" href="res/favicon.ico" />
-        <link rel="apple-touch-icon" href="res/mmex.png" />
-        
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
-		
-		<script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
-    </head>
-    
-    <body>
         <div class="container text_align_center">
-            <br />
-            <img src="res/mmex.png" alt="Money Manager Ex Logo" height="150" width="150"/>
-            <br />
-            <h2><strong>Money Manager Ex - Web App</strong></h2>
             <?php
 	           echo "<h4> Version ".costant::app_version()."</h4>";
                echo "<h5> API Version ".costant::api_version()."</h5>";
             ?>
             <br />
-            <h4>
+            <h5>
                 Developer 2021<?php if (date("Y") > 2021) { echo '&nbsp;&mdash;&nbsp' . date("Y"); } ?>:
                 <a href="https://github.com/maksimdzmitryew" target="_blank">Maksim Dzmitryew̆</a>
-            </h4>
-            <h4> Developer 2014 &mdash; 2016: Gabriele [Gabriele-V]</h4>
-            <h4>WebApp <a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank"> GitHub WebPage</a></h4>
+            </h5>
+            <h5>Developer 2014 &mdash; 2016: Gabriele [Gabriele-V]</h5>
+            <h4><a href="https://github.com/moneymanagerex/web-money-manager-ex" target="_blank">WebApp&rsquo;s GitHub</a></h4>
             <br />
             <p>
                 Used components:
                 <br />
-                <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>
+                <a href="https://getbootstrap.com/" target="_blank">Bootstrap</a>
                 <br />
-                <a href="http://jquery.com//" target="_blank">jQuery</a>
+                <a href="https://jquery.com/" target="_blank">jQuery</a>
                 <br />
-                <a href="http://modernizr.com/" target="_blank">Modernizr</a>
+                <a href="https://modernizr.com/" target="_blank">Modernizr</a>
                 <br />
-                <a href="http://www.sqlite.org/" target="_blank">SQLite</a>
+                <a href="https://www.sqlite.org/" target="_blank">SQLite</a>
+                <br />
+                <a href="https://twitter.github.io/typeahead.js/" target="_blank">Twitter's typeahead</a>
             </p>
             <img src="res/html5.png" alt="HTML5 Logo" height="100" width="100"/>
-            <br />
-            <br />
-            <a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>
-            <br />
-            <br />
+            <?php
+                include_once '_btn_back.php';
+            ?>
         </div>
 		
-		<script src="res/app/base-1.0.4.js" type="text/javascript"></script>
-	</body>
-</html>
+<?php
+include_once '_footer.php';

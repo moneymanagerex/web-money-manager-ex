@@ -1,7 +1,10 @@
 <?php
-require_once "configuration_system.php";
-if (file_exists("configuration_user.php"))
-    {require_once "configuration_user.php";}
+require_once 'configuration_system.php';
+
+if (file_exists('configuration_user.php'))
+{
+    require_once 'configuration_user.php';
+}
 
 #########################
 ###  Design function  ###
@@ -44,23 +47,32 @@ class design
                 
     //Create type input element
     public static function input_type ($TrTypeDefault)
-        {
-            $TypeArrayDesc = array ("Withdrawal", "Deposit", "Transfer");
-            
-            echo "<div class='form-group'>";
-                echo "<label for='Type'>Type</label>";
-                echo "<select id ='Type' name='Type' class='form-control' onchange='enable_element(\"ToAccount\",\"Type\",\"Transfer\"); disable_element(\"Payee\",\"Type\",\"Transfer\")'>";
-                for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
+    {
+        $TypeArrayDesc = array ('Withdrawal', 'Deposit', 'Transfer');
+        
+        echo '<div class="form-group">';
+            echo '<label for="Type">Type</label>';
+#            echo '<select id="Type" name="Type" class="form-control" onchange="enable_element(\'ToAccount\',\'Type\',\'Transfer\'); disable_element(\'Payee\',\'Type\',\'Transfer\')">';
+            $on_change = 'onchange="enable_element(\'ToAccount\',\'Type\',\'Transfer\'); disable_element(\'Payee\',\'Type\',\'Transfer\')"';
+            for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
+            {
+                $is_selected = '';
+                if ($TypeArrayDesc[$i] == $TrTypeDefault)
                 {
-                    if ($TypeArrayDesc[$i] == $TrTypeDefault)
-                        {echo "<option value='${TypeArrayDesc[$i]}' selected> ${TypeArrayDesc[$i]} </option>";}
-                    else
-                        {echo "<option value='${TypeArrayDesc[$i]}'> ${TypeArrayDesc[$i]} </option>";}
+#                    $is_selected = 'selected';
+                    $is_selected = 'checked';
                 }
-                echo "</select>";
-                echo "<span class='help-block'></span>";
-            echo "</div>\n";        
-        }
+                $element_id = 'Type_' . $TypeArrayDesc[$i];
+                $element_onchange = str_replace('Type', $element_id, $on_change);
+#                echo "<option value='${TypeArrayDesc[$i]}' $is_selected> ${TypeArrayDesc[$i]} </option>";
+                echo '<input type="radio" id="' . $element_id . '" name="Type" value="' . $TypeArrayDesc[$i] . '" ' . $element_onchange . $is_selected . '>';
+                echo '<label for="' . $element_id . '">' . $TypeArrayDesc[$i] . '</label>';
+
+            }
+            echo '</select>';
+            echo '<span class="help-block"></span>';
+        echo '</div>'."\n";
+    }
                 
         
     //Create account input element
@@ -860,8 +872,10 @@ class security
                     if ($login_check !== $login_string)
                         {header("Location: index.php");}
                 }
-                else
-                {header("Location: index.php");}
+                elseif ($_SERVER['PHP_SELF'] != "/index.php")
+                {
+                    header("Location: index.php");
+                }
             }
         }
         
@@ -901,10 +915,13 @@ class db_upgrade
                 {
                     switch (db_function::db_version())
                         {
+                            case '1.1.0':
+                                db_upgrade::upgrade_version('1.2.0');
+                                break;
+
                             case '1.0.4':
                                 db_upgrade::upgrade_version('1.1.0');
                                 break;
-
                             case '0.9.2':
                                 db_upgrade::to_0_9_3();
                                 break;
@@ -1038,7 +1055,7 @@ class various
 {
     public static function send_alert_and_redirect ($AlertMessage, $AlertRedirect)
         {
-            echo '<script src="res/app/functions-1.1.0.js" type="text/javascript"></script>';
+            echo '<script src="res/app/functions-1.2.0.js" type="text/javascript"></script>';
             echo '<script language="javascript">';
             if ($AlertRedirect <> 'None')
                 {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
@@ -1277,6 +1294,12 @@ class costant
             {
                 global $app_version;
                 return $app_version;
+            }
+
+        public static function app_name ()
+            {
+                global $app_name;
+                return $app_name;
             }
             
         public static function api_version ()

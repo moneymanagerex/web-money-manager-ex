@@ -64,19 +64,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             }
     }
 
+$s_page_title           = 'Edit settings';
+$is_edit                = (isset($const_username) AND isset($const_password));
+
+if (!$is_edit)
+{
+    $s_page_title           = 'New settings';
+    $b_page_logo            = true;
+
+}
+
 include_once '_header.php';
 
 ?>
     <div class="container">
         <?php
-        if (isset($const_username) AND isset($const_password))
-            {echo "<h3 class='text_align_center'>Edit settings</h3>";}
-        else
-                {
-                echo "<br />";
-                echo "<p style='text-align:center'><img src='res\mmex.png' alt='Money Manager EX Logo' height='150' width='150' /></p>";
-                echo "<h3 class='text_align_center'>Insert new settings to start use Money Manager</h3>";
-                }
+            if (!$is_edit) :
+        ?>
+        <h3 class="text_align_center">Provide new settings to start using Money Manager EX</h3>
+        <?php
+            endif;
         ?>
         <br />
         <form id="login" method="post" action="settings.php">

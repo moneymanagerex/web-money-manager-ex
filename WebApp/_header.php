@@ -1,5 +1,6 @@
 <?php
     $s_debug = '';
+    $s_debug = '?v=' . date("YmdHis");
     if (!isset($a_head_css_add)) { $s_head_css_add = ''; } else { $s_head_css_add = '        ' . implode ("\n" . '        ', $a_head_css_add) . "\n"; }
     if (!isset($a_head_js_add)) { $s_head_js_add = ''; } else { $s_head_js_add = '        ' . implode ("\n" . '        ', $a_head_js_add) . "\n"; }
     if ($b_debug) {
@@ -16,14 +17,24 @@
         <meta name="apple-mobile-web-app-title" content="MMEX">
         <meta name="apple-mobile-web-app-capable" content="yes" />
 
-        <title><?php echo $s_page_title ?> | Money Manager EX</title>
+        <title><?php 
+        if (costant::app_name() != $s_page_title)
+        {
+            echo $s_page_title;
+            if (!empty($s_page_title))
+            {
+                echo ' | ';
+            }
+        }
+        echo costant::app_name();
+        ?></title>
 
         <link rel="icon" href="res/favicon.ico" />
         <link rel="apple-touch-icon" href="res/mmex.png" />
 
         <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css<?php echo $s_debug; ?>" />
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css<?php echo $s_debug; ?>" />
-        <link rel="stylesheet" type="text/css" href="res/style_global-1.1.0.css<?php echo $s_debug; ?>" />
+        <link rel="stylesheet" type="text/css" href="res/style_global-1.2.0.css<?php echo $s_debug; ?>" />
 
         <!-- optional css -->
 <?php echo $s_head_css_add ?>
@@ -31,7 +42,7 @@
 
         <script src="res/jquery-2.1.4.min.js" type="text/javascript"></script>
         <script src="res/bootstrap-3.3.6.min.js" type="text/javascript"></script>
-        <script src="res/app/functions-1.1.0.js<?php echo $s_debug; ?>" type="text/javascript"></script>
+        <script src="res/app/functions-1.2.0.js<?php echo $s_debug; ?>" type="text/javascript"></script>
 
         <!-- optional js -->
 <?php echo $s_head_js_add ?>
@@ -40,3 +51,12 @@
     </head>
 
     <body>
+        <div class="container text_align_center app_page_title">
+            <?php if (isset($b_page_logo) && $b_page_logo) : ?>
+            <h1><strong><?php echo costant::app_name() ?></strong></h1>
+            <img src="res/mmex.png" alt="Money Manager Ex Logo" height="150" width="150"/>
+            <?php endif; ?>
+            <?php if (isset($s_page_title) && !empty($s_page_title)) : ?>
+            <h2><strong><?php echo $s_page_title ?></strong></h2>
+            <?php endif; ?>
+        </div>
