@@ -1,6 +1,6 @@
 <?php
     $s_debug = '';
-    $s_debug = '?v=' . date("YmdHis");
+    // $s_debug = '?v=' . date("YmdHis");
     if (!isset($a_head_css_add)) { $s_head_css_add = ''; } else { $s_head_css_add = '        ' . implode ("\n" . '        ', $a_head_css_add) . "\n"; }
     if (!isset($a_head_js_add)) { $s_head_js_add = ''; } else { $s_head_js_add = '        ' . implode ("\n" . '        ', $a_head_js_add) . "\n"; }
     if ($b_debug) {
