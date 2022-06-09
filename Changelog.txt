@@ -1,3 +1,12 @@
+Version 1.2.0
+- ADD fit "new transaction" screen to a single non-scrolling page on smartphones in portrait mode
+- ADD fit "about" and "guide" screen to a single non-scrolling page
+- ADD unify header and footer usage across all pages with proper reference to css and js versions
+- ADD app name as global settings
+- ADD more html at empty page of transactions list
+- DEL legacy css v.0.9.9
+- ADD exclude pattern for git takes any files that starts with configuration_user.php*
+
 Version 1.1.2
 - FIX function name "subactegory_select_all"
 
