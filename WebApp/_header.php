@@ -18,15 +18,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
 
         <title><?php 
-        if (costant::app_name() != $s_page_title)
-        {
-            echo $s_page_title;
-            if (!empty($s_page_title))
-            {
-                echo ' | ';
-            }
-        }
-        echo costant::app_name();
+            echo various::getPageTitle($s_page_title)
         ?></title>
 
         <link rel="icon" href="res/favicon.ico" />
@@ -52,11 +44,18 @@
 
     <body>
         <div class="container text_align_center app_page_title">
-            <?php if (isset($b_page_logo) && $b_page_logo) : ?>
-            <h1><strong><?php echo costant::app_name() ?></strong></h1>
-            <img src="res/mmex.png" alt="Money Manager Ex Logo" height="150" width="150"/>
-            <?php endif; ?>
-            <?php if (isset($s_page_title) && !empty($s_page_title)) : ?>
-            <h2><strong><?php echo $s_page_title ?></strong></h2>
-            <?php endif; ?>
+            <?php 
+                if (isset($b_page_logo) && $b_page_logo) : 
+            ?><h1><strong><?php echo costant::app_name() ?></strong></h1>
+            <img src="res/mmex.png" alt="Money Manager Ex Logo" height="150" width="150"/><?php
+                endif; 
+            ?>
+
+            <?php 
+                $page_header_title = various::getPageName($s_page_title);
+                if (!empty($page_header_title)) : 
+            ?><h2><strong><?php echo $page_header_title; ?></strong></h2><?php
+                endif; 
+            ?>
         </div>
+
