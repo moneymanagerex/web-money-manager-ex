@@ -36,7 +36,7 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
             </p>
             <br />
             <h4>
-                WebApp GUID:
+                Desktop GUID:
             </h4>
             <p>
                 <strong>
