@@ -1,7 +1,7 @@
 <?php
 
 $b_restricted_auth  = true;
-$s_page_title       = 'Settings';
+
 include_once '_common.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -64,7 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             }
     }
 
-$s_page_title           = 'Edit settings';
 $is_edit                = (isset($const_username) AND isset($const_password));
 
 if (!$is_edit)

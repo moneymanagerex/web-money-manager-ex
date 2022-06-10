@@ -1,7 +1,6 @@
 <?php
-$b_restricted_auth      = true;
 
-$s_page_title           = 'Guide';
+$b_restricted_auth      = true;
 $b_page_logo            = true;
 
 include_once '_common.php';
