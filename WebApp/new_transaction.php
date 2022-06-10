@@ -143,7 +143,7 @@ include_once '_header.php';
             echo "<script type='text/javascript'>";
                 //Refresh Attachments table
                 echo "attachment_RefreshTable(${TrEditNr});\n";
-                //Manager transfer disable field
+                //Manage transfer disable field
                 echo "enable_element ('ToAccount','Type_Withdrawal','Transfer');\n";
                 echo "disable_element ('Payee','Type_Withdrawal','Transfer');\n";
                 //Manage default category
