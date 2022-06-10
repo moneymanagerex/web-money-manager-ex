@@ -77,13 +77,6 @@ hr
     padding-bottom: 20px;
 }
 
-.div_btn_back
-{
-    padding-top: 17px;
-    padding-bottom: 7px;
-}
-
-
 .td_size_5
     {
         width: 5%;
@@ -105,6 +98,17 @@ hr
 
 .btn-block+.btn-block {
     margin-top: 0px;
+}
+
+.div_btn
+{
+    margin-bottom: 17px;
+}
+
+.div_btn_back
+{
+    padding-top: 17px;
+    padding-bottom: 7px;
 }
 
 /* new transaction */
