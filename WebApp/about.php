@@ -34,9 +34,6 @@ include_once '_header.php';
                 <a href="https://twitter.github.io/typeahead.js/" target="_blank">Twitter's typeahead</a>
             </p>
             <img src="res/html5.png" alt="HTML5 Logo" height="100" width="100"/>
-            <?php
-                include_once '_btn_back.php';
-            ?>
         </div>
 		
 <?php

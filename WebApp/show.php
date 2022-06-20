@@ -105,8 +105,6 @@ if ($recordmaxid > 0 ) :
         echo '<br />';
         echo '<div class="table-responsive">';
 
-        include_once '_btn_back.php';
-
             echo '<form id="Show_Function" class="form-show-function" method="post" action="show_function.php">';
 
             echo '<input class="btn-edit" type="hidden" id="btn_action" name="btn_action" value="" />';
@@ -167,7 +165,6 @@ else: ?>
         <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Add new</a>
 
 <?php
-include_once '_btn_back.php';
 
 endif;
 

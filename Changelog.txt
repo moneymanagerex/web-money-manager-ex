@@ -9,6 +9,7 @@ Version 1.2.0
 - ADD exclude pattern for git takes any files that starts with configuration_user.php*
 - ADD unify page titles and sync them to a pre-defined list
 - ADD split functions' classes into separate files
+- ADD place Menu button at the top of all pages
 - DEL legacy css v.0.9.9
 - DEL unnecessary page title manually written
 

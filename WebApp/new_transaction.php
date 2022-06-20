@@ -135,8 +135,6 @@ include_once '_header.php';
                         }
                     echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";
 
-                    include_once '_btn_back.php';
-
                 echo "</form>";
             echo "</div>\n";
 

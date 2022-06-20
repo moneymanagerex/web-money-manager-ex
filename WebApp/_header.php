@@ -42,20 +42,33 @@
 
     </head>
 
+<?php
+    $page_header_title = various::getPageName($s_page_title);
+?>
+
     <body>
         <div class="container text_align_center app_page_title">
-            <?php 
-                if (isset($b_page_logo) && $b_page_logo) : 
+            <?php
+
+            if (!empty($page_header_title))
+            {
+                include_once '_btn_back.php';
+            }
+
+            if (isset($b_page_logo) && $b_page_logo) : 
+        
             ?><h1><strong><?php echo costant::app_name() ?></strong></h1>
             <img src="res/mmex.png" alt="Money Manager Ex Logo" height="150" width="150"/><?php
-                endif; 
-            ?>
+            
+            endif; 
 
-            <?php 
-                $page_header_title = various::getPageName($s_page_title);
-                if (!empty($page_header_title)) : 
+            if (!empty($page_header_title)) :
+
             ?><h2><strong><?php echo $page_header_title; ?></strong></h2><?php
-                endif; 
+
+            endif; 
+
             ?>
         </div>
+
 

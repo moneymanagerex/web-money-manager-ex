@@ -42,10 +42,6 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
                     <?php echo costant::desktop_guid() ?>
                 </strong>
             </p>
-
-            <?php
-                include_once '_btn_back.php';
-            ?>
         </div>
 
 <?php
