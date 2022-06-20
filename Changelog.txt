@@ -1,3 +1,21 @@
+Version 1.2.0
+- ADD introduce unified "back to menu" and "logout" buttons
+- ADD fit "new transaction" screen to a single non-scrolling page on smartphones in portrait mode
+- ADD use unified "back to menu" and "logout" buttons at "new transaction" page, remove duplicate page title
+- ADD fit "about" and "guide" screen to a single non-scrolling page
+- ADD unify header and footer usage across all pages with proper reference to css and js versions
+- ADD app name as global settings
+- ADD more html at empty page of transactions list
+- ADD exclude pattern for git takes any files that starts with configuration_user.php*
+- ADD unify page titles and sync them to a pre-defined list
+- ADD split functions' classes into separate files
+- ADD place Menu button at the top of all pages
+- DEL legacy css v.0.9.9
+- DEL unnecessary page title manually written
+
+Version 1.1.2
+- FIX function name "subactegory_select_all"
+
 Version 1.1.1
 - FIX: Typo in spelling of "transaction" word.
 - FIX: New line character to be translated properly.

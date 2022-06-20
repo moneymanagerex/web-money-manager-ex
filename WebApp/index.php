@@ -1,5 +1,6 @@
 <?php
 require_once 'functions.php';
+
 $error = db_function::db_create();
 if ($error !== 'ok')
     {
@@ -59,34 +60,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }
 else
 {
+    $b_restricted_auth      = false;
+    include_once '_common.php';
+
+    $s_page_title           = '';
+    $b_page_logo            = true;
+    include_once '_header.php';
     ?>
-    
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="MMEX">
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-    	
-        <title>Money Manager EX</title>
-        <link rel="shortcuticon" href="res/favicon.ico" />
-        <link rel="apple-touch-icon" href="res/mmex.png" />
-        
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css" />
-        <link rel="stylesheet" type="text/css" href="res/style_global-0.9.9.css" />
-    </head>
-    
-    <body>
+
         <div class="container text_align_center">
-            <h2><strong>Money Manager EX</strong></h2>
-            <br />
-            <img src="res/mmex.png" alt="Money Manager EX Logo" height="150" width="150"/>
-            <br />
-            <br />
-            <br />
             <form id="login" method="post">
                 <div class="form-group">
                     <label for="Username">Username</label>
@@ -102,8 +84,6 @@ else
                 <button type="submit" id="Login" name="Login" class="btn btn-lg btn-success btn-block" value = "Login">Login</button>
             </form>
         </div>
-    </body>
-</html>
 <?php
+include_once '_footer.php';
 }
-?>
