@@ -10,9 +10,9 @@ if(isset($_POST["TrEditedNr"]))
 
 switch ($TrEditedNr)
 {
-    case -1: $s_page_title = 'New Transaction added'; break;
-    case 0: $s_page_title = 'Existing Transaction duplicated'; break;
-    default: $s_page_title = 'Existing Transaction updated'; break;
+    case -1:    $s_page_title = 'New Transaction added';            break;
+    case 0:     $s_page_title = 'Existing Transaction duplicated';  break;
+    default:    $s_page_title = 'Existing Transaction updated';     break;
 }
 
 include_once '_common.php';

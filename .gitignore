@@ -1,4 +1,4 @@
 .htaccess
 MMEX_New_Transaction.db
-configuration_user.php
+configuration_user.php*
 /WebApp/attachments/Transaction*.*

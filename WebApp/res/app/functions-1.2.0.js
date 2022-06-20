@@ -93,20 +93,36 @@ function send_alert_and_redirect (alertmessage,newurl)
     }
 
 function enable_element(element_to_enable,element_to_test,value_to_enable)
+{
+    if (document.getElementById(element_to_test).value !== value_to_enable)
     {
-        if (document.getElementById(element_to_test).value !== value_to_enable)
-            {document.getElementById(element_to_enable).disabled = true;}
-        else
-            {document.getElementById(element_to_enable).disabled = false;}
+        document.getElementById(element_to_enable).disabled = true;
+        document.getElementById(element_to_enable).parentElement.style.display = 'none';
+        document.getElementById(element_to_enable).parentElement.style.visibility = 'hidden';
     }
+    else
+    {
+        document.getElementById(element_to_enable).disabled = false;
+        document.getElementById(element_to_enable).parentElement.style.display = 'block';
+        document.getElementById(element_to_enable).parentElement.style.visibility = 'visible';
+    }
+}
     
 function disable_element(element_to_disable,element_to_test,value_to_disable)
+{
+    if (document.getElementById(element_to_test).value == value_to_disable)
     {
-        if (document.getElementById(element_to_test).value == value_to_disable)
-            {document.getElementById(element_to_disable).disabled = true;}
-        else
-            {document.getElementById(element_to_disable).disabled = false;}
+        document.getElementById(element_to_disable).disabled = true;
+        document.getElementById(element_to_disable).parentElement.parentElement.style.display = 'none';
+        document.getElementById(element_to_disable).parentElement.parentElement.style.visibility = 'hidden';
     }
+    else
+    {
+        document.getElementById(element_to_disable).disabled = false;
+        document.getElementById(element_to_disable).parentElement.parentElement.style.display = 'block';
+        document.getElementById(element_to_disable).parentElement.parentElement.style.visibility = 'visible';
+    }
+}
 
 function disable_confirm_password_if_empty()
     {
