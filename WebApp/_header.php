@@ -26,7 +26,7 @@
 
         <link rel="stylesheet" type="text/css" href="res/bootstrap-3.3.6.min.css<?php echo $s_debug; ?>" />
         <link rel="stylesheet" type="text/css" href="res/bootstrap-theme-3.3.6.min.css<?php echo $s_debug; ?>" />
-        <link rel="stylesheet" type="text/css" href="res/style_global-1.2.0.css<?php echo $s_debug; ?>" />
+        <link rel="stylesheet" type="text/css" href="res/style_global-1.2.1.css<?php echo $s_debug; ?>" />
 
         <!-- optional css -->
 <?php echo $s_head_css_add ?>

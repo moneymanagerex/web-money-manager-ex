@@ -214,6 +214,12 @@ hr
     }
 }
 
+/* Rules for icon sizes: */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; } /* Default */
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
 @media only screen and (max-width: 385px) {
     .form-transaction .form-group label:not(.width100) {
         display: block;
