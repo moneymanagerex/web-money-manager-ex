@@ -14,10 +14,13 @@ class db_upgrade
                 {
                     switch (db_function::db_version())
                         {
+                            case '1.2.0':
+                                db_upgrade::upgrade_version('1.2.1');
+                                break;
+
                             case '1.1.0':
                                 db_upgrade::upgrade_version('1.2.0');
                                 break;
-
                             case '1.0.4':
                                 db_upgrade::upgrade_version('1.1.0');
                                 break;
