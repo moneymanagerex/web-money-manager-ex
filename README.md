@@ -26,11 +26,22 @@ If you know what you are doing, you can install a webserver on your PC. After th
 
 ## How to install WebApp
 
+### Traditional Way
  1. Unzip the latest version in a folder on your webserver or upload files through FTP.
  2. Rename `htaccess.txt` to `.htaccess` (on Windows type `.htaccess.` or use the Command Prompt and &quot;rename&quot; command).
  3. Enable PDO_SQLite if disabled.
  4. Open your browser to the folder URL.
  5. Fill in a username and password and review the settings.
+
+### Docker Way 
+
+Run the following commands after cloning this repo:
+
+1. `docker build -t webmmx:latest .`
+
+2. `docker run -d -p <your available port>:80 webmmx:latest`
+
+
 
 The GUID for data sync with the desktop version is auto-generated. We suggest not changing it.
 
