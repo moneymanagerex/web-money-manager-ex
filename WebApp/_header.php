@@ -43,6 +43,7 @@
     </head>
 
 <?php
+    global $s_page_title;
     $page_header_title = various::getPageName($s_page_title);
 ?>
 

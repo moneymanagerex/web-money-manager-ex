@@ -85,7 +85,7 @@ class various
      */
     public static function getPageUrl() : String
     {
-        $page_addr = $_SERVER['DOCUMENT_URI'];
+        $page_addr = $_SERVER['REQUEST_URI'];
         $page_url = (substr(trim($page_addr, '/'), 0, strpos($page_addr, '.')-1));
         return $page_url;
     }
