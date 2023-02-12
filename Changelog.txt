@@ -1,3 +1,6 @@
+Version 1.2.2
+- PHP 8.1 support
+
 Version 1.2.1
 - FIX remove duplicate "return to menu" button after adding new transaction
 - ADD better visual styling for new transaction confirmation screen
