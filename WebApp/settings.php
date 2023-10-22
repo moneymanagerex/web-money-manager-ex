@@ -17,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             {$username = "";}
         
         $default_account = $_POST["Default_Account"];
-        $default_account = $_POST["Default_Account"];
         
         if (isset ($_POST["Set_Disable_payee"]))
             {$disable_payee = $_POST["Set_Disable_payee"];}
