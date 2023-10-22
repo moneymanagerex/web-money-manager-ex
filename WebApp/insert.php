@@ -11,15 +11,15 @@ if(isset($_POST["TrEditedNr"]))
 switch ($TrEditedNr)
 {
     case -1:    
-        $s_page_title = 'Nuova Operazione';
+        $s_page_title = $lang["page.transaction.added"];
         $transaction_action = 'added';
     break;
     case 0:     
-        $s_page_title = 'Operazione Esistente';
+        $s_page_title = $lang["page.transaction.duplicated"];
         $transaction_action = 'duplicated';
     break;
     default:    
-        $s_page_title = 'Operazione Esistente';
+        $s_page_title = $lang["page.transaction.updated"];
         $transaction_action = 'updated';
     break;
 }
@@ -84,13 +84,13 @@ include_once '_header.php';
                 check_box
             </i>
             <h3>
-                <?php echo ucfirst($transaction_action); ?> con successo
+                <?php echo $lang["trans.msg.action-".$transaction_action.".successfully"] ?> 
             </h3>
             <br />
             <br />
-            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Aggiungi altra operazione</a>
+            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block"><?php echo $lang["trans.msg.add-next"] ?></a>
             <br />
-            <a href="show.php" class="btn btn-lg btn-success btn-block">Lista operazioni</a>
+            <a href="show.php" class="btn btn-lg btn-success btn-block"><?php echo $lang["page.show-transactions"] ?></a>
             <br />
         </div>
 		

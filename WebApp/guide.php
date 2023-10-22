@@ -13,20 +13,20 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
             <p>
                 <ol>
                     <li>
-                        Copia le informazioni qui sotto e incollale nell'applicazione desktop.
+                        <?php echo $lang["guide.step1"] ?>
                     </li>
                     <li>
-                        Riapri l'applicazione desktop per sincronizzare i conti, i beneficiari, etc. sulla WebApp.
+                        <?php echo $lang["guide.step2"] ?>
                     </li>
                     <li>
-                        Inizia ad usare la WebApp.
+                        <?php echo $lang["guide.step3"] ?>
                     </li>
                 </ol>
             </p>
         </div>
         <div class="container text_align_center">
             <h4>
-                WebApp URL:
+                <?php echo $lang["guide.webapp-url"] ?>
             </h4>
             <p>
                 <strong>
@@ -35,7 +35,7 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
             </p>
             <br />
             <h4>
-                Desktop GUID:
+                <?php echo $lang["guide.desktop-guid"] ?>
             </h4>
             <p>
                 <strong>

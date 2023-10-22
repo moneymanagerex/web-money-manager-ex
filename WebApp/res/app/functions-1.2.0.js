@@ -14,7 +14,7 @@ function test_html5 ()
                 //|| !Modernizr.input.step          //Used but not prerequisite
             )
             {
-                alert("Seems that the browser doesn't fully supports HTML5" + '\n' + '\n' + "Please make attention because it doesn't validate fields!");
+                alert($lang["browser_not_support_html5"]);
                 //close();
             }
     }
@@ -149,7 +149,7 @@ function check_passwor_error()
 function check_password_match_and_submit (Password1,Password2,formid)
     {
         if (document.getElementById(Password1).value !== document.getElementById(Password2).value)
-            {alert("La password non corrisponde!");}
+            {alert($lang["sec.password_not_matching"]);}
         else
             {document.getElementById(formid).submit();}
     }
@@ -232,12 +232,12 @@ function attachment_uploadComplete(evt)
  
 function attachment_uploadFailed(evt)
     {
-        alert("Si è verificato un errore al caricamento del file.");
+        alert($lang["attachment.upload_failed"]);
     }
  
 function attachment_uploadCanceled(evt)
     {
-        alert("Il caricamento è stato annullato dall'utente o il browser ha interrotto la connessione.");
+        alert($lang["attachment.upload_canceled"]);
     }
 
 function attachment_delete(FileName,TrID)
