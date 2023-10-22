@@ -9,7 +9,7 @@ class design
     public static function input_date ($TrDateDefault)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Date'>Date</label>";
+                echo "<label for='Date'>Data</label>";
                 echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '${TrDateDefault}'/>";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
@@ -20,11 +20,11 @@ class design
     //Create status input element
     public static function input_status ($TrStatusDefault)
         {
-            $StatusArrayDesc = array ("None", "Reconciled", "Void", "Follow Up", "Duplicate");
+            $StatusArrayDesc = array ("Non Riconciliata", "Riconciliata", "Nulla", "Da Monitorare", "Duplicata");
             $StatusArrayDB = array ("", "R", "V", "F", "D");
 
             echo "<div class='form-group'>";
-                echo "<label for='Status'>Status</label>";
+                echo "<label for='Status'>Stato</label>";
                 echo "<select id ='Status' name='Status' class='form-control'>";
                 for ($i = 0; $i < sizeof($StatusArrayDesc); $i++)
                 {
@@ -42,24 +42,25 @@ class design
     //Create type input element
     public static function input_type ($TrTypeDefault)
     {
-        $TypeArrayDesc = array ('Withdrawal', 'Deposit', 'Transfer');
+        $TypeArrayDesc = array ('Prelievo', 'Deposito', 'Trasferimento');
+        $TypeArrayCode = array ('Withdrawal', 'Deposit', 'Transfer');
 
         echo '<div class="form-group">';
-            echo '<label for="Type">Type</label>';
+            echo '<label for="Type">Tipo</label>';
 #            echo '<select id="Type" name="Type" class="form-control" onchange="enable_element(\'ToAccount\',\'Type\',\'Transfer\'); disable_element(\'Payee\',\'Type\',\'Transfer\')">';
             $on_change = 'onchange="enable_element(\'ToAccount\',\'Type\',\'Transfer\'); disable_element(\'Payee\',\'Type\',\'Transfer\')"';
-            for ($i = 0; $i < sizeof($TypeArrayDesc); $i++)
+            for ($i = 0; $i < sizeof($TypeArrayCode); $i++)
             {
                 $is_selected = '';
-                if ($TypeArrayDesc[$i] == $TrTypeDefault)
+                if ($TypeArrayCode[$i] == $TrTypeDefault)
                 {
 #                    $is_selected = 'selected';
                     $is_selected = 'checked';
                 }
-                $element_id = 'Type_' . $TypeArrayDesc[$i];
+                $element_id = 'Type_' . $TypeArrayCode[$i];
                 $element_onchange = str_replace('Type', $element_id, $on_change);
 #                echo "<option value='${TypeArrayDesc[$i]}' $is_selected> ${TypeArrayDesc[$i]} </option>";
-                echo '<input type="radio" id="' . $element_id . '" name="Type" value="' . $TypeArrayDesc[$i] . '" ' . $element_onchange . $is_selected . '>';
+                echo '<input type="radio" id="' . $element_id . '" name="Type" value="' . $TypeArrayCode[$i] . '" ' . $element_onchange . $is_selected . '>';
                 echo '<label for="' . $element_id . '">' . $TypeArrayDesc[$i] . '</label>';
 
             }
@@ -77,7 +78,7 @@ class design
                 {$AccountArrayDesc[0] = "None";}
 
             echo "<div class='form-group'>";
-                echo "<label for='Account'>Account</label>";
+                echo "<label for='Account'>Conto</label>";
                 echo "<select id ='Account' name='Account' class='form-control'>";
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
@@ -99,7 +100,7 @@ class design
             array_unshift($ToAccountArrayDesc,"None");
 
             echo "<div class='form-group'>";
-                echo "<label for='ToAccount'>To Account</label>";
+                echo "<label for='ToAccount'>Al Conto</label>";
                 echo "<select id ='ToAccount' name='ToAccount' class='form-control'>";
                 for ($i = 0; $i < sizeof($ToAccountArrayDesc); $i++)
                 {
@@ -121,8 +122,8 @@ class design
             array_unshift($PayeeArrayDesc,"None");
 
             echo "<div class='form-group'>";
-                echo "<label for='Payee'>Payee</label>";
-                echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Choose a payee' autocomplete = 'off' required />";
+                echo "<label for='Payee'>Beneficiario</label>";
+                echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='Scegli un beneficiario' autocomplete = 'off' required />";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -142,8 +143,8 @@ class design
             array_unshift($CategoryArrayDesc,"None");
 
             echo "<div class='form-group'>";
-                echo "<label for='Category'>Category</label>";
-                echo "<input id='Category' type='text' name='Category' class='form-control' placeholder='Choose a category' autocomplete = 'off' required />";
+                echo "<label for='Category'>Categoria</label>";
+                echo "<input id='Category' type='text' name='Category' class='form-control' placeholder='Scegli una categoria' autocomplete = 'off' required />";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -160,8 +161,8 @@ class design
     public static function input_subcategory ($TrSubCategoryDefault)
         {
             echo "<div class='form-group'>";
-                echo "<label for='SubCategory'>SubCategory</label>";
-                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Choose a subcategory' autocomplete='off' />";
+                echo "<label for='SubCategory'>Sotto-Categoria</label>";
+                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='Scegli una sotto-categoria' autocomplete='off' />";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -176,14 +177,14 @@ class design
     public static function input_amount ($TrAmountDefault)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Amount'>Amount</label>";
+                echo "<label for='Amount'>Importo</label>";
                 if ($TrAmountDefault <> 0)
                     {
-                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='New transaction amount' min='0.01' step ='0.01' value='${TrAmountDefault}' required />";
+                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='Importo operazione' min='0.01' step ='0.01' value='${TrAmountDefault}' required />";
                     }
                 else
                     {
-                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='New transaction amount' min='0.01' step ='0.01' required />";
+                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='Importo operazione' min='0.01' step ='0.01' required />";
                     }
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
@@ -195,14 +196,14 @@ class design
     public static function input_notes ($TrNotesDefault)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Notes'>Notes</label>";
+                echo "<label for='Notes'>Note</label>";
                 if ($TrNotesDefault <> "Empty")
                     {
-                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'>${TrNotesDefault}</textarea>";
+                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='Eventuali note'>${TrNotesDefault}</textarea>";
                     }
                 else
                     {
-                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='New transaction notes'></textarea>";
+                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='Eventuali note'></textarea>";
                     }
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
@@ -263,10 +264,10 @@ class design
 
 
     //Create password input element
-    public static function settings_password ($VarName,$PlaceHolder,$Required)
+    public static function settings_password ($VarName,$PlaceHolder,$Required,$Label)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
+                echo "<label for='Set_${VarName}'>$Label</label>";
                     if ($Required == True)
                         {
                             echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' required />";
@@ -286,7 +287,7 @@ class design
                 {$AccountArrayDesc[0] = "None";}
 
             echo "<div class='form-group'>";
-                echo "<label for='Default_Account'> Default Account</label>";
+                echo "<label for='Default_Account'>Conto di Default</label>";
                 echo "<select id ='Default_Account' name='Default_Account' class='form-control'>";
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {

@@ -11,15 +11,15 @@ if(isset($_POST["TrEditedNr"]))
 switch ($TrEditedNr)
 {
     case -1:    
-        $s_page_title = 'New Transaction';
+        $s_page_title = 'Nuova Operazione';
         $transaction_action = 'added';
     break;
     case 0:     
-        $s_page_title = 'Existing Transaction';
+        $s_page_title = 'Operazione Esistente';
         $transaction_action = 'duplicated';
     break;
     default:    
-        $s_page_title = 'Existing Transaction';
+        $s_page_title = 'Operazione Esistente';
         $transaction_action = 'updated';
     break;
 }
@@ -88,9 +88,9 @@ include_once '_header.php';
             </h3>
             <br />
             <br />
-            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Add next</a>
+            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Aggiungi altra operazione</a>
             <br />
-            <a href="show.php" class="btn btn-lg btn-success btn-block">Show transactions</a>
+            <a href="show.php" class="btn btn-lg btn-success btn-block">Lista operazioni</a>
             <br />
         </div>
 		

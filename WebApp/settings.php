@@ -66,9 +66,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
 $is_edit                = (isset($const_username) AND isset($const_password));
 
+$s_page_title = 'Impostazioni';
+
 if (!$is_edit)
 {
-    $s_page_title           = 'New settings';
+    $s_page_title           = 'Nuove impostazioni';
     $b_page_logo            = true;
 
 }
@@ -96,11 +98,11 @@ include_once '_header.php';
                 $const_defaultaccountname = costant::transaction_default_account();
                 
                 //SECTION AUTHENTICATION
-                design::section_legened("Authentication");
+                design::section_legened("Autenticazione");
                     if ($const_disable_authentication == True)
-                        {design::settings_checkbox("Set_Disable_authentication",True,"Disable authentication (Not recommended)");}
+                        {design::settings_checkbox("Set_Disable_authentication",True,"Disattiva l'autenticazione (NON RACCOMANDATO)");}
                         else
-                        {design::settings_checkbox("Set_Disable_authentication",False,"Disable authentication (Not recommended)");}
+                        {design::settings_checkbox("Set_Disable_authentication",False,"Disattiva l'autenticazione (NON RACCOMANDATO)");}
 
                     if (isset($const_username) && $const_disable_authentication == False)
                         {design::settings("Username",$const_username,"","Text",True);}
@@ -108,24 +110,24 @@ include_once '_header.php';
                         {design::settings("Username","","Insert a new username","Text",True);}
                     
                     if (isset($const_password) && $const_disable_authentication == False)
-                        {design::settings_password("Password","To change insert a new password",False);}
+                        {design::settings_password("Password","Inserisci una nuova password per cambiarla",False,"Password");}
                         else
-                        {design::settings_password("Password","Insert a password",True);}
+                        {design::settings_password("Password","Inserisci una password",True,"Password");}
             
-                    design::settings_password("Confirm_Password","Confirm new password",False);
+                    design::settings_password("Confirm_Password","Conferma la nuova password",False,"Conferma Password");
                 echo "<br />";
                 
                 //SECTION NEW TRANSACTIONS
-                design::section_legened("New transactions");
+                design::section_legened("Nuove operazioni");
                     if ($const_disable_payee == True)
-                        {design::settings_checkbox("Set_Disable_payee",True,"Disable payees management");}
+                        {design::settings_checkbox("Set_Disable_payee",True,"Disattiva la richiesta del beneficiario");}
                         else
-                        {design::settings_checkbox("Set_Disable_payee",False,"Disable payees management");}
+                        {design::settings_checkbox("Set_Disable_payee",False,"Disattiva la richiesta del beneficiario");}
                         
                     if ($const_disable_category == True)
-                        {design::settings_checkbox("Set_Disable_category",True,"Disable categories management");}
+                        {design::settings_checkbox("Set_Disable_category",True,"Disattiva la richiesta della categoria");}
                         else
-                        {design::settings_checkbox("Set_Disable_category",False,"Disable categories management");}
+                        {design::settings_checkbox("Set_Disable_category",False,"Disattiva la richiesta della categoria");}
                     
                     if (isset($const_defaultaccountname))
                         {design::settings_default_account($const_defaultaccountname);}
@@ -134,7 +136,7 @@ include_once '_header.php';
                 echo "<br />";
                 
                 //SECTION DESKTOP INTEGRATION
-                design::section_legened("Desktop integration");
+                design::section_legened("Integrazione Desktop");
                     if (isset($const_desktop_guid))
                         {design::settings("Guid",$const_desktop_guid,"","Text",True);}
                         else
@@ -171,13 +173,13 @@ include_once '_header.php';
             <?php
                 if (isset($const_username) AND isset($const_password))
                     {
-                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">Save Settings</button>');
+                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">Salva</button>');
                         echo '<br />';
-                        echo ('<a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>');
+                        echo ('<a href="landing.php" class="btn btn-lg btn-success btn-block">Ritorna al menu</a>');
                     }
                 else
                     {
-                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">Apply Settings</button>');
+                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">Applica</button>');
                     }
                 echo '<br />';
                 echo '<br />';

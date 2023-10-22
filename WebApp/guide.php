@@ -13,13 +13,13 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
             <p>
                 <ol>
                     <li>
-                        Copy the data below and paste them into your desktop application.
+                        Copia le informazioni qui sotto e incollale nell'applicazione desktop.
                     </li>
                     <li>
-                        Re-open desktop application to synchronise bank account(s), etc. to the WebApp from Desktop.
+                        Riapri l'applicazione desktop per sincronizzare i conti, i beneficiari, etc. sulla WebApp.
                     </li>
                     <li>
-                        Start using the WebApp version.
+                        Inizia ad usare la WebApp.
                     </li>
                 </ol>
             </p>

@@ -54,7 +54,7 @@ var transactions = {
 
             // Confirm add new payee
             if(submit_form){
-                if(app.confirmIfNotPresentInDatalist('Payee', PayeeList, "Do you want to add the new payee")){
+                if(app.confirmIfNotPresentInDatalist('Payee', PayeeList, "Confermi la creazione del nuovo beneficiario")){
                     submit_form = true;
                 }else{
                     $('#Payee').focus();

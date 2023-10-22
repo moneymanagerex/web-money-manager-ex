@@ -100,10 +100,10 @@ class various
     public static function getPagesList() : Array
     {
         $pages_list             = [
-                                    'new_transaction'   => 'New transaction',
-                                    'show'              => 'Show transactions',
-                                    'settings'          => 'Edit settings',
-                                    'guide'             => 'Guide',
+                                    'new_transaction'   => 'Nuova operazione',
+                                    'show'              => 'Lista operazioni',
+                                    'settings'          => 'Impostazioni',
+                                    'guide'             => 'Guida',
                                     'about'             => 'About',
                                     ];
         return $pages_list;
