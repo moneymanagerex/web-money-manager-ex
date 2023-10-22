@@ -84,7 +84,7 @@ include_once '_header.php';
                 check_box
             </i>
             <h3>
-                <?php echo ucfirst($transaction_action); ?> successfully
+                <?php echo ucfirst($transaction_action); ?> con successo
             </h3>
             <br />
             <br />

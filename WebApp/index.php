@@ -11,7 +11,7 @@ else
         $upgrade_result = db_upgrade::upgrade_db();
         if ($upgrade_result == 'update_done')
             {
-                various::send_alert_and_redirect('Database succesfully updated to version '.costant::app_version(), 'index.php');
+                various::send_alert_and_redirect('Database aggiornato con successo alla versione '.costant::app_version(), 'index.php');
             }
     }
 $username = null;
@@ -72,16 +72,16 @@ else
             <form id="login" method="post">
                 <div class="form-group">
                     <label for="Username">Username</label>
-                    <input id="Username" type="text" name="Username" class="form-control" placeholder="Insert Username" autofocus required />
+                    <input id="Username" type="text" name="Username" class="form-control" placeholder="Inserisci lo Username" autofocus required />
                     <span class="help-block"></span>
                 </div>
                 <div class="form-group">
                     <label for="Password">Password</label>
-                    <input id="Password" type="password" name="Password" class="form-control" placeholder="Insert Password" required />
+                    <input id="Password" type="password" name="Password" class="form-control" placeholder="Inserisci la Password" required />
                     <span class="help-block"></span>
                 </div>
                 <br />
-                <button type="submit" id="Login" name="Login" class="btn btn-lg btn-success btn-block" value = "Login">Login</button>
+                <button type="submit" id="Login" name="Login" class="btn btn-lg btn-success btn-block" value = "Login">Accedi</button>
             </form>
         </div>
 <?php

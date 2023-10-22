@@ -149,7 +149,7 @@ function check_passwor_error()
 function check_password_match_and_submit (Password1,Password2,formid)
     {
         if (document.getElementById(Password1).value !== document.getElementById(Password2).value)
-            {alert("Password doesn't match!");}
+            {alert("La password non corrisponde!");}
         else
             {document.getElementById(formid).submit();}
     }
@@ -232,12 +232,12 @@ function attachment_uploadComplete(evt)
  
 function attachment_uploadFailed(evt)
     {
-        alert("There was an error attempting to upload the file.");
+        alert("Si è verificato un errore al caricamento del file.");
     }
  
 function attachment_uploadCanceled(evt)
     {
-        alert("The upload has been canceled by the user or the browser dropped the connection.");
+        alert("Il caricamento è stato annullato dall'utente o il browser ha interrotto la connessione.");
     }
 
 function attachment_delete(FileName,TrID)

@@ -49,7 +49,7 @@ var transactions = {
                 submit_form = true;
             }else{
                 form.find(':invalid').first().focus();
-                alert('Not all fields are valid');
+                alert('Alcuni campi non sono validi');
             }
 
             // Confirm add new payee

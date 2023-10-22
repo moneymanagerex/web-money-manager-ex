@@ -81,7 +81,7 @@ include_once '_header.php';
         <?php
             if (!$is_edit) :
         ?>
-        <h3 class="text_align_center">Provide new settings to start using Money Manager EX</h3>
+        <h3 class="text_align_center">Fornisci le nuove impostazioni per iniziare ad usare Money Manager EX</h3>
         <?php
             endif;
         ?>

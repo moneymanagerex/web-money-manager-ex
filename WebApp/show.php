@@ -118,7 +118,7 @@ if ($recordmaxid > 0 ) :
             /**
              *  delete button
              */
-            echo '<button type="submit" id="TrDelete" name="btn_action" value="Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
+            echo '<button type="submit" id="TrDelete" name="btn_action" value="Delete" class="btn btn-lg btn-danger btn-block">Cancella le righe selezionate</button>';
 
             /**
              *  new button
