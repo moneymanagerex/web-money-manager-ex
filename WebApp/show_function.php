@@ -20,7 +20,7 @@ if(isset($_POST['btn_action']))
         
         if(!isset($_POST['TrDelete']) && $btn_action == 'Delete')
             {   
-                $test = various::send_alert_and_redirect('Nessuna operazione selezionata!', 'show.php');
+                $test = various::send_alert_and_redirect(costant::lang("show.no_trans_selected"), 'show.php');
             }
         
         if(isset($_POST['TrEdit']) && in_array($btn_action, ['Edit', 'Duplicate']))
@@ -32,6 +32,6 @@ if(isset($_POST['btn_action']))
             
         if(!isset($_POST['TrEdit']) && $btn_action == 'Edit')
             {   
-                $test = various::send_alert_and_redirect('Nessuna operazione selezionata!', 'show.php');
+                $test = various::send_alert_and_redirect(costant::lang("show.no_trans_selected"), 'show.php');
             }
     }

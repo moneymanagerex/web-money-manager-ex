@@ -92,5 +92,10 @@ $lang["guide.step3"] = "Start using the WebApp version.";
 $lang["guide.webapp-url"] = "WebApp URL";
 $lang["guide.desktop-guid"] = "Desktop GUID";
 
-$lang["show.no-pending-trans"] = "No pending transaction";
-$lang["show.current-pending-trans"] = "Current pending transactions";
+$lang["show.no_pending_trans"] = "No pending transactions";
+$lang["show.current_pending_trans"] = "Current pending transactions";
+$lang["show.delete_all_selected"] = "Delete all selected";
+$lang["show.add_new"] = "Add new";
+$lang["show.delete"] = "Delete";
+$lang["show.new"] = "New transaction";
+$lang["show.no_trans_selected"] = "No transaction selected!";

@@ -104,9 +104,15 @@ class costant
              return $pageURL;
             }
 
-        public static function language ()
+        public static function uiLanguage ()
             {
                 global $language;
                 return $language;
             }
+
+        public static function lang ($Key)
+        {
+            global $lang;
+            return $lang[$Key];
+        }
     }

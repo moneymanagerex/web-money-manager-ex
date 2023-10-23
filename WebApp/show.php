@@ -103,7 +103,7 @@ if ($recordmaxid > 0 ) :
 
     $resultarray = db_function::transaction_select_all_order_by_date('DESC');
     echo '<div class="container">';
-        echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? $lang["show.no-pending-trans"] : $lang["show.current-pending-trans"]). '</h3>';
+        echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? $lang["show.no_pending_trans"] : $lang["show.current_pending_trans"]). '</h3>';
         echo '<br />';
         echo '<div class="table-responsive">';
 
@@ -118,27 +118,27 @@ if ($recordmaxid > 0 ) :
             /**
              *  delete button
              */
-            echo '<button type="submit" id="TrDelete" name="btn_action" value="Delete" class="btn btn-lg btn-danger btn-block">Cancella le righe selezionate</button>';
+            echo "<button type='submit' id='TrDelete' name='btn_action' value='Delete' class='btn btn-lg btn-danger btn-block'>{$lang["show.delete_all_selected"]}</button>";
 
             /**
              *  new button
              */
-            echo '<input type="button" class="btn btn-lg btn-success btn-block" id="btn_new" value="Nuova operazione" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
+            echo '<input type="button" class="btn btn-lg btn-success btn-block" id="btn_new" value="'.$lang["show.new"].'" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
             echo '<br />';
 
             echo '<table class="table table-hover table-condensed">';
             #echo '<table class = "table table-hover table-condensed table-bordered">'; //TABLE BORDERED FOR DEBUG
                 echo '<thead>';
                     echo '<tr>';
-                        echo "<th class='text_align_center'><span class='glyphicon glyphicon-trash'></span> <span class='transaction-extra-columns'>Cancella</span></th>";
-                        echo "<th class=''><span class='glyphicon glyphicon-info-sign'></span> <span class='transaction-extra-columns'>Tipo</span></th>";
-                        echo '<th class="text_align_right">Importo</th>';
-                        echo '<th class="text_align_center">Note</th>';
-                        echo '<th>Conto</th>';
+                        echo "<th class='text_align_center'><span class='glyphicon glyphicon-trash'></span> <span class='transaction-extra-columns'>{$lang["show.delete"]}</span></th>";
+                        echo "<th class=''><span class='glyphicon glyphicon-info-sign'></span> <span class='transaction-extra-columns'>{$lang["trans.type"]}</span></th>";
+                        echo "<th class='text_align_right'>{$lang["trans.amount"]}</th>";
+                        echo "<th class='text_align_center'>{$lang["trans.notes"]}</th>";
+                        echo "<th>{$lang["account"]}</th>";
                         if (costant::disable_payee() == False)
-                            {echo "<th class='transaction-extra-columns'>Beneficiario</th>";}
+                            {echo "<th class='transaction-extra-columns'>{$lang["trans.payee"]}</th>";}
                         if (costant::disable_category() == False)
-                            {echo '<th>Categoria</th>';}
+                            {echo "<th>{$lang["trans.category"]}</th>";}
                     echo '</tr>';
                 echo '</thead>';
                 
@@ -161,10 +161,10 @@ if ($recordmaxid > 0 ) :
 else: ?>
 
     <div class="container">
-        <h3 class="text_align_center">nessuna operazione in sospeso</h3>
+        <h3 class="text_align_center"><?php echo $lang["show.no_pending_trans"] ?></h3>
         <br />
         <br />
-        <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Nuova operazione</a>
+        <a href="new_transaction.php" class="btn btn-lg btn-success btn-block"><?php echo $lang["show.add_new"] ?></a>
 
 <?php
 

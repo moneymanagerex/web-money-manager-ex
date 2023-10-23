@@ -8,10 +8,8 @@ class design
     //Create date input element
     public static function input_date ($TrDateDefault)
         {
-            global $lang;
-
             echo "<div class='form-group'>";
-                echo "<label for='Date'>{$lang["trans.date"]}</label>";
+                echo '<label for="Date">'.costant::lang("trans.date").'</label>';
                 echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '${TrDateDefault}'/>";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
@@ -22,20 +20,18 @@ class design
     //Create status input element
     public static function input_status ($TrStatusDefault)
         {
-            global $lang;
-
             $StatusArrayDesc = array (
-                $lang["trans.status.none"], 
-                $lang["trans.status.reconciled"],
-                $lang["trans.status.void"],
-                $lang["trans.status.follow-up"],
-                $lang["trans.status.duplicate"]
+                costant::lang("trans.status.none"), 
+                costant::lang("trans.status.reconciled"),
+                costant::lang("trans.status.void"),
+                costant::lang("trans.status.follow-up"),
+                costant::lang("trans.status.duplicate")
             );
 
             $StatusArrayDB = array ("", "R", "V", "F", "D");
 
             echo "<div class='form-group'>";
-                echo "<label for='Status'>{$lang["trans.status"]}</label>";
+                echo '<label for="Status">'.costant::lang("trans.status").'</label>';
                 echo "<select id ='Status' name='Status' class='form-control'>";
                 for ($i = 0; $i < sizeof($StatusArrayDesc); $i++)
                 {
@@ -53,17 +49,15 @@ class design
     //Create type input element
     public static function input_type ($TrTypeDefault)
     {
-        global $lang;
-
         $TypeArrayDesc = array (
-            $lang["trans.type.withdrawal"],
-            $lang["trans.type.deposit"],
-            $lang["trans.type.transfer"]
+            costant::lang("trans.type.withdrawal"),
+            costant::lang("trans.type.deposit"),
+            costant::lang("trans.type.transfer")
         );
         $TypeArrayCode = array ('Withdrawal', 'Deposit', 'Transfer');
 
         echo '<div class="form-group">';
-            echo "<label for='Type'>{$lang["trans.type"]}</label>";
+            echo '<label for="Type">'.costant::lang("trans.type").'</label>';
 #            echo '<select id="Type" name="Type" class="form-control" onchange="enable_element(\'ToAccount\',\'Type\',\'Transfer\'); disable_element(\'Payee\',\'Type\',\'Transfer\')">';
             $on_change = 'onchange="enable_element(\'ToAccount\',\'Type\',\'Transfer\'); disable_element(\'Payee\',\'Type\',\'Transfer\')"';
             for ($i = 0; $i < sizeof($TypeArrayCode); $i++)
@@ -90,14 +84,12 @@ class design
     //Create account input element
     public static function input_account ($TrAccountDefault)
         {
-            global $lang;
-
             $AccountArrayDesc = db_function::bankaccount_select_all();
             if (sizeof($AccountArrayDesc) == 0)
                 {$AccountArrayDesc[0] = "None";}
 
             echo "<div class='form-group'>";
-                echo "<label for='Account'>{$lang["trans.account"]}</label>";
+                echo '<label for="Account">'.costant::lang("trans.account").'</label>';
                 echo "<select id ='Account' name='Account' class='form-control'>";
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
@@ -115,13 +107,11 @@ class design
     //Create toaccount input element
     public static function input_toaccount ($TrToAccountDefault)
         {
-            global $lang;
-
             $ToAccountArrayDesc = db_function::bankaccount_select_all();
             array_unshift($ToAccountArrayDesc,"None");
 
             echo "<div class='form-group'>";
-                echo "<label for='ToAccount'>{$lang["trans.to-account"]}</label>";
+                echo '<label for="ToAccount">'.costant::lang("trans.to-account").'</label>';
                 echo "<select id ='ToAccount' name='ToAccount' class='form-control'>";
                 for ($i = 0; $i < sizeof($ToAccountArrayDesc); $i++)
                 {
@@ -139,14 +129,12 @@ class design
     //Create payee input element
     public static function input_payee ($TrPayeeDefault)
         {
-            global $lang;
-
             $PayeeArrayDesc = db_function::payee_select_all_name();
             array_unshift($PayeeArrayDesc,"None");
 
             echo "<div class='form-group'>";
-                echo "<label for='Payee'>{$lang["trans.payee"]}</label>";
-                echo "<input id='Payee' type='text' name='Payee' class='form-control' placeholder='{$lang["trans.payee.placeholder"]}' autocomplete = 'off' required />";
+                echo '<label for="Payee">'.costant::lang("trans.payee").'</label>';
+                echo '<input id="Payee" type="text" name="Payee" class="form-control" placeholder="'.costant::lang("trans.payee.placeholder").'" autocomplete = "off" required />';
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -162,14 +150,12 @@ class design
     //Create category input element
     public static function input_category ($TrCategoryDefault)
         {
-            global $lang;
-
             $CategoryArrayDesc = db_function::category_select_distinct();
             array_unshift($CategoryArrayDesc,"None");
 
             echo "<div class='form-group'>";
-                echo "<label for='Category'>{$lang["trans.category"]}</label>";
-                echo "<input id='Category' type='text' name='Category' class='form-control' placeholder='{$lang["trans.category.placeholder"]}' autocomplete = 'off' required />";
+                echo '<label for="Category">'.costant::lang("trans.category").'</label>';
+                echo '<input id="Category" type="text" name="Category" class="form-control" placeholder="'.costant::lang("trans.category.placeholder").'" autocomplete = "off" required />';
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -185,11 +171,9 @@ class design
     //Create subcategory input element
     public static function input_subcategory ($TrSubCategoryDefault)
         {
-            global $lang;
-
             echo "<div class='form-group'>";
-                echo "<label for='SubCategory'>{$lang["trans.sub-category"]}</label>";
-                echo "<input id='SubCategory' type='text' name='SubCategory' class='form-control' placeholder='{$lang["trans.sub-category.placeholder"]}' autocomplete='off' />";
+                echo '<label for="SubCategory">'.costant::lang("trans.sub-category").'</label>';
+                echo '<input id="SubCategory" type="text" name="SubCategory" class="form-control" placeholder="'.costant::lang("trans.sub-category.placeholder").'" autocomplete="off" />';
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -203,17 +187,15 @@ class design
     //Create amount input element
     public static function input_amount ($TrAmountDefault)
         {
-            global $lang;
-
             echo "<div class='form-group'>";
-                echo "<label for='Amount'>{$lang["trans.amount"]}</label>";
+                echo '<label for="Amount">'.costant::lang("trans.amount").'</label>';
                 if ($TrAmountDefault <> 0)
                     {
-                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='{$lang["trans.amount.placeholder"]}' min='0.01' step ='0.01' value='${TrAmountDefault}' required />";
+                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='".costant::lang("trans.amount.placeholder")."' min='0.01' step ='0.01' value='{$TrAmountDefault}' required />";
                     }
                 else
                     {
-                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='{$lang["trans.amount.placeholder"]}' min='0.01' step ='0.01' required />";
+                        echo "<input id='Amount' type='number' name='Amount' class='form-control' placeholder='".costant::lang("trans.amount.placeholder")."' min='0.01' step ='0.01' required />";
                     }
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
@@ -224,17 +206,15 @@ class design
     //Create notes input element
     public static function input_notes ($TrNotesDefault)
         {
-            global $lang;
-
             echo "<div class='form-group'>";
-                echo "<label for='Notes'>{$lang["trans.notes"]}</label>";
+                echo '<label for="Notes">'.costant::lang("trans.notes").'</label>';
                 if ($TrNotesDefault <> "Empty")
                     {
-                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='{$lang["trans.notes.placeholder"]}'>${TrNotesDefault}</textarea>";
+                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='".costant::lang("trans.notes.placeholder")."'>{$TrNotesDefault}</textarea>";
                     }
                 else
                     {
-                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='{$lang["trans.notes.placeholder"]}'></textarea>";
+                        echo "<textarea id='Notes' name='Notes' class='form-control' rows='5' placeholder='".costant::lang("trans.notes.placeholder")."'></textarea>";
                     }
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
@@ -313,14 +293,12 @@ class design
     //Design setting default account
     public static function settings_default_account ($TrAccountDefault)
         {
-            global $lang;
-
             $AccountArrayDesc = db_function::bankaccount_select_all();
             if (sizeof($AccountArrayDesc) == 0)
                 {$AccountArrayDesc[0] = "None";}
 
             echo "<div class='form-group'>";
-                echo "<label for='Default_Account'>{$lang["settings.default-account"]}</label>";
+                echo '<label for="Default_Account">'.costant::lang("settings.default-account").'</label>';
                 echo "<select id ='Default_Account' name='Default_Account' class='form-control'>";
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
@@ -354,12 +332,10 @@ class design
      //Create account input element
      public static function settings_language ($Language)
         {
-            global $lang;
-
             $AvailableLanguages = array("en","it");
 
             echo "<div class='form-group'>";
-                echo "<label for='Language'>{$lang["settings.language"]}</label>";
+                echo '<label for="Language">'.costant::lang("settings.language").'</label>';
                 echo "<select id ='Language' name='Language' class='form-control'>";
                 for ($i = 0; $i < sizeof($AvailableLanguages); $i++)
                 {

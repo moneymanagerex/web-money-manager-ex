@@ -99,13 +99,12 @@ class various
      */
     public static function getPagesList() : Array
     {
-        global $lang;
         $pages_list             = [
-                                    'new_transaction'   => $lang["page.new-transaction"],
-                                    'show'              => $lang["page.show-transactions"],
-                                    'settings'          => $lang["page.settings"],
-                                    'guide'             => $lang["page.guide"],
-                                    'about'             => $lang["page.about"]
+                                    'new_transaction'   => costant::lang("page.new-transaction"),
+                                    'show'              => costant::lang("page.show-transactions"),
+                                    'settings'          => costant::lang("page.settings"),
+                                    'guide'             => costant::lang("page.guide"),
+                                    'about'             => costant::lang("page.about")
                                     ];
         return $pages_list;
     }

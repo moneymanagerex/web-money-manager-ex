@@ -94,7 +94,7 @@ include_once '_header.php';
         <br />
         <form id="login" method="post" action="settings.php">
             <?php
-                $const_language = costant::language();
+                $const_uiLanguage = costant::uiLanguage();
                 $const_disable_authentication = costant::disable_authentication();
                 $const_username = costant::login_username();
                 $const_password = costant::login_password();
@@ -104,8 +104,8 @@ include_once '_header.php';
                 $const_defaultaccountname = costant::transaction_default_account();
                 
                 //SECTION LANGUAGE
-                if  ($const_language)
-                    {design::settings_language($const_language);}
+                if  ($const_uiLanguage)
+                    {design::settings_language($const_uiLanguage);}
                     else
                     {design::settings_language("en");}
                 echo "<br />";

@@ -9,7 +9,7 @@ $lang["page.show-transactions"] = "Lista operazioni";
 $lang["page.settings"] = "Impostazioni";
 $lang["page.settings.new"] = "Nuove impostazioni";
 $lang["page.guide"] = "Guida";
-$lang["page.about"] = "About";
+$lang["page.about"] = "Info";
 
 $lang["sec.username"] = "Username";
 $lang["sec.username.placeholder"] = "Inserisci lo Username";
@@ -92,5 +92,10 @@ $lang["guide.step3"] = "Inizia ad usare la WebApp.";
 $lang["guide.webapp-url"] = "WebApp URL:";
 $lang["guide.desktop-guid"] = "Desktop GUID:";
 
-$lang["show.no-pending-trans"] = "Nessuna operazione in sospeso";
-$lang["show.current-pending-trans"] = "Operazioni in sospeso";
+$lang["show.no_pending_trans"] = "Nessuna operazione in sospeso";
+$lang["show.current_pending_trans"] = "Operazioni in sospeso";
+$lang["show.delete_all_selected"] = "Cancella le righe selezionate";
+$lang["show.add_new"] = "Nuova operazione";
+$lang["show.delete"] = "Cancella";
+$lang["show.new"] = "Nuova operazione";
+$lang["show.no_trans_selected"] = "Nessuna operazione selezionata!";
