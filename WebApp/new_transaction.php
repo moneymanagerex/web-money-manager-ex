@@ -83,6 +83,7 @@ include_once '_header.php';
                     design::input_type($TransactionType);
                     design::input_account($TransactionAccount);
                     design::input_toaccount($TransactionToAccount);
+                    design::input_amount($TransactionAmount);
                     if (costant::disable_payee() !== True)
                         {
                             design::input_payee($TransactionPayee);
@@ -101,7 +102,7 @@ include_once '_header.php';
                             design::input_hidden("Category","None");
                             design::input_hidden("SubCategory","None");
                         }
-                    design::input_amount($TransactionAmount);
+
                     design::input_notes($TransactionNotes);
                     
                     echo "<div class='form-group'>";
