@@ -23,7 +23,7 @@ $lang["return_to_menu"] = "Ritorna al menu";
 $lang["db_successfully_updated_to_version"] = "Database aggiornato con successo alla versione ";
 
 $lang["trans.msg.add-next"] = "Aggiungi altra operazione";
-$lang["trans.msg.action-added.successfully"] = "Aggiungo con successo";
+$lang["trans.msg.action-added.successfully"] = "Aggiunto con successo";
 $lang["trans.msg.action-duplicated.successfully"] = "Duplicato con successo";
 $lang["trans.msg.action-updated.successfully"] = "Aggiornato con successo";
 
