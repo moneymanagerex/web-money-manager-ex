@@ -8,6 +8,8 @@ if(isset($_POST["TrEditedNr"]))
     $TrEditedNr = $_POST["TrEditedNr"];
 }
 
+include_once '_common.php';
+
 switch ($TrEditedNr)
 {
     case -1:    
@@ -27,7 +29,6 @@ switch ($TrEditedNr)
 $a_head_js_add[]        = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
 $a_head_css_add[]       = '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
 
-include_once '_common.php';
 include_once '_header.php';
 
 
