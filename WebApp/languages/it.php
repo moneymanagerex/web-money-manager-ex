@@ -17,19 +17,11 @@ $lang["sec.password"] = "Password";
 $lang["sec.password.placeholder"] = "Inserisci la Password";
 $lang["sec.login"] = "Accedi";
 $lang["sec.logout"] = "Esci";
-$lang["sec.password_not_matching"] = "La password non corrisponde!";
 
 $lang["return_to_menu"] = "Ritorna al menu";
 
 $lang["db_successfully_updated_to_version"] = "Database aggiornato con successo alla versione ";
 
-$lang["browser_not_support_html5"] = "Sembra che il browser non supporti l'HTML5\n\nPresta attenzione perché i campi non verranno validati!";
-
-$lang["attachment.upload_failed"] = "Si è verificato un errore al caricamento del file.";
-$lang["attachment.upload_canceled"] = "Il caricamento è stato annullato dall'utente o il browser ha interrotto la connessione.";
-
-$lang["trans.msg.not_all_fields_are_valid"] = "Alcuni campi non sono validi";
-$lang["trans.msg.do_you_want_to_add_new_payee"] = "Confermi la creazione del nuovo beneficiario";
 $lang["trans.msg.add-next"] = "Aggiungi altra operazione";
 $lang["trans.msg.action-added.successfully"] = "Aggiungo con successo";
 $lang["trans.msg.action-duplicated.successfully"] = "Duplicato con successo";
@@ -99,3 +91,14 @@ $lang["show.add_new"] = "Nuova operazione";
 $lang["show.delete"] = "Cancella";
 $lang["show.new"] = "Nuova operazione";
 $lang["show.no_trans_selected"] = "Nessuna operazione selezionata!";
+
+/*
+ * THESE TRANSLATIONS ARE STILL NOT USED.
+ * THEY ARE READY FOR JAVASCRIPT FILES: functions-1.2.0.js and new_transaction-1.0.4.js
+ */
+$lang["browser_not_support_html5"] = "Sembra che il browser non supporti l'HTML5\n\nPresta attenzione perché i campi non verranno validati!";
+$lang["sec.password_not_matching"] = "La password non corrisponde!";
+$lang["attachment.upload_failed"] = "Si è verificato un errore al caricamento del file.";
+$lang["attachment.upload_canceled"] = "Il caricamento è stato annullato dall'utente o il browser ha interrotto la connessione.";
+$lang["trans.msg.not_all_fields_are_valid"] = "Alcuni campi non sono validi";
+$lang["trans.msg.do_you_want_to_add_new_payee"] = "Confermi la creazione del nuovo beneficiario";

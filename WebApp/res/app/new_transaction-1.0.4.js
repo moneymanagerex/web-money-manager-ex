@@ -49,12 +49,12 @@ var transactions = {
                 submit_form = true;
             }else{
                 form.find(':invalid').first().focus();
-                alert($lang["trans.msg.not_all_fields_are_valid"]);
+                alert("Not all fields are valid");
             }
 
             // Confirm add new payee
             if(submit_form){
-                if(app.confirmIfNotPresentInDatalist('Payee', PayeeList, $lang["trans.msg.do_you_want_to_add_new_payee"])){
+                if(app.confirmIfNotPresentInDatalist('Payee', PayeeList, "Do you want to add the new payee")){
                     submit_form = true;
                 }else{
                     $('#Payee').focus();

@@ -17,19 +17,11 @@ $lang["sec.password"] = "Password";
 $lang["sec.password.placeholder"] = "Insert Password";
 $lang["sec.login"] = "Login";
 $lang["sec.logout"] = "Logout";
-$lang["sec.password_not_matching"] = "Password doesn't match!";
 
 $lang["return_to_menu"] = "Return to menu";
 
 $lang["db_successfully_updated_to_version"] = "Database successfully updated to version ";
 
-$lang["browser_not_support_html5"] = "Seems that the browser doesn't fully supports HTML5\n\nPlease make attention because it doesn't validate fields!";
-
-$lang["attachment.upload_failed"] = "There was an error attempting to upload the file.";
-$lang["attachment.upload_canceled"] = "The upload has been canceled by the user or the browser dropped the connection.";
-
-$lang["trans.msg.not_all_fields_are_valid"] = "Not all fields are valid";
-$lang["trans.msg.do_you_want_to_add_new_payee"] = "Do you want to add the new payee";
 $lang["trans.msg.add-next"] = "Add next";
 $lang["trans.msg.action-added.successfully"] = "Added successfully";
 $lang["trans.msg.action-duplicated.successfully"] = "Duplicated successfully";
@@ -99,3 +91,14 @@ $lang["show.add_new"] = "Add new";
 $lang["show.delete"] = "Delete";
 $lang["show.new"] = "New transaction";
 $lang["show.no_trans_selected"] = "No transaction selected!";
+
+/*
+ * THESE TRANSLATIONS ARE STILL NOT USED.
+ * THEY ARE READY FOR JAVASCRIPT FILES: functions-1.2.0.js and new_transaction-1.0.4.js
+ */
+$lang["browser_not_support_html5"] = "Seems that the browser doesn't fully supports HTML5\n\nPlease make attention because it doesn't validate fields!";
+$lang["sec.password_not_matching"] = "Password doesn't match!";
+$lang["attachment.upload_failed"] = "There was an error attempting to upload the file.";
+$lang["attachment.upload_canceled"] = "The upload has been canceled by the user or the browser dropped the connection.";
+$lang["trans.msg.not_all_fields_are_valid"] = "Not all fields are valid";
+$lang["trans.msg.do_you_want_to_add_new_payee"] = "Do you want to add the new payee";
