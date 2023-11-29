@@ -6,6 +6,8 @@ $a_head_js_add[]      = '<script src="res/app/base-1.0.4.js" type="text/javascri
 $a_head_js_add[]      = '<script src="res/app/show-1.1.0.js" type="text/javascript"></script>';
 
 include_once '_common.php';
+
+$s_page_title = $lang["page.show-transactions"];    
 include_once '_header.php';
 
 function drawRecordRow(Array $a_transaction, String $s_date) : void
@@ -101,7 +103,7 @@ if ($recordmaxid > 0 ) :
 
     $resultarray = db_function::transaction_select_all_order_by_date('DESC');
     echo '<div class="container">';
-        echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? 'No' : 'Current'). ' pending transaction' . (count($resultarray) != 1 ? 's' : ''). '</h3>';
+        echo '<h3 class="text_align_center">' . (count($resultarray) == 0 ? $lang["show.no_pending_trans"] : $lang["show.current_pending_trans"]). '</h3>';
         echo '<br />';
         echo '<div class="table-responsive">';
 
@@ -116,27 +118,27 @@ if ($recordmaxid > 0 ) :
             /**
              *  delete button
              */
-            echo '<button type="submit" id="TrDelete" name="btn_action" value="Delete" class="btn btn-lg btn-danger btn-block">Delete all selected</button>';
+            echo "<button type='submit' id='TrDelete' name='btn_action' value='Delete' class='btn btn-lg btn-danger btn-block'>{$lang["show.delete_all_selected"]}</button>";
 
             /**
              *  new button
              */
-            echo '<input type="button" class="btn btn-lg btn-success btn-block" id="btn_new" value="New transaction" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
+            echo '<input type="button" class="btn btn-lg btn-success btn-block" id="btn_new" value="'.$lang["show.new"].'" onclick='."'top.location.href = ".'"new_transaction.php"'."' />";
             echo '<br />';
 
             echo '<table class="table table-hover table-condensed">';
             #echo '<table class = "table table-hover table-condensed table-bordered">'; //TABLE BORDERED FOR DEBUG
                 echo '<thead>';
                     echo '<tr>';
-                        echo "<th class='text_align_center'><span class='glyphicon glyphicon-trash'></span> <span class='transaction-extra-columns'>Delete</span></th>";
-                        echo "<th class=''><span class='glyphicon glyphicon-info-sign'></span> <span class='transaction-extra-columns'>Type</span></th>";
-                        echo '<th class="text_align_right">Amount</th>';
-                        echo '<th class="text_align_center">Notes</th>';
-                        echo '<th>Account</th>';
+                        echo "<th class='text_align_center'><span class='glyphicon glyphicon-trash'></span> <span class='transaction-extra-columns'>{$lang["show.delete"]}</span></th>";
+                        echo "<th class=''><span class='glyphicon glyphicon-info-sign'></span> <span class='transaction-extra-columns'>{$lang["trans.type"]}</span></th>";
+                        echo "<th class='text_align_right'>{$lang["trans.amount"]}</th>";
+                        echo "<th class='text_align_center'>{$lang["trans.notes"]}</th>";
+                        echo "<th>{$lang["account"]}</th>";
                         if (costant::disable_payee() == False)
-                            {echo "<th class='transaction-extra-columns'>Payee</th>";}
+                            {echo "<th class='transaction-extra-columns'>{$lang["trans.payee"]}</th>";}
                         if (costant::disable_category() == False)
-                            {echo '<th>Category</th>';}
+                            {echo "<th>{$lang["trans.category"]}</th>";}
                     echo '</tr>';
                 echo '</thead>';
                 
@@ -159,10 +161,10 @@ if ($recordmaxid > 0 ) :
 else: ?>
 
     <div class="container">
-        <h3 class="text_align_center">No pending transactions</h3>
+        <h3 class="text_align_center"><?php echo $lang["show.no_pending_trans"] ?></h3>
         <br />
         <br />
-        <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Add new</a>
+        <a href="new_transaction.php" class="btn btn-lg btn-success btn-block"><?php echo $lang["show.add_new"] ?></a>
 
 <?php
 

@@ -3,23 +3,25 @@
 $b_restricted_auth  = true;
 $transaction_name   = '';
 
+require_once 'functions.php';
+
 $TrEditNr = 0;
-$TransactionHeaderText = 'Creating new transaction';
-$TransactionSubmit = 'Create transaction';
+$TransactionHeaderText = $lang["trans.new.header"];
+$TransactionSubmit = $lang["trans.new.submit"];
 $FlagNew = true;
 
 if (isset($_GET['TrEditNr']))
 {
     $TrEditNr = $_GET['TrEditNr'];
-    $TransactionHeaderText = 'Editing transaction';
-    $TransactionSubmit = 'Update transaction';
+    $TransactionHeaderText = $lang["trans.update.header"];
+    $TransactionSubmit = $lang["trans.update.submit"];
     $FlagNew = false;
 }
 elseif (isset($_GET['TrDuplicateNr']))
 {
     $TrEditNr = $_GET['TrDuplicateNr'];
-    $TransactionHeaderText = 'Duplicating transaction';
-    $TransactionSubmit = 'Create duplicate';
+    $TransactionHeaderText = $lang["trans.duplicate.header"];
+    $TransactionSubmit = $lang["trans.duplicate.submit"];
 }
 
 $s_page_title           = $TransactionHeaderText;
@@ -104,7 +106,7 @@ include_once '_header.php';
                     design::input_notes($TransactionNotes);
                     
                     echo "<div class='form-group'>";
-                        echo '<label class="width100" for="fileToUpload">Take a picture or upload attachments</label><br />';
+                        echo "<label class='width100' for='fileToUpload'>{$lang["trans.upload.label"]}</label><br />";
                         echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile(${TrEditNr});' />";
                         echo "<span class='help-block'></span>";
                     echo "</div>\n";
@@ -134,7 +136,7 @@ include_once '_header.php';
                                 echo "populate_sub_category(false);";
                             echo "</script>";
                         }
-                    echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>${TransactionSubmit}</button>";
+                    echo "<button type='submit' id='SubmitButton' name='SubmitButton' class='btn btn-lg btn-success btn-block'>{$TransactionSubmit}</button>";
 
                 echo "</form>";
             echo "</div>\n";

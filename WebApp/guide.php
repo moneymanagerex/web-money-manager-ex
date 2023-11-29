@@ -13,20 +13,20 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
             <p>
                 <ol>
                     <li>
-                        Copy the data below and paste them into your desktop application.
+                        <?php echo $lang["guide.step1"] ?>
                     </li>
                     <li>
-                        Re-open desktop application to synchronise bank account(s), etc. to the WebApp from Desktop.
+                        <?php echo $lang["guide.step2"] ?>
                     </li>
                     <li>
-                        Start using the WebApp version.
+                        <?php echo $lang["guide.step3"] ?>
                     </li>
                 </ol>
             </p>
         </div>
         <div class="container text_align_center">
             <h4>
-                WebApp URL:
+                <?php echo $lang["guide.webapp-url"] ?>
             </h4>
             <p>
                 <strong>
@@ -35,7 +35,7 @@ $CurrentPage = str_replace('/guide.php','',costant::current_page_url());
             </p>
             <br />
             <h4>
-                Desktop GUID:
+                <?php echo $lang["guide.desktop-guid"] ?>
             </h4>
             <p>
                 <strong>

@@ -11,7 +11,7 @@ else
         $upgrade_result = db_upgrade::upgrade_db();
         if ($upgrade_result == 'update_done')
             {
-                various::send_alert_and_redirect('Database succesfully updated to version '.costant::app_version(), 'index.php');
+                various::send_alert_and_redirect($lang["db_successfully_updated_to_version"].costant::app_version(), 'index.php');
             }
     }
 $username = null;
@@ -71,17 +71,17 @@ else
         <div class="container text_align_center">
             <form id="login" method="post">
                 <div class="form-group">
-                    <label for="Username">Username</label>
-                    <input id="Username" type="text" name="Username" class="form-control" placeholder="Insert Username" autofocus required />
+                    <label for="Username"><?php echo $lang["sec.username"]; ?></label>
+                    <input id="Username" type="text" name="Username" class="form-control" placeholder="<?php echo $lang["sec.username.placeholder"] ?>"" autofocus required />
                     <span class="help-block"></span>
                 </div>
                 <div class="form-group">
-                    <label for="Password">Password</label>
-                    <input id="Password" type="password" name="Password" class="form-control" placeholder="Insert Password" required />
+                    <label for="Password"><?php echo $lang["sec.password"]; ?></label>
+                    <input id="Password" type="password" name="Password" class="form-control" placeholder="<?php echo $lang["sec.password.placeholder"] ?>" required />
                     <span class="help-block"></span>
                 </div>
                 <br />
-                <button type="submit" id="Login" name="Login" class="btn btn-lg btn-success btn-block" value = "Login">Login</button>
+                <button type="submit" id="Login" name="Login" class="btn btn-lg btn-success btn-block" value = "Login"><?php echo $lang["sec.login"] ?></button>
             </form>
         </div>
 <?php

@@ -103,4 +103,16 @@ class costant
                 {$pageURL .= ':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
              return $pageURL;
             }
+
+        public static function uiLanguage ()
+            {
+                global $language;
+                return $language;
+            }
+
+        public static function lang ($Key)
+        {
+            global $lang;
+            return $lang[$Key];
+        }
     }
