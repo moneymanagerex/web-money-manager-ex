@@ -5,7 +5,12 @@ $b_restricted_auth  = true;
 include_once '_common.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
-    {        
+    {   
+        if (isset ($_POST["Language"]))
+            {$language = $_POST["Language"];}
+            else
+            {$language = "en";}
+
         if (isset ($_POST["Set_Disable_authentication"]))
             {$disable_authentication = $_POST["Set_Disable_authentication"];}
             else
@@ -42,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         
         $parameterarray = array
             (
+                "language"              => $language,
                 "disable_authentication"=> $disable_authentication,
                 "user_username"         => $username,
                 "user_password"         => $password,
@@ -65,9 +71,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
 $is_edit                = (isset($const_username) AND isset($const_password));
 
+$s_page_title = $lang["page.settings"];
+
 if (!$is_edit)
 {
-    $s_page_title           = 'New settings';
+    $s_page_title           = $lang["page.settings.new"];
     $b_page_logo            = true;
 
 }
@@ -79,13 +87,14 @@ include_once '_header.php';
         <?php
             if (!$is_edit) :
         ?>
-        <h3 class="text_align_center">Provide new settings to start using Money Manager EX</h3>
+        <h3 class="text_align_center"><?php echo $lang["settings.new"] ?></h3>
         <?php
             endif;
         ?>
         <br />
         <form id="login" method="post" action="settings.php">
             <?php
+                $const_uiLanguage = costant::uiLanguage();
                 $const_disable_authentication = costant::disable_authentication();
                 $const_username = costant::login_username();
                 $const_password = costant::login_password();
@@ -94,37 +103,44 @@ include_once '_header.php';
                 $const_disable_category = costant::disable_category();
                 $const_defaultaccountname = costant::transaction_default_account();
                 
+                //SECTION LANGUAGE
+                if  ($const_uiLanguage)
+                    {design::settings_language($const_uiLanguage);}
+                    else
+                    {design::settings_language("en");}
+                echo "<br />";
+
                 //SECTION AUTHENTICATION
-                design::section_legened("Authentication");
+                design::section_legened($lang["settings.authentication.section"]);
                     if ($const_disable_authentication == True)
-                        {design::settings_checkbox("Set_Disable_authentication",True,"Disable authentication (Not recommended)");}
+                        {design::settings_checkbox("Set_Disable_authentication",True,$lang["settings.authentication.disable"]);}
                         else
-                        {design::settings_checkbox("Set_Disable_authentication",False,"Disable authentication (Not recommended)");}
+                        {design::settings_checkbox("Set_Disable_authentication",False,$lang["settings.authentication.disable"]);}
 
                     if (isset($const_username) && $const_disable_authentication == False)
                         {design::settings("Username",$const_username,"","Text",True);}
                         else
-                        {design::settings("Username","","Insert a new username","Text",True);}
+                        {design::settings("Username","",$lang["sec.username.placeholder"] ,"Text",True);}
                     
                     if (isset($const_password) && $const_disable_authentication == False)
-                        {design::settings_password("Password","To change insert a new password",False);}
+                        {design::settings_password("Password",$lang["settings.authentication.password.update.placeholder"],False,"Password");}
                         else
-                        {design::settings_password("Password","Insert a password",True);}
+                        {design::settings_password("Password",$lang["settings.authentication.password.new.placeholder"],True,"Password");}
             
-                    design::settings_password("Confirm_Password","Confirm new password",False);
+                    design::settings_password("Confirm_Password",$lang["settings.authentication.password.confirm.placeholder"],False,"Conferma Password");
                 echo "<br />";
                 
                 //SECTION NEW TRANSACTIONS
-                design::section_legened("New transactions");
+                design::section_legened($lang["settings.new-trans.section"]);
                     if ($const_disable_payee == True)
-                        {design::settings_checkbox("Set_Disable_payee",True,"Disable payees management");}
+                        {design::settings_checkbox("Set_Disable_payee",True,$lang["settings.new-trans.disable-payee.placeholder"]);}
                         else
-                        {design::settings_checkbox("Set_Disable_payee",False,"Disable payees management");}
+                        {design::settings_checkbox("Set_Disable_payee",False,$lang["settings.new-trans.disable-payee.placeholder"]);}
                         
                     if ($const_disable_category == True)
-                        {design::settings_checkbox("Set_Disable_category",True,"Disable categories management");}
+                        {design::settings_checkbox("Set_Disable_category",True,$lang["settings.new-trans.disable-category.placeholder"]);}
                         else
-                        {design::settings_checkbox("Set_Disable_category",False,"Disable categories management");}
+                        {design::settings_checkbox("Set_Disable_category",False,$lang["settings.new-trans.disable-category.placeholder"]);}
                     
                     if (isset($const_defaultaccountname))
                         {design::settings_default_account($const_defaultaccountname);}
@@ -133,7 +149,7 @@ include_once '_header.php';
                 echo "<br />";
                 
                 //SECTION DESKTOP INTEGRATION
-                design::section_legened("Desktop integration");
+                design::section_legened($lang["settings.new-trans.section"]);
                     if (isset($const_desktop_guid))
                         {design::settings("Guid",$const_desktop_guid,"","Text",True);}
                         else
@@ -170,13 +186,13 @@ include_once '_header.php';
             <?php
                 if (isset($const_username) AND isset($const_password))
                     {
-                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">Save Settings</button>');
+                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">'.$lang["settings.save"].'</button>');
                         echo '<br />';
-                        echo ('<a href="landing.php" class="btn btn-lg btn-success btn-block">Return to menu</a>');
+                        echo ('<a href="landing.php" class="btn btn-lg btn-success btn-block">'.$lang['return_to_menu'].'</a>');
                     }
                 else
                     {
-                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">Apply Settings</button>');
+                        echo ('<button type="button" id="EditSettings" name="EditSettings" class="btn btn-lg btn-success btn-block" onclick="check_password_match_and_submit(\'Set_Password\',\'Set_Confirm_Password\',\'login\')">'.$lang["settings.apply"].'</button>');
                     }
                 echo '<br />';
                 echo '<br />';

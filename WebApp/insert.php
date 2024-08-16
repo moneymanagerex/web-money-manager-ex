@@ -8,18 +8,20 @@ if(isset($_POST["TrEditedNr"]))
     $TrEditedNr = $_POST["TrEditedNr"];
 }
 
+include_once '_common.php';
+
 switch ($TrEditedNr)
 {
     case -1:    
-        $s_page_title = 'New Transaction';
+        $s_page_title = $lang["page.transaction.added"];
         $transaction_action = 'added';
     break;
     case 0:     
-        $s_page_title = 'Existing Transaction';
+        $s_page_title = $lang["page.transaction.duplicated"];
         $transaction_action = 'duplicated';
     break;
     default:    
-        $s_page_title = 'Existing Transaction';
+        $s_page_title = $lang["page.transaction.updated"];
         $transaction_action = 'updated';
     break;
 }
@@ -27,7 +29,6 @@ switch ($TrEditedNr)
 $a_head_js_add[]        = '<script src="res/app/base-1.0.4.js" type="text/javascript"></script>';
 $a_head_css_add[]       = '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
 
-include_once '_common.php';
 include_once '_header.php';
 
 
@@ -84,13 +85,13 @@ include_once '_header.php';
                 check_box
             </i>
             <h3>
-                <?php echo ucfirst($transaction_action); ?> successfully
+                <?php echo $lang["trans.msg.action-".$transaction_action.".successfully"] ?> 
             </h3>
             <br />
             <br />
-            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block">Add next</a>
+            <a href="new_transaction.php" class="btn btn-lg btn-success btn-block"><?php echo $lang["trans.msg.add-next"] ?></a>
             <br />
-            <a href="show.php" class="btn btn-lg btn-success btn-block">Show transactions</a>
+            <a href="show.php" class="btn btn-lg btn-success btn-block"><?php echo $lang["page.show-transactions"] ?></a>
             <br />
         </div>
 		

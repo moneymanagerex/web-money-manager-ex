@@ -100,11 +100,11 @@ class various
     public static function getPagesList() : Array
     {
         $pages_list             = [
-                                    'new_transaction'   => 'New transaction',
-                                    'show'              => 'Show transactions',
-                                    'settings'          => 'Edit settings',
-                                    'guide'             => 'Guide',
-                                    'about'             => 'About',
+                                    'new_transaction'   => costant::lang("page.new-transaction"),
+                                    'show'              => costant::lang("page.show-transactions"),
+                                    'settings'          => costant::lang("page.settings"),
+                                    'guide'             => costant::lang("page.guide"),
+                                    'about'             => costant::lang("page.about")
                                     ];
         return $pages_list;
     }
