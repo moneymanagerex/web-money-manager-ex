@@ -188,21 +188,23 @@ class db_function
 
 
     //Delete group transaction
-    public static function transaction_delete_group ($TrDeleteArr)
-        {
-            $const_dbpath = costant::database_path();
-            $N = count($TrDeleteArr);
-            $SQLDelete = "";
-            for($i=0; $i < $N; $i++)
-                {$SQLDelete = $SQLDelete.$TrDeleteArr[$i] . ",";}
-            $SQLDelete = rtrim($SQLDelete, ",");
+    public static function transaction_delete_group($TrDeleteArr)
+	{
+	    $const_dbpath = costant::database_path();
+	    $N = count($TrDeleteArr);
 
-            $db = new PDO("sqlite:${const_dbpath}");
-            $db->exec   ("DELETE FROM New_Transaction WHERE ID IN (${SQLDelete});");
+	    // Create placeholders for each element in $TrDeleteArr
+	    $placeholders = rtrim(str_repeat('?,', $N), ',');
 
-            $db = null;
-        }
+	    // Prepare the SQL statement
+	    $db = new PDO("sqlite:${const_dbpath}");
+	    $stmt = $db->prepare("DELETE FROM New_Transaction WHERE ID IN (${placeholders})");
 
+	    // Execute the statement with the array of IDs
+	    $stmt->execute($TrDeleteArr);
+
+	    $db = null;
+	}
 
     // Update transaction
     public static function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrCategory,$TrSubCategory,$TrAmount,$TrNotes)
