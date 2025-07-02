@@ -332,7 +332,7 @@ class design
      //Create account input element
      public static function settings_language ($Language)
         {
-            $AvailableLanguages = array("en","it");
+            $AvailableLanguages = array("en","it", "pt_br");
 
             echo "<div class='form-group'>";
                 echo '<label for="Language">'.costant::lang("settings.language").'</label>';
