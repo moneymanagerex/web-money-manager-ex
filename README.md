@@ -39,7 +39,7 @@ Run the following commands after cloning this repo:
 
 1. `docker build -t webmmx:latest .`
 
-2. `docker run -d -p <your available port>:80 webmmx:latest`
+2. `docker run -d -v <your directory for the database>:/data -p <your available port>:80 webmmx:latest`
 
 
 
