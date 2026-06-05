@@ -10,7 +10,7 @@ class various
             echo '<script src="res/app/functions-1.2.0.js" type="text/javascript"></script>';
             echo '<script language="javascript">';
             if ($AlertRedirect <> 'None')
-                {echo "send_alert_and_redirect ('${AlertMessage}','${AlertRedirect}')";}
+                {echo "send_alert_and_redirect ('{$AlertMessage}','{$AlertRedirect}')";}
             echo '</script>';
         }
 
@@ -29,7 +29,7 @@ class various
             fwrite($fileopen, "\n");
 
             foreach ($ParameterArray as $key => $value)
-                {fwrite($fileopen, "\$${key} = \"${value}\";\n");}
+                {fwrite($fileopen, "\${$key} = \"{$value}\";\n");}
 
             fclose($fileopen);
 

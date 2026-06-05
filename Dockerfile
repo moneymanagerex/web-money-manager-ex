@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.5-apache
 WORKDIR /var/www/html
 
 COPY WebApp .
