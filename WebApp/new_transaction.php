@@ -107,7 +107,7 @@ include_once '_header.php';
                     
                     echo "<div class='form-group'>";
                         echo "<label class='width100' for='fileToUpload'>{$lang["trans.upload.label"]}</label><br />";
-                        echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile(${TrEditNr});' />";
+                        echo "<input type='file' name='fileToUpload' id='fileToUpload' onchange='attachment_uploadFile({$TrEditNr});' />";
                         echo "<span class='help-block'></span>";
                     echo "</div>\n";
                     
@@ -143,7 +143,7 @@ include_once '_header.php';
 
             echo "<script type='text/javascript'>";
                 //Refresh Attachments table
-                echo "attachment_RefreshTable(${TrEditNr});\n";
+                echo "attachment_RefreshTable({$TrEditNr});\n";
                 //Manage transfer disable field
                 echo "enable_element ('ToAccount','Type_Withdrawal','Transfer');\n";
                 echo "disable_element ('Payee','Type_Withdrawal','Transfer');\n";

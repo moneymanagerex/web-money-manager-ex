@@ -98,9 +98,22 @@ class costant
 
         public static function current_page_url ()
             {
-             $pageURL = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"];
-             if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443")
-                {$pageURL .= ':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];}
+             $serverPort = (string)($_SERVER["SERVER_PORT"] ?? "");
+             $scheme = $_SERVER["REQUEST_SCHEME"] ?? "";
+             if ($scheme === "")
+                {
+                    $https = strtolower((string)($_SERVER["HTTPS"] ?? ""));
+                    $scheme = ($https !== "" && $https !== "off") || $serverPort === "443" ? "https" : "http";
+                }
+
+             $host = $_SERVER["HTTP_HOST"];
+             $pageURL = $scheme . '://' . $host;
+             if ($serverPort !== "" && $serverPort !== "80" && $serverPort !== "443")
+                {
+                    if (preg_match('/:\d+$/', $host) !== 1)
+                        {$pageURL .= ':'.$serverPort;}
+                    $pageURL .= $_SERVER["REQUEST_URI"] ?? "";
+                }
              return $pageURL;
             }
 

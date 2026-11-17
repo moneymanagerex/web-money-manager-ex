@@ -1,68 +1,50 @@
-Money Manager EX - WebApp
-====================
+# Money Manager EX WebApp
 
-The WebApp for Money Manager EX lets you insert new transactions from any device. You only need a web browser and an Internet connection to your webserver.
+The WebApp lets you record transaction reminders from a browser on any device and synchronize them with the Money Manager EX desktop application. The desktop app can download transactions and keep the WebApp's account, payee, and category lists in sync.
 
-The webapp lets you save a &quot;transaction reminder&quot; with essential data, that you can reviewed later using the desktop version.
+The application stores its data in a local SQLite database. It does not require a separate database server.
 
-When you start up the desktop version of Money Manager EX, it downloads all transactions saved to the webapp. You can review them one by one. At the same time, the desktop version updates the webapp with any new payees or categories so they both stay in sync.</p>
+## Requirements
 
-## Server-side requirements
+- A web server with PHP and the `PDO_SQLite` extension enabled.
+- The PHP/web-server process must be able to create and update `configuration_user.php` and `MMEX_New_Transaction.db` in the application directory, and write files in `attachments/`.
+- A modern HTML5-compatible browser. The interface is optimized for portrait mobile screens.
 
- * Webserver with PHP 5.4 or higher (tested on Apache, IIS and nginx)
- * PDO_SQLite extension (enabled by default on PHP 5.2 or higher)
- * Full rights on the WebApp subfolder
+Use a PHP release that is still supported by your operating system. The repository's Dockerfile uses PHP 8.3; keep the image updated with current PHP 8.3 security patches.
 
-## Client-side requirements
+## Installation
 
- * Web browser fully compatible with HTML5
- * Optimized for portrait view on mobile device
+For detailed Ubuntu 24.04/PHP 8.3 instructions, see the [Apache deployment guide](docs/deployment-ubuntu.md) or the [Nginx + PHP-FPM deployment guide](docs/deployment-ubuntu-nginx.md). Both cover SQLite, file permissions, HTTPS, first-run setup, backups, and upgrades.
 
-## Recommendations
+For another hosting environment, deploy the contents of `WebApp/` as the web root, ensure the requirements above are met, and protect the configuration file, SQLite database, and attachments from direct web access. Configure HTTPS before entering credentials or synchronizing financial data.
 
-You can use WebApp on a shared hosting service to greatly simplify the installation process. Most free services meet the small requirements of the WebApp.
+## Docker
 
-If you know what you are doing, you can install a webserver on your PC. After that you also need to properly configure your router to forward the webserver port and reach it with a static IP or DNS. You can find many guides for this on the web.
+The included Dockerfile can be used for a local preview:
 
-## How to install WebApp
+```sh
+docker build -t webmmx:latest .
+docker run --rm -p 8080:80 webmmx:latest
+docker run -d -v <your directory for the database>:/data -p <your available port>:80 webmmx:latest
+```
 
-### Traditional Way
- 1. Unzip the latest version in a folder on your webserver or upload files through FTP.
- 2. Rename `htaccess.txt` to `.htaccess` (on Windows type `.htaccess.` or use the Command Prompt and &quot;rename&quot; command).
- 3. Enable PDO_SQLite if disabled.
- 4. Open your browser to the folder URL.
- 5. Fill in a username and password and review the settings.
+Open `http://localhost:8080`. This is a disposable preview only: the current image has no persistent data-volume setup, so its configuration, database, and attachments are stored in the container's writable layer and are lost when the container is removed. Do not use this Dockerfile as-is for a public or persistent installation.
 
-### Docker Way 
+## First-run and desktop setup
 
-Run the following commands after cloning this repo:
+1. Open the WebApp URL in a browser. On a new installation, the app sends you to Settings.
+2. Keep authentication enabled and set a unique username and strong password. Keep the generated desktop GUID; it is the token used by desktop synchronization.
+3. Save the settings and use the URL and GUID shown by the WebApp's Guide page in the desktop app under **Options → Network → WebApp Settings**.
+4. In the desktop app, choose **Tools → Refresh WebApp** to populate the WebApp with the desktop account, payee, and category data.
 
-1. `docker build -t webmmx:latest .`
+Treat the GUID as a secret. Use HTTPS for the WebApp URL and do not publish the GUID.
 
-2. `docker run -d -v <your directory for the database>:/data -p <your available port>:80 webmmx:latest`
+## Upgrading and backups
 
+Back up the installation before upgrading. Preserve `configuration_user.php`, `MMEX_New_Transaction.db`, and the contents of `attachments/`; replace the application files with the new release without deleting those data files. The app attempts to upgrade the database when it is opened after an update.
 
+Back up all three data items regularly and keep the backup somewhere separate from the web server. The Ubuntu guide includes an example backup procedure.
 
-The GUID for data sync with the desktop version is auto-generated. We suggest not changing it.
+## Project version
 
-## Configure Desktop App
-
- 1. Open desktop app.
- 2. Options -> Network -> WebApp Settings.
- 3. Fill in Url and GUID.
- 4. Hit OK
-
-## First run
-
- 1. Open desktop app.
- 2. Tools -> Refresh WebApp.
- 3. Wait till it's over
- 4. You're now ready to enter your first transaction.
-
-## Upgrade
-
- 1. Delete all files from webserver except for:
-    * configuration_user.php
-    * MMEX_New_Transaction.db
- 2. Unzip all files in the same folder as the original installation.
- 3. The first time you open the WebApp, it automatically upgrades the database to new version.
+The application version is defined in `WebApp/configuration_system.php`. The repository's current version is 1.2.3.

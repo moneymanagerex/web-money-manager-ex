@@ -68,7 +68,7 @@ class db_upgrade
                             case $app_version;
                                 break;
                             default:
-                                various::send_alert_and_redirect('Database version is not compatible: DB Version = '.db_function::db_version()." - APP Version = ${app_version}",'error.php');
+                                various::send_alert_and_redirect('Database version is not compatible: DB Version = '.db_function::db_version()." - APP Version = {$app_version}",'error.php');
                                 break 2;
                         }
                 }
@@ -82,7 +82,7 @@ class db_upgrade
     public static function to_0_9_3 ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec   ("ALTER TABLE New_Transaction RENAME TO New_Transaction_Old");
             db_function::db_create();
@@ -107,7 +107,7 @@ class db_upgrade
     public static function to_0_9_7 ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec   ("ALTER TABLE New_Transaction RENAME TO New_Transaction_Old");
             db_function::db_create();
@@ -133,7 +133,7 @@ class db_upgrade
                 );
             various::update_configuration_file($parameterarray);
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
             $db->exec   ("ALTER TABLE Payee_List ADD DefCateg TEXT");
             $db->exec   ("ALTER TABLE Payee_List ADD DefSubCateg TEXT");
             $db->exec   ("UPDATE Payee_List SET DefCateg = 'None', DefSubCateg = 'None'");
@@ -146,9 +146,9 @@ class db_upgrade
     public static function upgrade_version ($version)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
-            $db->exec   ("UPDATE Parameters SET Value = '${version}' WHERE Parameter = 'Version';");
+            $db->exec   ("UPDATE Parameters SET Value = '{$version}' WHERE Parameter = 'Version';");
             $db = null;
         }
 }

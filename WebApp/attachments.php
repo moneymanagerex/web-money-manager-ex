@@ -31,9 +31,9 @@ if (isset($_GET["AttachmentsTable"]))
                     echo "<tr>";
                         $File = $Attachments[$i];
                         design::table_cell(substr($File,strpos($File,"Attach"),strlen($File)),"");
-                        design::table_cell("<a href='services.php?guid=${Guid}&download_attachment=${File}'>
+                        design::table_cell("<a href='services.php?guid={$Guid}&download_attachment={$File}'>
                             <span class='glyphicon glyphicon-download-alt'> </span> Open</a>","text_align_right");
-                        design::table_cell("<a href='#' onclick='attachment_delete(\"${File}\",${TrId});return false;'>
+                        design::table_cell("<a href='#' onclick='attachment_delete(\"{$File}\",{$TrId});return false;'>
                             <span class='glyphicon glyphicon-remove'> </span> Delete</a>","text_align_right");
                     echo "</tr>";
                 }
