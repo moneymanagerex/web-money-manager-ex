@@ -25,6 +25,7 @@ The included Dockerfile can be used for a local preview:
 ```sh
 docker build -t webmmx:latest .
 docker run --rm -p 8080:80 webmmx:latest
+docker run -d -v <your directory for the database>:/data -p <your available port>:80 webmmx:latest
 ```
 
 Open `http://localhost:8080`. This is a disposable preview only: the current image has no persistent data-volume setup, so its configuration, database, and attachments are stored in the container's writable layer and are lost when the container is removed. Do not use this Dockerfile as-is for a public or persistent installation.
