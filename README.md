@@ -14,7 +14,7 @@ Use a PHP release that is still supported by your operating system. The reposito
 
 ## Installation
 
-For a detailed, security-conscious installation on Ubuntu, see [Ubuntu deployment](docs/deployment-ubuntu.md). It covers Apache, PHP/SQLite, file permissions, HTTPS, first-run setup, backups, and upgrades.
+For detailed Ubuntu 24.04/PHP 8.3 instructions, see the [Apache deployment guide](docs/deployment-ubuntu.md) or the [Nginx + PHP-FPM deployment guide](docs/deployment-ubuntu-nginx.md). Both cover SQLite, file permissions, HTTPS, first-run setup, backups, and upgrades.
 
 For another hosting environment, deploy the contents of `WebApp/` as the web root, ensure the requirements above are met, and protect the configuration file, SQLite database, and attachments from direct web access. Configure HTTPS before entering credentials or synchronizing financial data.
 

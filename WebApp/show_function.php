@@ -27,7 +27,7 @@ if(isset($_POST['btn_action']))
             {
                 $TrEdit = $_POST['TrEdit'];
                 
-                header("Location: new_transaction.php?Tr${btn_action}Nr=${TrEdit[0]}");
+                header("Location: new_transaction.php?Tr{$btn_action}Nr={$TrEdit[0]}");
             }
             
         if(!isset($_POST['TrEdit']) && $btn_action == 'Edit')

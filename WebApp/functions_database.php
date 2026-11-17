@@ -15,7 +15,7 @@ class db_function
 
             try
                 {
-                    $db = new PDO("sqlite:${const_dbpath}");
+                    $db = new PDO("sqlite:{$const_dbpath}");
 
                     $db -> exec   ("CREATE TABLE IF NOT EXISTS [New_Transaction](
                                             ID          INTEGER     PRIMARY KEY  AUTOINCREMENT,
@@ -48,7 +48,7 @@ class db_function
                                             Parameter   TEXT PRIMARY KEY NOT NULL,
                                             Value       TEXT
                                         );");
-                    $db -> exec     ("INSERT or IGNORE INTO Parameters VALUES ('Version','${const_app_version}');");
+                    $db -> exec     ("INSERT or IGNORE INTO Parameters VALUES ('Version','{$const_app_version}');");
                     $db = null;
                 }
             catch(PDOException $e)
@@ -62,7 +62,7 @@ class db_function
     public static function db_version ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db->query("SELECT Value FROM Parameters WHERE Parameter = 'Version';");
             $db_version=$statement->fetchColumn(0);
@@ -76,7 +76,7 @@ class db_function
     public static function db_vacuum ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec ("VACUUM");
 
@@ -89,7 +89,7 @@ class db_function
         {
             $ID = 0;
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db -> prepare("INSERT INTO New_Transaction (Date, Status, Type, Account, ToAccount, Payee, Category, SubCategory, Amount, Notes)
                                         VALUES(:TrDate, :TrStatus, :TrType, :TrAccount, :TrToAccount, :TrPayee, :TrCategory, :TrSubCategory, :TrAmount, :TrNotes);");
@@ -115,7 +115,7 @@ class db_function
     public static function transaction_select_maxid ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db->query("SELECT MAX(ID) FROM New_Transaction;");
             $resultcount=$statement->fetchColumn(0);
@@ -130,7 +130,7 @@ class db_function
     public static function transaction_select_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $results = $db -> query("SELECT * FROM New_Transaction;");
             $resultarray = array();
@@ -145,7 +145,7 @@ class db_function
     public static function transaction_select_all_order_by_date (String $s_direction = 'DESC')
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
             $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
 
             $results = $db -> query("SELECT * FROM New_Transaction ORDER BY Date $s_direction, id $s_direction;");
@@ -161,7 +161,7 @@ class db_function
     public static function transaction_select_one ($TrEditNr)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db-> prepare("SELECT * FROM New_Transaction WHERE ID = :TrEditNr;");
                 $statement->bindParam(":TrEditNr",$TrEditNr);
@@ -179,7 +179,7 @@ class db_function
     public static function transaction_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec   ("DELETE FROM New_Transaction;");
 
@@ -197,8 +197,8 @@ class db_function
 	    $placeholders = rtrim(str_repeat('?,', $N), ',');
 
 	    // Prepare the SQL statement
-	    $db = new PDO("sqlite:${const_dbpath}");
-	    $stmt = $db->prepare("DELETE FROM New_Transaction WHERE ID IN (${placeholders})");
+	    $db = new PDO("sqlite:{$const_dbpath}");
+	    $stmt = $db->prepare("DELETE FROM New_Transaction WHERE ID IN ({$placeholders})");
 
 	    // Execute the statement with the array of IDs
 	    $stmt->execute($TrDeleteArr);
@@ -210,7 +210,7 @@ class db_function
     public static function transaction_update ($TrEditedId,$TrDate,$TrStatus,$TrType,$TrAccount,$TrToAccount,$TrPayee,$TrCategory,$TrSubCategory,$TrAmount,$TrNotes)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db-> prepare("UPDATE New_Transaction SET Date = :TrDate, Status = :TrStatus, Type = :TrType,
                                         Account = :TrAccount, ToAccount = :TrToAccount, Payee = :TrPayee,
@@ -240,7 +240,7 @@ class db_function
             $BankAccountList = $bankaccounts_json_list["Accounts"];
             $const_dbpath = costant::database_path();
 
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
             $statement = $db -> prepare("INSERT or IGNORE INTO Account_list (AccountName) VALUES (:AccountName);");
             $db->beginTransaction();
             $BankAccountListSize = sizeof($BankAccountList);
@@ -262,7 +262,7 @@ class db_function
     public static function bankaccount_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec   ("DELETE FROM Account_list;");
 
@@ -274,7 +274,7 @@ class db_function
    public static function bankaccount_select_all ()
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:${const_dbpath}");
+        $db = new PDO("sqlite:{$const_dbpath}");
 
         $results = $db -> query("SELECT AccountName FROM Account_list ORDER BY AccountName COLLATE nocase;");
         $resultarray = array();
@@ -289,7 +289,7 @@ class db_function
    public static function payee_select_all_name ()
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:${const_dbpath}");
+        $db = new PDO("sqlite:{$const_dbpath}");
 
         $results = $db -> query("SELECT PayeeName FROM Payee_List ORDER BY PayeeName COLLATE nocase;");
         $resultarray = array();
@@ -305,7 +305,7 @@ class db_function
    public static function payee_select_one ($PayeeName)
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:${const_dbpath}");
+        $db = new PDO("sqlite:{$const_dbpath}");
 
         $statement = $db-> prepare("SELECT * FROM Payee_List WHERE PayeeName = :TrPayeeName COLLATE nocase;");
                 $statement->bindParam(":TrPayeeName",$PayeeName);
@@ -323,7 +323,7 @@ class db_function
     public static function payee_insert_single ($Payee,$Category,$SubCategory)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db -> prepare("INSERT or IGNORE INTO Payee_list (PayeeName,DefCateg,DefSubCateg)
                                         VALUES (:PayeeName,:DefCateg,:DefSubCateg);");
@@ -342,7 +342,7 @@ class db_function
             $PayeeList = $payees_json_list["Payees"];
             $const_dbpath = costant::database_path();
 
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
             $statement = $db -> prepare("INSERT or IGNORE INTO Payee_list (PayeeName,DefCateg,DefSubCateg)
                                         VALUES (:PayeeName,:DefCateg,:DefSubCateg);");
             $db->beginTransaction();
@@ -367,7 +367,7 @@ class db_function
     public static function payee_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec   ("DELETE FROM Payee_list;");
 
@@ -379,7 +379,7 @@ class db_function
     public static function payee_update_single ($Payee,$Category,$SubCategory)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db -> prepare("UPDATE Payee_list SET DefCateg = :DefCateg, DefSubCateg = :DefSubCateg
                                         WHERE PayeeName = :PayeeName");
@@ -396,7 +396,7 @@ class db_function
     public static function category_delete_all ()
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $db->exec   ("DELETE FROM Category_list;");
 
@@ -408,7 +408,7 @@ class db_function
     public static function category_select_all ()
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:${const_dbpath}");
+        $db = new PDO("sqlite:{$const_dbpath}");
 
         $results = $db -> query("SELECT * FROM Category_List ORDER BY CategoryName COLLATE nocase;");
         $resultarray = array();
@@ -424,7 +424,7 @@ class db_function
     public static function category_select_distinct ()
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:${const_dbpath}");
+        $db = new PDO("sqlite:{$const_dbpath}");
 
         $results = $db -> query("SELECT DISTINCT CategoryName FROM Category_List ORDER BY CategoryName COLLATE nocase;");
         $resultarray = array();
@@ -440,7 +440,7 @@ class db_function
     public static function subcategory_select_all ($Category)
     {
         $const_dbpath = costant::database_path();
-        $db = new PDO("sqlite:${const_dbpath}");
+        $db = new PDO("sqlite:{$const_dbpath}");
 
         $statement = $db-> prepare("SELECT SubCategoryName FROM Category_List WHERE CategoryName = :CategName; COLLATE nocase ");
                 $statement->bindParam(":CategName",$Category);
@@ -467,7 +467,7 @@ class db_function
             $CategoryList = $categories_json_list['Categories'];
             $const_dbpath = costant::database_path();
 
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
             $statement = $db -> prepare('INSERT or IGNORE INTO Category_list (CategoryName,SubCategoryName)
                                         VALUES (:CategoryName,:SubCategoryName);');
             $db->beginTransaction();
@@ -514,7 +514,7 @@ class db_function
     public static function category_insert_single ($Category,$SubCategory)
         {
             $const_dbpath = costant::database_path();
-            $db = new PDO("sqlite:${const_dbpath}");
+            $db = new PDO("sqlite:{$const_dbpath}");
 
             $statement = $db -> prepare("INSERT or IGNORE INTO Category_List (CategoryName, SubCategoryName)
                                         VALUES (:CategoryName, :SubCategoryName);");

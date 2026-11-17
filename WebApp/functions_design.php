@@ -10,7 +10,7 @@ class design
         {
             echo "<div class='form-group'>";
                 echo '<label for="Date">'.costant::lang("trans.date").'</label>';
-                echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '${TrDateDefault}'/>";
+                echo "<input id = 'Date' type='date' name='Date' class='form-control'   value = '{$TrDateDefault}'/>";
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
 
@@ -36,9 +36,9 @@ class design
                 for ($i = 0; $i < sizeof($StatusArrayDesc); $i++)
                 {
                     if ($StatusArrayDB[$i] == $TrStatusDefault)
-                        {echo "<option value = '${StatusArrayDB[$i]}' selected> ${StatusArrayDesc[$i]} </option>";}
+                        {echo "<option value = '{$StatusArrayDB[$i]}' selected> {$StatusArrayDesc[$i]} </option>";}
                     else
-                        {echo "<option value = '${StatusArrayDB[$i]}'> ${StatusArrayDesc[$i]} </option>";}
+                        {echo "<option value = '{$StatusArrayDB[$i]}'> {$StatusArrayDesc[$i]} </option>";}
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
@@ -70,7 +70,7 @@ class design
                 }
                 $element_id = 'Type_' . $TypeArrayCode[$i];
                 $element_onchange = str_replace('Type', $element_id, $on_change);
-#                echo "<option value='${TypeArrayDesc[$i]}' $is_selected> ${TypeArrayDesc[$i]} </option>";
+#                echo "<option value='{$TypeArrayDesc[$i]}' $is_selected> {$TypeArrayDesc[$i]} </option>";
                 echo '<input type="radio" id="' . $element_id . '" name="Type" value="' . $TypeArrayCode[$i] . '" ' . $element_onchange . $is_selected . '>';
                 echo '<label for="' . $element_id . '">' . $TypeArrayDesc[$i] . '</label>';
 
@@ -94,9 +94,9 @@ class design
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
                     if ($AccountArrayDesc[$i] == $TrAccountDefault)
-                        {echo "<option value=\"${AccountArrayDesc[$i]}\" selected> ${AccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"{$AccountArrayDesc[$i]}\" selected> {$AccountArrayDesc[$i]} </option>";}
                     else
-                        {echo "<option value=\"${AccountArrayDesc[$i]}\"> ${AccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"{$AccountArrayDesc[$i]}\"> {$AccountArrayDesc[$i]} </option>";}
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
@@ -116,9 +116,9 @@ class design
                 for ($i = 0; $i < sizeof($ToAccountArrayDesc); $i++)
                 {
                     if ($ToAccountArrayDesc[$i] == $TrToAccountDefault)
-                        {echo "<option value=\"${ToAccountArrayDesc[$i]}\" selected> ${ToAccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"{$ToAccountArrayDesc[$i]}\" selected> {$ToAccountArrayDesc[$i]} </option>";}
                     else
-                        {echo "<option value=\"${ToAccountArrayDesc[$i]}\"> ${ToAccountArrayDesc[$i]} </option>";}
+                        {echo "<option value=\"{$ToAccountArrayDesc[$i]}\"> {$ToAccountArrayDesc[$i]} </option>";}
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
@@ -142,7 +142,7 @@ class design
                 echo "var PayeeList = " . json_encode($PayeeArrayDesc) . ";";
                 echo "$('#Payee').typeahead({hint: true, highlight: true, minLength: 0},{name: 'PayeeList', limit:15, displayKey: 'value', source: substringMatcher(PayeeList)});";
                 if ($TrPayeeDefault != "")
-                    {echo "document.getElementById('Payee').value='${TrPayeeDefault}'";}
+                    {echo "document.getElementById('Payee').value='{$TrPayeeDefault}'";}
             echo "</script>";
         }
 
@@ -163,7 +163,7 @@ class design
                 echo "var CategoryList = " . json_encode($CategoryArrayDesc) . ";";
                 echo "$('#Category').typeahead({hint: true, highlight: true, minLength: 0},{name: 'CategoryList', limit:15, displayKey: 'value', source: substringMatcher(CategoryList)});";
                 if ($TrCategoryDefault != "")
-                    {echo "document.getElementById('Category').value='${TrCategoryDefault}';";}
+                    {echo "document.getElementById('Category').value='{$TrCategoryDefault}';";}
             echo "</script>";
         }
 
@@ -179,7 +179,7 @@ class design
 
             echo "<script type='text/javascript'>";
                 if ($TrSubCategoryDefault != "")
-                    {echo "document.getElementById('SubCategory').value='${TrSubCategoryDefault}';";}
+                    {echo "document.getElementById('SubCategory').value='{$TrSubCategoryDefault}';";}
             echo "</script>";
         }
 
@@ -233,27 +233,27 @@ class design
     public static function settings ($VarName,$VarValue,$PlaceHolder,$InputType,$Required)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Set_${VarName}'>".str_replace("_"," ",$VarName)."</label>";
+                echo "<label for='Set_{$VarName}'>".str_replace("_"," ",$VarName)."</label>";
                 if ($VarValue == "")
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' autocomplete = 'off' required />";
+                                echo "<input id='Set_{$VarName}' type='{$InputType}' name='Set_{$VarName}' class='form-control' placeholder='{$PlaceHolder}' autocomplete = 'off' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' autocomplete = 'off' />";
+                                echo "<input id='Set_{$VarName}' type='{$InputType}' name='Set_{$VarName}' class='form-control' placeholder='{$PlaceHolder}' autocomplete = 'off' />";
                             }
                     }
                 else
                     {
                         if ($Required == True)
                             {
-                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' value='${VarValue}' autocomplete = 'off' required />";
+                                echo "<input id='Set_{$VarName}' type='{$InputType}' name='Set_{$VarName}' class='form-control' value='{$VarValue}' autocomplete = 'off' required />";
                             }
                         elseif ($Required == False)
                             {
-                                echo "<input id='Set_${VarName}' type='${InputType}' name='Set_${VarName}' class='form-control' value='${VarValue}' autocomplete = 'off' />";
+                                echo "<input id='Set_{$VarName}' type='{$InputType}' name='Set_{$VarName}' class='form-control' value='{$VarValue}' autocomplete = 'off' />";
                             }
                     }
                 echo "<span class='help-block'></span>";
@@ -266,9 +266,9 @@ class design
             echo "<div class='checkbox'>";
                 echo "<label>";
                     if ($VarValue == True)
-                        {echo "<input id='${VarName}' type='checkbox' name='${VarName}' value='True' checked>${VarDescription}";}
+                        {echo "<input id='{$VarName}' type='checkbox' name='{$VarName}' value='True' checked>{$VarDescription}";}
                     else
-                        {echo "<input id='${VarName}' type='checkbox' name='${VarName}' value='True'>${VarDescription}";}
+                        {echo "<input id='{$VarName}' type='checkbox' name='{$VarName}' value='True'>{$VarDescription}";}
                 echo "</label>";
             echo "</div>\n";
         }
@@ -278,13 +278,13 @@ class design
     public static function settings_password ($VarName,$PlaceHolder,$Required,$Label)
         {
             echo "<div class='form-group'>";
-                echo "<label for='Set_${VarName}'>$Label</label>";
+                echo "<label for='Set_{$VarName}'>$Label</label>";
                     if ($Required == True)
                         {
-                            echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' required />";
+                            echo "<input id='Set_{$VarName}' type='Password' name='Set_{$VarName}' class='form-control' placeholder='{$PlaceHolder}' required />";
                         }
                     elseif ($Required == False)
-                        {echo "<input id='Set_${VarName}' type='Password' name='Set_${VarName}' class='form-control' placeholder='${PlaceHolder}' />";}
+                        {echo "<input id='Set_{$VarName}' type='Password' name='Set_{$VarName}' class='form-control' placeholder='{$PlaceHolder}' />";}
                 echo "<span class='help-block'></span>";
             echo "</div>\n";
         }
@@ -303,9 +303,9 @@ class design
                 for ($i = 0; $i < sizeof($AccountArrayDesc); $i++)
                 {
                     if ($AccountArrayDesc[$i] == $TrAccountDefault)
-                        {echo "<option selected> ${AccountArrayDesc[$i]} </option>";}
+                        {echo "<option selected> {$AccountArrayDesc[$i]} </option>";}
                     else
-                        {echo "<option> ${AccountArrayDesc[$i]} </option>";}
+                        {echo "<option> {$AccountArrayDesc[$i]} </option>";}
                 }
                 echo "</select>";
                 echo "<span class='help-block'></span>";
@@ -316,7 +316,7 @@ class design
     //Design section legend
     public static function section_legened ($Text)
         {
-                echo "<h4>${Text}</h4>";
+                echo "<h4>{$Text}</h4>";
                 echo "<hr>";
         }
 

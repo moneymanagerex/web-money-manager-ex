@@ -14,7 +14,7 @@ include_once '_header.php';
             ?>
             <br />
             <h5>
-                Developer 2021<?php if (date("Y") > 2021) { echo '&nbsp;&mdash;&nbsp' . date("Y"); } ?>:
+                Developer 2021<?php if (date("Y") > 2021) { echo '&nbsp;&mdash;&nbsp2022'; } ?>:
                 <a href="https://github.com/maksimdzmitryew" target="_blank">Maksim Dzmitryew̆</a>
             </h5>
             <h5>Developer 2014 &mdash; 2016: Gabriele [Gabriele-V]</h5>
