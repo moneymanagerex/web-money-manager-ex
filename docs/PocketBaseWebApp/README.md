@@ -41,6 +41,26 @@ Initialization is not transactional. If an import fails, inspect the partial
 instance before retrying. Do not delete records from an instance containing
 data you need.
 
+### Resetting an instance
+
+The administrator page can delete the known MMEX collections and recreate the
+bundled schema. **This permanently deletes their records**, including the
+entire ledger. It does not delete the `users` collection, superusers, or
+unrelated collections. First make and verify a full PocketBase backup and stop
+all other clients. Inspect the collection names and record counts, then
+re-enter the superuser password, confirm the backup and type the exact reset
+phrase including the instance URL. The default-data checkbox controls whether
+categories and currencies are seeded into the new schema.
+
+Reset rechecks the inspected collection IDs and counts before deleting, and
+refuses known relations to MMEX collections or an unsupported schema
+version. These checks are not a server-side lock; other clients must remain
+stopped. Reset is not transactional: a network or server error can leave
+collections deleted or initialization incomplete. Inspect the instance and
+restore the backup, or inspect again before another reset. External views,
+hooks and integrations may depend on the deleted collections even when no
+PocketBase relation is detected; review them before resetting.
+
 ## Schema versions and future upgrades
 
 The schema version is stored as `MMEX_SCHEMA_VERSION` in `dbInfo`. Setup

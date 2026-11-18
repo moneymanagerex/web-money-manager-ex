@@ -1,17 +1,28 @@
 import { state,$,setStatus,esc,showScreen } from "./core.mjs";
 import { api } from "./api.mjs";
 import { readSchemaVersion,checkSchemaVersion,markSchemaVersion } from "./schema.mjs";
-import { seedDefaults } from "./seed.mjs";
-const MMEX_COLLECTIONS=["ACCOUNTLIST_V1","ASSETS_V1","ATTACHMENT_V1","BILLSDEPOSITS_V1","BUDGETSPLITTRANSACTIONS_V1","BUDGETTABLE_V1","BUDGETYEAR_V1","CATEGORY_V1","CHECKINGACCOUNT_V1","CURRENCYFORMATS_V1","CURRENCYHISTORY_V1","CUSTOMFIELDDATA_V1","CUSTOMFIELD_V1","INFOTABLE_V1","PAYEE_V1","REPORT_V1","SETTING_V1","SHAREINFO_V1","SPLITTRANSACTIONS_V1","STOCKHISTORY_V1","STOCK_V1","TAGLINK_V1","TAG_V1","TRANSLINK_V1","USAGE_V1","dbInfo"];
-async function listCollections(token) {
-  const collections=[];
-  let page=1,result;
-  do {
-    result=await api(state.base,`/api/collections?perPage=200&page=${page}`,{},token);
-    collections.push(...result.items);
-    page++;
-  } while(page<=result.totalPages);
-  return collections;
+import { seedDefaults,loadDefaultData } from "./seed.mjs";
+import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs";
+let resetPreview=null;
+function clearResetPreview() {
+  resetPreview=null;
+  $("resetPreview").textContent="";
+  $("resetBackup").checked=false;
+  $("resetConfirm").value="";
+}
+function setBusy(busy) {
+  $("initializeButton").disabled=busy;
+  $("inspectResetButton").disabled=busy;
+  $("adminBack").disabled=busy;
+  $("resetButton").disabled=busy||!resetPreview?.entries.length;
+}
+async function authenticateAdmin() {
+  if(!$("adminEmail").value.trim()||!$("adminEmail").validity.valid||!$("adminPassword").value)
+    throw Error("Enter a valid superuser email and password above.");
+  return api(state.base,"/api/collections/_superusers/auth-with-password",{
+    method: "POST",
+    body: JSON.stringify({ identity: $("adminEmail").value.trim(),password: $("adminPassword").value })
+  });
 }
 function renderReport(collections) {
   const names=new Set(collections.map(collection => collection.name));
@@ -61,29 +72,20 @@ async function ensureUserCollection(collections,token) {
 }
 $("setupForm").addEventListener("submit",async (event) => {
   event.preventDefault();
-  const button=$("initializeButton");
-  button.disabled=true;
+  clearResetPreview();
+  setBusy(true);
   try {
     setStatus("setupStatus","Authenticating PocketBase superuser…");
-    const auth=await api(state.base,"/api/collections/_superusers/auth-with-password",{
-      method: "POST",
-      body: JSON.stringify({ identity: $("adminEmail").value.trim(),password: $("adminPassword").value })
-    });
+    const auth=await authenticateAdmin();
     const token=auth.token;
-    const collections=await listCollections(token);
+    const collections=await listCollections(state.base,token);
     const { found,missing }=renderReport(collections);
     if(missing.length!==0&&missing.length!==MMEX_COLLECTIONS.length) {
       throw Error("Partial MMEX schema detected. No changes were made.");
     }
     if(found.length)
       checkSchemaVersion(await readSchemaVersion(state.base,token),true);
-    const response=await fetch("schema-import.json");
-    if(!response.ok)
-      throw Error("Could not load schema-import.json from this frontend host.");
-    const schema=await response.json();
-    if(schema.length!==MMEX_COLLECTIONS.length||MMEX_COLLECTIONS.some(name => !schema.some(collection => collection.name===name))) {
-      throw Error("Bundled schema does not match the expected MMEX collection set.");
-    }
+    const schema=await loadBundledSchema();
     if(found.length) {
       checkFields(collections,schema);
     }
@@ -117,6 +119,77 @@ $("setupForm").addEventListener("submit",async (event) => {
     setStatus("setupStatus",error.message,"error");
   }
   finally {
-    button.disabled=false;
+    setBusy(false);
   }
+});
+
+$("inspectResetButton").addEventListener("click",async () => {
+  clearResetPreview();
+  setBusy(true);
+  try {
+    setStatus("resetStatus","Authenticating and inspecting MMEX collections…");
+    const { token }=await authenticateAdmin();
+    const preview=await inspectReset(state.base,token);
+    resetPreview=preview;
+    $("resetPreview").innerHTML=preview.entries.length? `<p>Will delete ${preview.entries.length} collections on <strong>${esc(preview.base)}</strong>:</p><ul>${preview.entries.map(c => `<li>${esc(c.name)}: ${c.count} record(s)</li>`).join("")}</ul>`:"No MMEX collections exist. Use normal initialization instead.";
+    setStatus("resetStatus",preview.entries.length? "Inspect the list and confirm the backup before resetting.":"");
+  }
+  catch(error) {
+    setStatus("resetStatus",error.message,"error");
+  }
+  finally {
+    $("adminPassword").value="";
+    setBusy(false);
+  }
+});
+
+$("resetButton").addEventListener("click",async () => {
+  if(!resetPreview||resetPreview.base!==state.base||!$("resetBackup").checked||$("resetConfirm").value!==`RESET ${state.base}`) {
+    setStatus("resetStatus","Inspect this instance, confirm the backup, and type the exact reset phrase.","error");
+    return;
+  }
+  const importDefaults=$("seedDefaults").checked;
+  const firstEmail=$("newUserEmail").value.trim(),firstPassword=$("newUserPassword").value,validFirstEmail=$("newUserEmail").validity.valid;
+  setBusy(true);
+  let resetStarted=false;
+  try {
+    setStatus("resetStatus","Authenticating and checking prerequisites…");
+    const { token }=await authenticateAdmin();
+    const [schema,defaults,collections]=await Promise.all([loadBundledSchema(),importDefaults? loadDefaultData():Promise.resolve(null),listCollections(state.base,token)]);
+    const users=collections.find(c => c.name==="users");
+    if(users&&users.type!=="auth")
+      throw Error("The users collection is not an authentication collection.");
+    const userCount=users? (await api(state.base,"/api/collections/users/records?perPage=1",{},token)).totalItems:0;
+    if(!Number.isSafeInteger(userCount)||userCount<0)
+      throw Error("Cannot determine the number of users.");
+    if(userCount===0&&(!firstEmail||!validFirstEmail||firstPassword.length<10))
+      throw Error("No MMEX user exists. Enter the first user's email and a password of at least 10 characters above before resetting.");
+    resetStarted=true;
+    await resetCollections(state.base,token,resetPreview,schema,defaults,msg => setStatus("resetStatus",msg));
+    await ensureUserCollection(collections,token);
+    if(userCount===0) {
+      await api(state.base,"/api/collections/users/records",{ method: "POST",body: JSON.stringify({ email: firstEmail,password: firstPassword,passwordConfirm: firstPassword,verified: true }) },token);
+    }
+    await markSchemaVersion(state.base,token);
+    clearResetPreview();
+    $("newUserPassword").value="";
+    $("schemaReport").textContent="MMEX schema reinitialized. Inspect again to view its current state.";
+    setStatus("resetStatus","MMEX schema reinitialized. Existing users and unrelated collections were preserved.","ok");
+  }
+  catch(error) {
+    if(resetStarted) {
+      clearResetPreview();
+    }
+    setStatus("resetStatus",resetStarted? `${error.message} Reset is not transactional; inspect the instance before continuing.`:error.message,"error");
+  }
+  finally {
+    $("adminPassword").value="";
+    setBusy(false);
+  }
+});
+$("adminBack").addEventListener("click",() => {
+  clearResetPreview();
+  setStatus("resetStatus","");
+  $("adminPassword").value="";
+  setBusy(false);
 });

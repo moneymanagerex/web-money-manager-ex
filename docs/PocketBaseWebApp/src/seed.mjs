@@ -1,9 +1,20 @@
 import { api } from "./api.mjs";
 
-export async function seedDefaults(base, token) {
+export async function loadDefaultData() {
   const response = await fetch("defaults.json");
   if (!response.ok) throw Error(`Unable to load default data (HTTP ${response.status}).`);
   const defaults = await response.json();
+  const names = ["CATEGORY_V1", "CURRENCYFORMATS_V1"];
+  for (const name of names) {
+    if (!Array.isArray(defaults[name]) || !defaults[name].length) {
+      throw Error(`Default data is missing for ${name}.`);
+    }
+  }
+  return defaults;
+}
+
+export async function seedDefaults(base, token, defaults = null) {
+  defaults ??= await loadDefaultData();
   const names = ["CATEGORY_V1", "CURRENCYFORMATS_V1"];
   for (const name of names) {
     if (!Array.isArray(defaults[name]) || !defaults[name].length) {

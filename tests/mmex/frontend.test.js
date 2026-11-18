@@ -187,3 +187,71 @@ test("network and server errors expose uncertain mutation outcomes", async t => 
   globalThis.fetch.mock.mockImplementation(async () => new Response('{"message":"invalid"}', { status: 400 }));
   await assert.rejects(api("https://example.test", "/", { method: "POST" }), err => err.uncertain === false);
 });
+
+test("schema reset deletes only inspected MMEX collections and recreates the schema", async t => {
+  const { inspectReset, resetCollections } = await import(modulePath("schema-reset"));
+  const collections = [
+    { id: "catid", name: "CATEGORY_V1", type: "base", fields: [] },
+    { id: "otherid", name: "Other", type: "base", fields: [] },
+    { id: "usersid", name: "users", type: "auth", fields: [] }
+  ];
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    calls.push({ url, method: options.method || "GET", body: options.body });
+    if (url.includes("/api/collections?")) return json({ items: collections, totalPages: 1 });
+    if (url.includes("/catid/records")) return json({ totalItems: 2 });
+    if (options.method === "DELETE") return new Response(null, { status: 204 });
+    if (url.endsWith("/api/collections/import")) return json({});
+    throw Error(`Unexpected request: ${url}`);
+  });
+  const preview = await inspectReset("https://example.test", "admin");
+  assert.deepEqual(preview.entries, [{ name: "CATEGORY_V1", id: "catid", count: 2 }]);
+  await resetCollections(preview.base, "admin", preview, [{ name: "CATEGORY_V1" }], null, () => {});
+  assert.deepEqual(calls.filter(c => c.method === "DELETE").map(c => c.url), ["https://example.test/api/collections/catid"]);
+  const imported = calls.find(c => c.method === "PUT");
+  assert.equal(JSON.parse(imported.body).deleteMissing, false);
+});
+
+test("schema reset stops before deletion if records changed or another collection references MMEX", async t => {
+  const { inspectReset, resetCollections } = await import(modulePath("schema-reset"));
+  let count = 2, reference = false;
+  const mutations = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    if (options.method) mutations.push(options.method);
+    if (url.includes("/api/collections?")) return json({ items: [
+      { id: "catid", name: "CATEGORY_V1", type: "base", fields: [] },
+      { id: "otherid", name: "Other", type: "base", fields: reference ? [{ type: "relation", collectionId: "catid" }] : [] }
+    ], totalPages: 1 });
+    return json({ totalItems: count });
+  });
+  const preview = await inspectReset("https://example.test", "admin");
+  count = 3;
+  await assert.rejects(resetCollections(preview.base, "admin", preview, [], null, () => {}), /changed since inspection/);
+  reference = true;
+  await assert.rejects(inspectReset(preview.base, "admin"), /Other references an MMEX collection/);
+  assert.deepEqual(mutations, []);
+});
+
+test("schema reset reports an uncertain deletion and never imports after failure", async t => {
+  const { inspectReset, resetCollections } = await import(modulePath("schema-reset"));
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    calls.push(options.method || "GET");
+    if (url.includes("/api/collections?")) return json({ items: [{ id: "catid", name: "CATEGORY_V1", type: "base", fields: [] }], totalPages: 1 });
+    if (options.method === "DELETE") throw Error("connection lost");
+    return json({ totalItems: 0 });
+  });
+  const preview = await inspectReset("https://example.test", "admin");
+  await assert.rejects(resetCollections(preview.base, "admin", preview, [], null, () => {}), /deletion of CATEGORY_V1 may have succeeded/);
+  assert.equal(calls.includes("PUT"), false);
+});
+
+test("schema reset refuses an unsupported schema version", async t => {
+  const { inspectReset } = await import(modulePath("schema-reset"));
+  t.mock.method(globalThis, "fetch", async url => {
+    if (url.includes("/api/collections?")) return json({ items: [{ id: "dbid", name: "dbInfo", type: "base", fields: [] }], totalPages: 1 });
+    if (url.includes("/dbInfo/records")) return json({ items: [{ VALUE: "2" }] });
+    throw Error(`Unexpected request: ${url}`);
+  });
+  await assert.rejects(inspectReset("https://example.test", "admin"), /Unsupported MMEX schema version 2/);
+});
