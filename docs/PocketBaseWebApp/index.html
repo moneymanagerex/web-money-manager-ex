@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MMEX Web</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="brandline"><h1>MMEX Web</h1><span class="muted">PocketBase</span></header>
+
+<section id="instanceScreen" class="card hidden">
+ <h2>Choose PocketBase instance</h2>
+ <p class="muted hint">Connect the frontend to the PocketBase server that stores this MMEX dataset. The URL is remembered in this browser.</p>
+ <form id="instanceForm">
+  <label>PocketBase URL<input id="instanceUrl" type="url" required placeholder="https://your-pocketbase.example.com" autocomplete="url"></label>
+  <div class="row"><button id="connectButton" type="submit">Check connection & continue</button><button id="cancelInstance" type="button" class="hidden">Cancel</button></div>
+ </form><p id="instanceStatus" class="hint status"></p>
+</section>
+
+<section id="loginScreen" class="card hidden">
+ <div class="toolbar"><div><h2>Sign in to MMEX</h2><div id="loginInstance" class="muted hint instance-chip"></div></div><span class="pill">Regular user</span></div>
+ <p class="warning hint">All users of this PocketBase dataset can read and modify the same records. Use an instance and accounts you trust.</p>
+ <form id="loginForm"><label>Email<input id="email" type="email" value="demo@mmex.org" required autocomplete="username"></label><label>Password<input id="password" type="password" required autocomplete="current-password"></label><button id="loginButton" type="submit">Sign in</button></form>
+ <p id="loginStatus" class="hint status"></p>
+ <div class="row"><button type="button" id="openAdmin">Administrator / schema setup</button><button type="button" id="openChangeInstance">Change PocketBase instance</button></div>
+</section>
+
+<section id="adminScreen" class="card hidden">
+ <div class="toolbar"><div><h2>Administrator setup</h2><div id="adminInstance" class="muted hint instance-chip"></div></div><span class="pill">Admin only</span></div>
+ <p class="muted hint">Only use this setup on a trusted frontend. All authenticated users share the same dataset. Restrict access to trusted users.</p>
+ <div id="schemaReport" class="hint">Authenticate as a PocketBase Superuser to inspect the schema.</div>
+ <form id="setupForm">
+  <label>PocketBase Superuser email<input id="adminEmail" type="email" required autocomplete="username"></label>
+  <label>PocketBase Superuser password<input id="adminPassword" type="password" required autocomplete="current-password"></label>
+  <div class="warning hint">Superuser credentials and token are used only for this setup operation. The token is never persisted.</div>
+  <label style="display:flex;align-items:center"><input id="seedDefaults" type="checkbox" style="width:auto" checked> Import default categories and currencies on a fresh schema</label><h3>First MMEX user (only if none exists)</h3>
+  <label>MMEX login email<input id="newUserEmail" type="email" autocomplete="off"></label>
+  <label>MMEX login password<input id="newUserPassword" type="password" minlength="10" autocomplete="new-password"></label>
+  <div class="row"><button id="initializeButton" type="submit">Inspect and initialize if needed</button><button id="adminBack" type="button">Back to sign in</button></div>
+ </form><p id="setupStatus" class="hint status"></p>
+</section>
+
+<main id="workspace" class="hidden">
+ <div class="toolbar"><div><strong id="userEmail"></strong><div id="connectedInstance" class="muted hint instance-chip"></div></div><div class="row"><button id="workspaceChangeInstance">Change instance</button><button id="logout">Log out</button></div></div>
+ <nav class="topnav" aria-label="MMEX sections">
+  <button data-view="dashboard" aria-current="page">Overview</button><button data-view="accounts">Accounts</button><button data-view="transactions">Transactions</button><button data-view="categories">Categories</button><button data-view="payees">Payees</button><button data-view="currencies">Currencies</button>
+ </nav>
+ <section id="view-dashboard" class="view active">
+  <h2>Overview</h2><div class="stats"><div class="stat"><div class="value" id="statAccounts">—</div><div class="label">Accounts</div></div><div class="stat"><div class="value" id="statTransactions">—</div><div class="label">Transactions loaded</div></div><div class="stat"><div class="value" id="statCategories">—</div><div class="label">Categories</div></div><div class="stat"><div class="value" id="statPayees">—</div><div class="label">Payees</div></div></div>
+  <section class="card"><div class="toolbar"><h3>Recent transactions</h3><button data-go="transactions">View all loaded transactions</button></div><div id="recentStatus" class="muted hint">Loading…</div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Payee</th><th>Category</th><th>Account</th><th>Code</th><th class="num">Amount</th></tr></thead><tbody id="recentBody"></tbody></table></div></section>
+  <div class="warning hint">All signed-in users share this PocketBase dataset. Split and asset/stock-linked transactions are read-only here. Reconciliation and `.mmb` export are not implemented.</div>
+ </section>
+ <section id="view-accounts" class="view"><h2>Accounts</h2><p class="muted hint">Account records from <code>ACCOUNTLIST_V1</code>. The displayed MMEX PK is the existing business key, not PocketBase's internal record ID.</p>
+  <section class="card"><h3 id="accountFormTitle">New account</h3><form id="accountForm"><input id="accountRecordId" type="hidden"><div class="editgrid"><label>Account name<input id="accountName" required maxlength="255"></label><label>Type<select id="accountType"><option>Checking</option><option>Savings</option><option>Cash</option><option>Credit Card</option><option>Loan</option><option>Term</option><option>Investment</option></select></label><label>Status<select id="accountStatus"><option>Open</option><option>Closed</option></select></label><label>Account number<input id="accountNumber"></label><label>Currency<select id="accountCurrency" required></select></label><label>Initial balance<input id="accountInitialBalance" type="number" step="any" value="0"></label><label>Initial date<input id="accountInitialDate" type="date"></label><label>Notes<input id="accountNotes"></label></div><div class="row"><button id="saveAccountButton" type="submit">Create account</button><button id="cancelAccountEdit" type="button" class="hidden">Cancel edit</button></div></form><p id="accountFormStatus" class="hint status"></p></section>
+  <p class="muted hint">Current cash balance includes transactions through today, excluding void and deleted records. Investment holdings and asset values are not included.</p><div id="accountsStatus" class="muted hint">Loading…</div><div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Name</th><th>Type</th><th>Status</th><th>Account number</th><th>Currency</th><th class="num">Current cash balance</th><th>Actions</th></tr></thead><tbody id="accountsBody"></tbody></table></div></section>
+ <section id="view-transactions" class="view"><h2>Transactions</h2>
+  <section class="card"><h3 id="txFormTitle">New transaction</h3><form id="newTxForm"><div class="editgrid"><label>Type<select id="newTxCode"><option>Withdrawal</option><option>Deposit</option><option>Transfer</option></select></label><label>Date<input id="newTxDate" type="date" required></label><label>Account<select id="newTxAccount" required></select></label><label id="txDestinationLabel" class="hidden">Destination account<select id="newTxDestination"></select></label><label>Category<select id="newTxCategory"><option value="">No category</option></select></label><label>Payee<select id="newTxPayee"><option value="-1">(No payee)</option></select></label><label>Amount<input id="newTxAmount" type="number" min="0" step="any" inputmode="decimal" required></label><label id="txReceivedLabel" class="hidden">Amount received<input id="newTxReceived" type="number" min="0" step="any" inputmode="decimal"></label><label>Status<select id="newTxStatus"><option value="">Unreconciled</option><option value="R">Reconciled</option><option value="V">Void</option><option value="F">Follow up</option><option value="D">Duplicate</option></select></label><label>Notes<input id="newTxNotes"></label></div><div class="row"><button id="createTxButton" type="submit">Create transaction</button><button id="clearEdit" type="button" class="hidden">Cancel edit</button></div></form><p id="createTxStatus" class="hint status" aria-live="polite"></p></section>
+  <div class="filters"><label>Search<input id="txSearch" type="search" placeholder="Payee, notes, account, category…"></label><label>Transaction type<select id="txType"><option value="">All types</option><option>Withdrawal</option><option>Deposit</option><option>Transfer</option></select></label><label>Account<select id="txFilterAccount"><option value="">All accounts</option></select></label><label>From<input id="txFrom" type="date"></label><label>Through<input id="txThrough" type="date"></label><label class="checkbox"><input id="txShowDeleted" type="checkbox"> Show deleted</label></div><div class="row"><div id="txStatus" class="muted hint" aria-live="polite">Loading…</div><button id="refreshTransactions" type="button">Refresh data</button></div><p id="txActionStatus" class="hint status" aria-live="polite"></p><div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Date</th><th>Type / status</th><th>Account</th><th>Payee</th><th>Category</th><th class="num">Amount</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="txBody"></tbody></table></div>
+ </section>
+ <section id="view-categories" class="view"><h2>Categories</h2><p class="muted hint">Reference data from <code>CATEGORY_V1</code>; parent-child IDs are shown as stored.</p><div id="categoriesStatus" class="muted hint">Loading…</div><div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Category</th><th>Parent PK</th><th>Active</th></tr></thead><tbody id="categoriesBody"></tbody></table></div></section>
+ <section id="view-payees" class="view"><h2>Payees</h2><p class="muted hint">Reference data from <code>PAYEE_V1</code>.</p><div class="filters"><label>Search payees<input id="payeeSearch" type="search" placeholder="Name, website, notes…"></label></div><section class="card"><h3>Add payee</h3><form id="newPayeeForm"><div class="editgrid"><label>Name<input id="newPayeeName" required></label><label>Website<input id="newPayeeWebsite" type="url"></label><label>Notes<input id="newPayeeNotes"></label></div><button id="createPayeeButton" type="submit">Add payee</button></form><p id="createPayeeStatus" class="hint status"></p></section><div id="payeesStatus" class="muted hint" style="margin-top:10px">Loading…</div><div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Name</th><th>Default category PK</th><th>Website</th><th>Notes</th></tr></thead><tbody id="payeesBody"></tbody></table></div></section>
+ <section id="view-currencies" class="view">
+  <h2>Currencies</h2>
+  <p class="muted hint">Manage currency definitions and their stored base conversion rates. Rates are not updated automatically.</p>
+  <label>Search currencies<input id="currencySearch" type="search" placeholder="Name, code, symbol or type"></label>
+  <section class="card">
+   <h3 id="currencyFormTitle">New currency</h3>
+   <form id="currencyForm">
+    <input id="currencyRecordId" type="hidden">
+    <div class="editgrid">
+     <label>Name<input id="currencyName" required maxlength="255"></label>
+     <label>Code<input id="currencyCode" required maxlength="255" placeholder="e.g. USD"></label>
+     <label>Type<select id="currencyType" required><option>Fiat</option><option>Crypto</option></select></label>
+     <label>Prefix symbol<input id="currencyPrefix"></label>
+     <label>Suffix symbol<input id="currencySuffix"></label>
+     <label>Decimal separator<input id="currencyDecimal" value="."></label>
+     <label>Group separator<input id="currencyGroup" value=","></label>
+     <label>Unit name<input id="currencyUnit"></label>
+     <label>Fractional unit name<input id="currencyCent"></label>
+     <label>Scale<input id="currencyScale" type="number" min="1" step="1" value="100" required></label>
+     <label>Base conversion rate<input id="currencyRate" type="number" min="0" step="any" value="1" required></label>
+    </div>
+    <div class="row"><button id="saveCurrencyButton" type="submit">Create currency</button><button id="cancelCurrencyEdit" type="button" class="hidden">Cancel edit</button></div>
+   </form>
+   <p id="currencyFormStatus" class="hint status" aria-live="polite"></p>
+  </section>
+  <div id="currenciesStatus" class="muted hint" aria-live="polite">Loading…</div>
+  <div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Name</th><th>Code</th><th>Type</th><th>Prefix</th><th>Suffix</th><th>Scale</th><th>Base rate</th><th>Actions</th></tr></thead><tbody id="currenciesBody"></tbody></table></div>
+ </section>
+</main>
+<script type="module" src="src/app.mjs"></script>
+</body></html>

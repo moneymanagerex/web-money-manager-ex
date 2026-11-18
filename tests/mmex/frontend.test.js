@@ -1,0 +1,189 @@
+const test = require("node:test");
+const assert = require("node:assert/strict");
+
+const modulePath = name => `../../docs/PocketBaseWebApp/src/${name}.mjs`;
+const json = value => new Response(JSON.stringify(value), {
+  headers: { "content-type": "application/json" }
+});
+
+test("record loading follows every PocketBase page and keeps sort and filter", async t => {
+  const { state } = await import(modulePath("core"));
+  const { fetchRecords } = await import(modulePath("api"));
+  state.base = "https://example.test";
+  state.token = "token";
+  const urls = [];
+  t.mock.method(globalThis, "fetch", async (url, options) => {
+    urls.push(url);
+    assert.equal(options.headers.Authorization, "token");
+    return json(url.includes("page=1")
+      ? { items: [1, 2], totalPages: 2 }
+      : { items: [3], totalPages: 2 });
+  });
+  assert.deepEqual(await fetchRecords("PAYEE_V1", "PAYEENAME", "ACTIVE = 1"), [1, 2, 3]);
+  assert.equal(urls.length, 2);
+  assert.match(urls[1], /sort=PAYEENAME/);
+  assert.match(urls[1], /filter=ACTIVE%20%3D%201/);
+  assert.match(urls[1], /page=2/);
+});
+
+test("default import checks both collections before writing", async t => {
+  const { seedDefaults } = await import(modulePath("seed"));
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    if (url === "defaults.json") return json({ CATEGORY_V1: [{}], CURRENCYFORMATS_V1: [{}] });
+    calls.push(options.method || "GET");
+    return json({ totalItems: url.includes("CURRENCYFORMATS_V1") ? 1 : 0 });
+  });
+  await assert.rejects(seedDefaults("https://example.test", "admin"), /CURRENCYFORMATS_V1 is not empty/);
+  assert.deepEqual(calls, ["GET", "GET"]);
+});
+
+test("default import reports partial writes", async t => {
+  const { seedDefaults } = await import(modulePath("seed"));
+  let writes = 0;
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    if (url === "defaults.json") return json({ CATEGORY_V1: [{}], CURRENCYFORMATS_V1: [{}] });
+    if (options.method !== "POST") return json({ totalItems: 0 });
+    if (++writes === 2) return new Response(JSON.stringify({ message: "server unavailable" }), { status: 500 });
+    return json({});
+  });
+  await assert.rejects(seedDefaults("https://example.test", "admin"), /stopped after 1 records: server unavailable/);
+});
+
+test("schema compatibility rejects missing and unknown versions", async () => {
+  const { checkSchemaVersion } = await import(modulePath("schema"));
+  assert.doesNotThrow(() => checkSchemaVersion({ VALUE: "1" }));
+  assert.doesNotThrow(() => checkSchemaVersion(null, true));
+  assert.throws(() => checkSchemaVersion(null), /no MMEX schema version/);
+  assert.throws(() => checkSchemaVersion({ VALUE: "2" }), /Unsupported MMEX schema version 2/);
+  assert.throws(() => checkSchemaVersion({ VALUE: "invalid" }), /Unsupported MMEX schema version invalid/);
+});
+
+test("setup never overwrites an existing or unsupported schema version", async t => {
+  const { markSchemaVersion } = await import(modulePath("schema"));
+  let version = "2";
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    calls.push(options.method || "GET");
+    return json({ items: [{ VALUE: version }] });
+  });
+  await assert.rejects(markSchemaVersion("https://example.test", "admin"), /Unsupported MMEX schema version 2/);
+  version = "1";
+  await markSchemaVersion("https://example.test", "admin");
+  assert.deepEqual(calls, ["GET", "GET"]);
+});
+
+test("setup records version only when missing", async t => {
+  const { markSchemaVersion } = await import(modulePath("schema"));
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    calls.push(options);
+    return json(options.method === "POST" ? {} : { items: [] });
+  });
+  await markSchemaVersion("https://example.test", "admin");
+  assert.deepEqual(JSON.parse(calls[1].body), { KEY: "MMEX_SCHEMA_VERSION", VALUE: "1" });
+});
+
+test("currency name and code uniqueness ignores case and the edited record", async () => {
+  const { findDuplicateCurrency } = await import(modulePath("currencies"));
+  const currencies = [
+    { id: "one", CURRENCYNAME: "US dollar", CURRENCY_SYMBOL: "USD" },
+    { id: "two", CURRENCYNAME: "Euro", CURRENCY_SYMBOL: "EUR" }
+  ];
+  assert.equal(findDuplicateCurrency(currencies, " US DOLLAR ", "other", ""), currencies[0]);
+  assert.equal(findDuplicateCurrency(currencies, "other", "eur", ""), currencies[1]);
+  assert.equal(findDuplicateCurrency(currencies, "US dollar", "USD", "one"), undefined);
+});
+
+test("currency deletion checks all supported references and rejects invalid responses", async t => {
+  const { state } = await import(modulePath("core"));
+  const { checkCurrencyReferences } = await import(modulePath("currencies"));
+  state.base = "https://example.test";
+  state.token = "token";
+  const urls = [];
+  let baseReferenced = true;
+  let invalidResponse = false;
+  t.mock.method(globalThis, "fetch", async url => {
+    urls.push(url);
+    if (invalidResponse && url.includes("ASSETS_V1")) return json({});
+    if (url.includes("INFOTABLE_V1")) return json({ totalItems: baseReferenced ? 1 : 0 });
+    return json({ totalItems: 0 });
+  });
+  await assert.rejects(checkCurrencyReferences(42), /INFOTABLE_V1 \(1\)/);
+  assert.equal(urls.length, 4);
+  assert.match(decodeURIComponent(urls[3]), /INFONAME = "BASECURRENCYID" && INFOVALUE = "42"/);
+  baseReferenced = false;
+  await checkCurrencyReferences(42);
+  invalidResponse = true;
+  await assert.rejects(checkCurrencyReferences(42), /invalid PocketBase response/);
+  await assert.rejects(checkCurrencyReferences(-1), /Invalid currency ID/);
+});
+
+test("current balances use exact decimal sums and both sides of transfers", async () => {
+  const { accountBalance, formatDecimal, formatTransactionAmount } = await import(modulePath("balances"));
+  const a = { ACCOUNTID: 1, INITIALBAL: 0.1 };
+  const b = { ACCOUNTID: 2, INITIALBAL: 0 };
+  const rows = [
+    { TRANSID: 1, ACCOUNTID: 1, TRANSCODE: "Deposit", TRANSAMOUNT: 0.2, TRANSDATE: "2025-01-01", STATUS: "" },
+    { TRANSID: 2, ACCOUNTID: 1, TOACCOUNTID: 2, TRANSCODE: "Transfer", TRANSAMOUNT: 0.1, TOTRANSAMOUNT: 0.00000001, TRANSDATE: "2025-01-02", STATUS: "R" },
+    { TRANSID: 3, ACCOUNTID: 1, TRANSCODE: "Withdrawal", TRANSAMOUNT: 99, TRANSDATE: "2025-01-02", STATUS: "V" },
+    { TRANSID: 4, ACCOUNTID: 1, TRANSCODE: "Withdrawal", TRANSAMOUNT: 99, TRANSDATE: "2025-01-02", DELETEDTIME: "2025-01-02" },
+    { TRANSID: 5, ACCOUNTID: 1, TRANSCODE: "Withdrawal", TRANSAMOUNT: 99, TRANSDATE: "2025-02-01" },
+    { TRANSID: 6, ACCOUNTID: 1, TOACCOUNTID: 1, TRANSCODE: "Transfer", TRANSAMOUNT: 5, TOTRANSAMOUNT: 6, TRANSDATE: "2025-01-02" }
+  ];
+  const sep = new Intl.NumberFormat().formatToParts(1.1).find(x => x.type === "decimal").value;
+  assert.equal(formatDecimal(accountBalance(a, rows, "2025-01-31"), { SCALE: 100 }), `0${sep}20`);
+  assert.equal(formatDecimal(accountBalance(b, rows, "2025-01-31"), { SCALE: 100000000 }), `0${sep}00000001`);
+  assert.equal(formatTransactionAmount(1e-21), `0${sep}000000000000000000001`);
+});
+
+test("balances report malformed data instead of silently calculating a value", async () => {
+  const { accountBalance } = await import(modulePath("balances"));
+  const account = { ACCOUNTID: 1, INITIALBAL: 0 };
+  const row = { TRANSID: 1, ACCOUNTID: 1, TRANSCODE: "Deposit", TRANSAMOUNT: 1, TRANSDATE: "2025-01-01" };
+  assert.throws(() => accountBalance(account, [{ ...row, TRANSDATE: "2025-02-30" }], "2025-03-01"), /invalid date/);
+  assert.throws(() => accountBalance(account, [{ ...row, STATUS: "unknown" }], "2025-03-01"), /unsupported status/);
+  assert.throws(() => accountBalance(account, [{ ...row, TRANSCODE: "unknown" }], "2025-03-01"), /unsupported type/);
+  assert.throws(() => accountBalance(account, [{ ...row, TRANSAMOUNT: null }], "2025-03-01"), /Invalid monetary amount/);
+});
+
+test("amount input rejects decimal precision loss", async () => {
+  const { parseStoredNumber } = await import(modulePath("balances"));
+  assert.equal(parseStoredNumber(".10"), 0.1);
+  assert.equal(parseStoredNumber("1e-8"), 1e-8);
+  assert.throws(() => parseStoredNumber("0.10000000000000001"), /precision/);
+  assert.throws(() => parseStoredNumber("9007199254740993"), /precision/);
+  assert.throws(() => parseStoredNumber("1e-999999"), /range/);
+});
+
+test("transaction filters include both transfer accounts and exclude deleted by default", async () => {
+  const { filterTransactions } = await import(modulePath("transactions"));
+  const accounts = [{ ACCOUNTID: 1, ACCOUNTNAME: "Cash" }, { ACCOUNTID: 2, ACCOUNTNAME: "Savings" }];
+  const transactions = [
+    { TRANSID: 1, ACCOUNTID: 1, TOACCOUNTID: 2, TRANSCODE: "Transfer", TRANSDATE: "2025-01-02" },
+    { TRANSID: 2, ACCOUNTID: 2, TRANSCODE: "Deposit", TRANSDATE: "2025-01-03", DELETEDTIME: "2025-01-04" },
+    { TRANSID: 3, ACCOUNTID: 2, TRANSCODE: "Deposit", TRANSDATE: "2025-02-01" }
+  ];
+  const filter = options => filterTransactions(transactions, options, accounts, [], []).map(t => t.TRANSID);
+  assert.deepEqual(filter({ account: "2", through: "2025-01-31" }), [1]);
+  assert.deepEqual(filter({ query: "savings", showDeleted: true, through: "2025-01-31" }), [1, 2]);
+  assert.deepEqual(filter({ type: "Deposit", from: "2025-01-03", showDeleted: true }), [2, 3]);
+});
+
+test("editing preserves unchanged legacy fields and transaction time", async () => {
+  const { changedFields } = await import(modulePath("transactions"));
+  const old = { ACCOUNTID: 1, TOACCOUNTID: -1, PAYEEID: -1, TRANSCODE: "Deposit", TRANSAMOUNT: 2, TOTRANSAMOUNT: 0, STATUS: "", NOTES: "old", CATEGID: -1, TRANSDATE: "2025-01-01 14:30:00" };
+  const form = { ACCOUNTID: 1, TOACCOUNTID: null, PAYEEID: -1, TRANSCODE: "Deposit", TRANSAMOUNT: 2, TOTRANSAMOUNT: null, STATUS: "", NOTES: "new", CATEGID: null, TRANSDATE: "2025-01-01" };
+  assert.deepEqual(changedFields(form, old), { NOTES: "new" });
+  assert.deepEqual(changedFields({ ...form, TRANSCODE: "Transfer", TOACCOUNTID: 2, TOTRANSAMOUNT: 1 }, old), { TOACCOUNTID: 2, TRANSCODE: "Transfer", TOTRANSAMOUNT: 1, NOTES: "new" });
+});
+
+test("network and server errors expose uncertain mutation outcomes", async t => {
+  const { api } = await import(modulePath("api"));
+  t.mock.method(globalThis, "fetch", async () => { throw Error("offline"); });
+  await assert.rejects(api("https://example.test", "/", { method: "POST" }), err => err.uncertain === true);
+  globalThis.fetch.mock.mockImplementation(async () => new Response('{"message":"server error"}', { status: 500 }));
+  await assert.rejects(api("https://example.test", "/", { method: "POST" }), err => err.uncertain === true);
+  globalThis.fetch.mock.mockImplementation(async () => new Response('{"message":"invalid"}', { status: 400 }));
+  await assert.rejects(api("https://example.test", "/", { method: "POST" }), err => err.uncertain === false);
+});

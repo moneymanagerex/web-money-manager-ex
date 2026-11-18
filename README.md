@@ -4,6 +4,13 @@ The WebApp lets you record transaction reminders from a browser on any device an
 
 The application stores its data in a local SQLite database. It does not require a separate database server.
 
+## PocketBase WebApp
+
+The separate [PocketBase WebApp](docs/PocketBaseWebApp/) is a static frontend for PocketBase.
+It can be self-hosted or published on GitHub Pages; it does not replace the PHP
+WebApp or implement its desktop synchronization protocol. See the
+[setup and deployment guide](docs/PocketBaseWebApp/README.md).
+
 ## Requirements
 
 - A web server with PHP and the `PDO_SQLite` extension enabled.
