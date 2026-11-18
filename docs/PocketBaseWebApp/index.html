@@ -41,11 +41,13 @@
  <section class="card">
   <h3>Reset MMEX schema</h3>
   <p class="warning hint">Permanently deletes the listed MMEX collections and all their records, then recreates them. Users, superusers and other collections are not deleted. Back up the entire instance first and stop all other clients. This cannot be undone.</p>
-  <p class="muted hint">Enter superuser credentials above and inspect the affected collections. The password is cleared after inspection; enter it again to reset. The default-data checkbox above also applies to the new schema.</p>
+  <p class="muted hint">1. Enter superuser credentials above and select <strong>Inspect reset scope</strong>. The delete button stays disabled until inspection succeeds and finds MMEX collections.</p>
+  <p class="muted hint">2. Review the list, confirm the backup, enter the exact phrase shown below, and re-enter the superuser password above. The password is cleared after inspection. The default-data checkbox above also applies to the new schema.</p>
   <button id="inspectResetButton" type="button">Inspect reset scope</button>
+  <p id="inspectResetStatus" class="hint status" aria-live="polite"></p>
   <div id="resetPreview" class="hint" aria-live="polite"></div>
   <label class="checkbox"><input id="resetBackup" type="checkbox"> I have a verified backup and have stopped other clients.</label>
-  <label>Type <code>RESET</code> followed by a space and the exact instance URL<input id="resetConfirm" autocomplete="off" spellcheck="false" placeholder="RESET https://your-pocketbase.example.com"></label>
+  <label>Type the exact phrase: <code id="resetPhrase">shown after inspection</code><input id="resetConfirm" autocomplete="off" spellcheck="false" placeholder="RESET https://your-pocketbase.example.com"></label>
   <button id="resetButton" type="button" disabled>Delete and reinitialize MMEX</button>
   <p id="resetStatus" class="hint status" aria-live="polite"></p>
  </section>
@@ -99,5 +101,5 @@
   <div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Name</th><th>Code</th><th>Type</th><th>Prefix</th><th>Suffix</th><th>Scale</th><th>Base rate</th><th>Actions</th></tr></thead><tbody id="currenciesBody"></tbody></table></div>
  </section>
 </main>
-<script type="module" src="src/app.mjs"></script>
+<script type="module" src="src/app.mjs?v=20261118-reset"></script>
 </body></html>

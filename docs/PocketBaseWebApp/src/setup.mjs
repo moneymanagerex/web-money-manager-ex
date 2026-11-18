@@ -7,6 +7,7 @@ let resetPreview=null;
 function clearResetPreview() {
   resetPreview=null;
   $("resetPreview").textContent="";
+  $("resetPhrase").textContent="shown after inspection";
   $("resetBackup").checked=false;
   $("resetConfirm").value="";
 }
@@ -126,16 +127,19 @@ $("setupForm").addEventListener("submit",async (event) => {
 $("inspectResetButton").addEventListener("click",async () => {
   clearResetPreview();
   setBusy(true);
+  setStatus("resetStatus","");
   try {
-    setStatus("resetStatus","Authenticating and inspecting MMEX collections…");
+    setStatus("inspectResetStatus","Authenticating and inspecting MMEX collections…");
     const { token }=await authenticateAdmin();
     const preview=await inspectReset(state.base,token);
     resetPreview=preview;
+    if(preview.entries.length)
+      $("resetPhrase").textContent=`RESET ${preview.base}`;
     $("resetPreview").innerHTML=preview.entries.length? `<p>Will delete ${preview.entries.length} collections on <strong>${esc(preview.base)}</strong>:</p><ul>${preview.entries.map(c => `<li>${esc(c.name)}: ${c.count} record(s)</li>`).join("")}</ul>`:"No MMEX collections exist. Use normal initialization instead.";
-    setStatus("resetStatus",preview.entries.length? "Inspect the list and confirm the backup before resetting.":"");
+    setStatus("inspectResetStatus",preview.entries.length? "Review the list, confirm the backup, type the exact phrase, and re-enter the superuser password above.":"");
   }
   catch(error) {
-    setStatus("resetStatus",error.message,"error");
+    setStatus("inspectResetStatus",error.message,"error");
   }
   finally {
     $("adminPassword").value="";
@@ -189,6 +193,7 @@ $("resetButton").addEventListener("click",async () => {
 });
 $("adminBack").addEventListener("click",() => {
   clearResetPreview();
+  setStatus("inspectResetStatus","");
   setStatus("resetStatus","");
   $("adminPassword").value="";
   setBusy(false);

@@ -4,7 +4,7 @@ import { initWorkspace,loadWorkspace } from "./workspace.mjs";
 import { requireCompatibleSchema } from "./schema.mjs";
 import { resetCurrencyForm } from "./currencies.mjs";
 import { resetTransactionForm } from "./transactions.mjs";
-import "./setup.mjs";
+import "./setup.mjs?v=20261118-reset";
 initWorkspace();
 async function chooseInstance(value) {
   const base=normalizeUrl(value);

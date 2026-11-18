@@ -23,6 +23,9 @@ copy is needed.
 For self-hosting, serve the contents of `docs/PocketBaseWebApp/` over HTTPS
 (or HTTP on localhost). Pages does not run PocketBase; the selected server must be
 reachable by the browser and allow requests from the frontend origin.
+When updating `app.mjs` or `setup.mjs`, change the corresponding version query
+in the HTML or module import so cached older scripts are not reused. After
+publishing, a hard refresh may be needed if the HTML itself is still cached.
 
 ## Instance setup
 
@@ -47,9 +50,11 @@ The administrator page can delete the known MMEX collections and recreate the
 bundled schema. **This permanently deletes their records**, including the
 entire ledger. It does not delete the `users` collection, superusers, or
 unrelated collections. First make and verify a full PocketBase backup and stop
-all other clients. Inspect the collection names and record counts, then
+all other clients. Enter your superuser credentials and select **Inspect reset
+scope** first; the delete button remains disabled until inspection succeeds and
+finds MMEX collections. Review the collection names and record counts, then
 re-enter the superuser password, confirm the backup and type the exact reset
-phrase including the instance URL. The default-data checkbox controls whether
+phrase displayed on the page. The default-data checkbox controls whether
 categories and currencies are seeded into the new schema.
 
 Reset rechecks the inspected collection IDs and counts before deleting, and

@@ -255,3 +255,70 @@ test("schema reset refuses an unsupported schema version", async t => {
   });
   await assert.rejects(inspectReset("https://example.test", "admin"), /Unsupported MMEX schema version 2/);
 });
+
+test("reset inspection shows the exact phrase and gates deletion", async t => {
+  const { state } = await import(modulePath("core"));
+  const oldBase = state.base;
+  const previousDocument = globalThis.document;
+  const elements = new Map();
+  const element = id => {
+    if (!elements.has(id)) elements.set(id, {
+      value: "", checked: false, disabled: id === "resetButton",
+      textContent: "", innerHTML: "", validity: { valid: true },
+      listeners: {}, addEventListener(type, handler) { this.listeners[type] = handler; }
+    });
+    return elements.get(id);
+  };
+  globalThis.document = { getElementById: element };
+  state.base = "https://example.test";
+  let empty = false;
+  let fail = false;
+  let releaseAuth;
+  const authGate = new Promise(resolve => { releaseAuth = resolve; });
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    calls.push(options.method || "GET");
+    if (url.endsWith("/auth-with-password")) {
+      await authGate;
+      return fail ? new Response('{"message":"Invalid credentials"}', { status: 400 }) : json({ token: "admin" });
+    }
+    if (url.includes("/api/collections?")) return json({
+      items: empty ? [] : [{ id: "catid", name: "CATEGORY_V1", type: "base", fields: [] }],
+      totalPages: 1
+    });
+    if (url.includes("/catid/records")) return json({ totalItems: 2 });
+    throw Error(`Unexpected request: ${url}`);
+  });
+  try {
+    await import(modulePath("setup"));
+    element("adminEmail").value = "admin@example.test";
+    element("adminPassword").value = "password";
+    assert.equal(element("resetButton").disabled, true);
+    const inspection = element("inspectResetButton").listeners.click();
+    assert.match(element("inspectResetStatus").textContent, /Authenticating and inspecting/);
+    assert.equal(element("inspectResetButton").disabled, true);
+    releaseAuth();
+    await inspection;
+    assert.equal(element("resetButton").disabled, false);
+    assert.equal(element("resetPhrase").textContent, "RESET https://example.test");
+    assert.equal(element("adminPassword").value, "");
+    element("resetConfirm").value = "RESET https://example.test";
+    await element("resetButton").listeners.click();
+    assert.match(element("resetStatus").textContent, /confirm the backup/);
+    assert.equal(calls.filter(method => method === "POST").length, 1);
+    empty = true;
+    element("adminPassword").value = "password";
+    await element("inspectResetButton").listeners.click();
+    assert.equal(element("resetButton").disabled, true);
+    assert.equal(element("resetPhrase").textContent, "shown after inspection");
+    fail = true;
+    element("adminPassword").value = "password";
+    await element("inspectResetButton").listeners.click();
+    assert.equal(element("resetButton").disabled, true);
+    assert.match(element("inspectResetStatus").textContent, /Invalid credentials/);
+  } finally {
+    state.base = oldBase;
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
+});
