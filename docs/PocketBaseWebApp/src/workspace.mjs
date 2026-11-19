@@ -27,6 +27,7 @@ async function loadWorkspace() {
   $("statTransactions").textContent=active.length;
   $("statCategories").textContent=categories.length;
   $("statPayees").textContent=payees.length;
+  $("statCurrencies").textContent=currencies.length;
   renderAccounts();
   renderReferenceData();
   renderCurrencies();
