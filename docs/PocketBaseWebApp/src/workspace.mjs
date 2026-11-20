@@ -1,10 +1,10 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261120-ux5";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261120-ux5";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261120-ux5";
-import { initPayees,renderReferenceData } from "./payees.mjs?v=20261120-ux5";
-import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261120-ux5";
-import { formatTransactionAmount } from "./balances.mjs?v=20261120-ux5";
+import { fetchRecords } from "./api.mjs?v=20261120-audit2";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261120-audit2";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261120-audit2";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261120-audit2";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261120-audit2";
+import { formatTransactionAmount } from "./balances.mjs?v=20261120-audit2";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;

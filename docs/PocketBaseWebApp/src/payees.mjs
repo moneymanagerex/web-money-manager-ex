@@ -1,5 +1,5 @@
 import { state,$,esc,setStatus,indexBy,safeHttpUrl,newBusinessId } from "./core.mjs";
-import { api } from "./api.mjs?v=20261120-ux5";
+import { api } from "./api.mjs?v=20261120-audit2";
 let reloadWorkspace;
 function renderReferenceData() {
   const cats=indexBy(state.categories,"CATEGID");

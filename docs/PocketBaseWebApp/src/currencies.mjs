@@ -1,5 +1,5 @@
 import { state, $, esc, setStatus, newBusinessId } from "./core.mjs";
-import { api, fetchRecords } from "./api.mjs?v=20261120-ux5";
+import { api, fetchRecords } from "./api.mjs?v=20261120-audit2";
 
 let reloadWorkspace;
 

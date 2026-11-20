@@ -93,6 +93,17 @@ PocketBase's built-in `_migrations` tracks server-side migration files, not
 remote API imports. `dbInfo` remains necessary for this self-contained
 frontend to check the MMEX schema version on remote instances.
 
+### PocketBase audit fields
+
+Besides the mirrored MMEX columns, every collection carries PocketBase's system
+`created` and `updated` autodate fields. PocketBase sets them on the server, so
+clients cannot forge them, and `updated` is the natural change cursor for
+future incremental synchronization. Setup adds these fields to instances built
+from an older baseline, verifies the result, and leaves business data and the
+`21` marker untouched; the repair is idempotent. Records that predate the
+fields keep empty timestamps — they are not back-filled, because a synthetic
+value would misreport when the data actually changed.
+
 Apart from the legacy v1 version-marker transition, there are no automatic
 migrations yet. For a future version, define an
 explicit, ordered migration from each supported prior version, validate its

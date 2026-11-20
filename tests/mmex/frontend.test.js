@@ -461,3 +461,76 @@ test("base currency plan inserts only when unset and never rewrites an existing 
   assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "99" }], ids), true);
   assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "5" }], ids), false);
 });
+
+test("schema inspection separates missing audit fields from real mismatches", async () => {
+  const { inspectSchema, isAuditField, checkSchemaFields } = await import(modulePath("schema"));
+  const audit = [
+    { id: "a1", name: "created", type: "autodate", system: true, onCreate: true, onUpdate: false },
+    { id: "a2", name: "updated", type: "autodate", system: true, onCreate: true, onUpdate: true }
+  ];
+  const schema = [
+    { name: "items", type: "base", fields: [{ name: "value", type: "number" }, ...audit] },
+    { name: "others", type: "base", fields: [{ name: "label", type: "text" }, ...audit] }
+  ];
+  assert.equal(isAuditField(audit[0]), true);
+  assert.equal(isAuditField({ name: "created", type: "text", system: true }), false);
+  assert.equal(isAuditField({ name: "other", type: "autodate", system: true }), false);
+
+  const complete = [
+    { id: "c1", name: "items", type: "base", fields: [{ name: "value", type: "number" }, ...audit] },
+    { id: "c2", name: "others", type: "base", fields: [{ name: "label", type: "text" }, ...audit] }
+  ];
+  assert.deepEqual(inspectSchema(complete, schema), { problems: [], additions: [] });
+  assert.doesNotThrow(() => checkSchemaFields(complete, schema));
+
+  const legacy = [
+    { id: "c1", name: "items", type: "base", fields: [{ name: "value", type: "number" }] },
+    { id: "c2", name: "others", type: "base", fields: [{ name: "label", type: "text" }] }
+  ];
+  const legacyPlan = inspectSchema(legacy, schema);
+  assert.deepEqual(legacyPlan.problems, []);
+  assert.deepEqual(legacyPlan.additions.map(item => item.collection.name), ["items", "others"]);
+  assert.deepEqual(legacyPlan.additions[0].fields.map(field => field.name), ["created", "updated"]);
+  assert.throws(() => checkSchemaFields(legacy, schema), /items missing created\/updated/);
+
+  const broken = [
+    { id: "c1", name: "items", type: "base", fields: [{ name: "value", type: "text" }] },
+    { id: "c2", name: "others", type: "base", fields: [{ name: "label", type: "text" }] }
+  ];
+  const brokenPlan = inspectSchema(broken, schema);
+  assert.deepEqual(brokenPlan.problems, ["items.value missing/type mismatch"]);
+  assert.deepEqual(brokenPlan.additions.map(item => item.collection.name), ["items", "others"]);
+});
+
+test("audit field repair patches collections then re-verifies the schema", async t => {
+  const { state } = await import(modulePath("core"));
+  const { ensureSchemaFields } = await import(modulePath("schema"));
+  const audit = [
+    { id: "a1", name: "created", type: "autodate", system: true, onCreate: true, onUpdate: false },
+    { id: "a2", name: "updated", type: "autodate", system: true, onCreate: true, onUpdate: true }
+  ];
+  const schema = [{ name: "items", type: "base", fields: [{ name: "value", type: "number" }, ...audit] }];
+  state.base = "https://example.test";
+  let added = false;
+  const patches = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    if (options.method === "PATCH") {
+      patches.push({ url, body: JSON.parse(options.body) });
+      added = true;
+      return json({ id: "c1", name: "items", type: "base", fields: JSON.parse(options.body).fields });
+    }
+    return json({});
+  });
+  const reload = async () => [{ id: "c1", name: "items", type: "base", fields: [{ name: "value", type: "number" }, ...(added ? audit : [])] }];
+  const result = await ensureSchemaFields(state.base, "admin", [{ id: "c1", name: "items", type: "base", fields: [{ name: "value", type: "number" }] }], schema, reload);
+  assert.deepEqual(result.applied, ["items"]);
+  assert.equal(patches.length, 1);
+  assert.match(patches[0].url, /\/api\/collections\/c1$/);
+  assert.deepEqual(patches[0].body.fields.map(field => field.name), ["value", "created", "updated"]);
+  const noop = await ensureSchemaFields(state.base, "admin", [{ id: "c1", name: "items", type: "base", fields: [{ name: "value", type: "number" }, ...audit] }], schema, reload);
+  assert.deepEqual(noop.applied, []);
+  await assert.rejects(
+    ensureSchemaFields(state.base, "admin", [{ id: "c1", name: "items", type: "base", fields: [] }], schema, reload),
+    /items\.value missing\/type mismatch/
+  );
+});

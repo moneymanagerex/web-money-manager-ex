@@ -1,8 +1,8 @@
 import { state,$,setStatus,esc,showScreen } from "./core.mjs";
-import { api } from "./api.mjs?v=20261120-ux5";
-import { readSchemaVersion,checkSchemaVersion,checkSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261120-ux5";
-import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261120-ux5";
-import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261120-ux5";
+import { api } from "./api.mjs?v=20261120-audit2";
+import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261120-audit2";
+import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261120-audit2";
+import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261120-audit2";
 let resetPreview=null;
 function clearResetPreview() {
   resetPreview=null;
@@ -74,8 +74,13 @@ $("setupForm").addEventListener("submit",async (event) => {
     if(found.length)
       checkSchemaVersion(await readSchemaVersion(state.base,token),true,true);
     const schema=await loadBundledSchema();
+    let currentCollections=collections;
     if(found.length) {
-      checkSchemaFields(collections,schema);
+      setStatus("setupStatus","Checking collections and PocketBase audit fields…");
+      const ensured=await ensureSchemaFields(state.base,token,collections,schema,() => listCollections(state.base,token));
+      currentCollections=ensured.collections;
+      if(ensured.applied.length)
+        setStatus("setupStatus",`Added PocketBase created/updated fields to ${ensured.applied.length} collection(s). Existing records keep empty timestamps.`);
     }
     else {
       setStatus("setupStatus",`Creating ${schema.length} collections and indexes…`);

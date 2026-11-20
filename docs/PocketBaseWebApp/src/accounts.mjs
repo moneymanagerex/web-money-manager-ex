@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,fmtDate,newBusinessId,indexBy } from "./core.mjs";
-import { api } from "./api.mjs?v=20261120-ux5";
-import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261120-ux5";
+import { api } from "./api.mjs?v=20261120-audit2";
+import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261120-audit2";
 let reloadWorkspace;
 function renderAccounts() {
   const cur=indexBy(state.currencies,"CURRENCYID");
