@@ -28,6 +28,7 @@
 <section id="adminScreen" class="card hidden">
  <div class="toolbar"><div><h2>Administrator setup</h2><div id="adminInstance" class="muted hint instance-chip"></div></div><span class="pill">Admin only</span></div>
  <p class="muted hint">Only use this setup on a trusted frontend. All authenticated users share the same dataset. Restrict access to trusted users.</p>
+ <p class="warning hint">For an existing v1 schema, back up the instance and stop other clients before setup upgrades its version marker to v21. Older WebApp versions will no longer connect.</p>
  <div id="schemaReport" class="hint">Authenticate as a PocketBase Superuser to inspect the schema.</div>
  <form id="setupForm">
   <label>PocketBase Superuser email<input id="adminEmail" type="email" required autocomplete="username"></label>
@@ -101,5 +102,5 @@
   <div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Name</th><th>Code</th><th>Type</th><th>Prefix</th><th>Suffix</th><th>Scale</th><th>Base rate</th><th>Actions</th></tr></thead><tbody id="currenciesBody"></tbody></table></div>
  </section>
 </main>
-<script type="module" src="src/app.mjs?v=20261118-reset"></script>
+<script type="module" src="src/app.mjs?v=20261120-v21"></script>
 </body></html>

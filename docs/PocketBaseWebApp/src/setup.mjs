@@ -1,8 +1,8 @@
 import { state,$,setStatus,esc,showScreen } from "./core.mjs";
 import { api } from "./api.mjs";
-import { readSchemaVersion,checkSchemaVersion,markSchemaVersion } from "./schema.mjs";
+import { readSchemaVersion,checkSchemaVersion,checkSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261120-v21";
 import { seedDefaults,loadDefaultData } from "./seed.mjs";
-import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs";
+import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261120-v21";
 let resetPreview=null;
 function clearResetPreview() {
   resetPreview=null;
@@ -42,19 +42,6 @@ function renderReport(collections) {
   $("schemaReport").innerHTML=html;
   return { found,missing };
 }
-function checkFields(actualCollections,expectedCollections) {
-  const byName=new Map(actualCollections.map(collection => [collection.name,collection]));
-  const problems=[];
-  for(const expected of expectedCollections) {
-    const fields=new Map((byName.get(expected.name).fields||[]).map(field => [field.name,field.type]));
-    for(const field of expected.fields) {
-      if(fields.get(field.name)!==field.type)
-        problems.push(`${expected.name}.${field.name} missing/type mismatch`);
-    }
-  }
-  if(problems.length)
-    throw Error(`Existing schema mismatch; no changes made: ${problems.slice(0,12).join("; ")}`);
-}
 async function ensureUserCollection(collections,token) {
   const users=collections.find(collection => collection.name==="users");
   if(users) {
@@ -85,10 +72,10 @@ $("setupForm").addEventListener("submit",async (event) => {
       throw Error("Partial MMEX schema detected. No changes were made.");
     }
     if(found.length)
-      checkSchemaVersion(await readSchemaVersion(state.base,token),true);
+      checkSchemaVersion(await readSchemaVersion(state.base,token),true,true);
     const schema=await loadBundledSchema();
     if(found.length) {
-      checkFields(collections,schema);
+      checkSchemaFields(collections,schema);
     }
     else {
       setStatus("setupStatus",`Creating ${schema.length} collections and indexes…`);
@@ -108,7 +95,7 @@ $("setupForm").addEventListener("submit",async (event) => {
         method: "POST",body: JSON.stringify({ email,password,passwordConfirm: password,verified: true })
       },token);
     }
-    await markSchemaVersion(state.base,token);
+    await markSchemaVersion(state.base,token,found.length? collections:undefined,found.length? schema:undefined);
     $("adminPassword").value=$("newUserPassword").value=$("adminEmail").value="";
     showScreen("loginScreen");
     if($("newUserEmail").value)

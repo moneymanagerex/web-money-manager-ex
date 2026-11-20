@@ -52,9 +52,11 @@ test("default import reports partial writes", async t => {
 
 test("schema compatibility rejects missing and unknown versions", async () => {
   const { checkSchemaVersion } = await import(modulePath("schema"));
-  assert.doesNotThrow(() => checkSchemaVersion({ VALUE: "1" }));
+  assert.doesNotThrow(() => checkSchemaVersion({ VALUE: "21" }));
   assert.doesNotThrow(() => checkSchemaVersion(null, true));
   assert.throws(() => checkSchemaVersion(null), /no MMEX schema version/);
+  assert.throws(() => checkSchemaVersion({ VALUE: "1" }), /Unsupported MMEX schema version 1/);
+  assert.doesNotThrow(() => checkSchemaVersion({ VALUE: "1" }, true, true));
   assert.throws(() => checkSchemaVersion({ VALUE: "2" }), /Unsupported MMEX schema version 2/);
   assert.throws(() => checkSchemaVersion({ VALUE: "invalid" }), /Unsupported MMEX schema version invalid/);
 });
@@ -68,7 +70,7 @@ test("setup never overwrites an existing or unsupported schema version", async t
     return json({ items: [{ VALUE: version }] });
   });
   await assert.rejects(markSchemaVersion("https://example.test", "admin"), /Unsupported MMEX schema version 2/);
-  version = "1";
+  version = "21";
   await markSchemaVersion("https://example.test", "admin");
   assert.deepEqual(calls, ["GET", "GET"]);
 });
@@ -81,7 +83,52 @@ test("setup records version only when missing", async t => {
     return json(options.method === "POST" ? {} : { items: [] });
   });
   await markSchemaVersion("https://example.test", "admin");
-  assert.deepEqual(JSON.parse(calls[1].body), { KEY: "MMEX_SCHEMA_VERSION", VALUE: "1" });
+  assert.deepEqual(JSON.parse(calls[1].body), { KEY: "MMEX_SCHEMA_VERSION", VALUE: "21" });
+});
+
+test("legacy v1 is upgraded only after validating its collections", async t => {
+  const { markSchemaVersion } = await import(modulePath("schema"));
+  const schema = [{ name: "items", fields: [{ name: "value", type: "number" }] }];
+  const collections = [{ name: "items", type: "base", fields: [{ name: "value", type: "number" }] }];
+  let version = "1";
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    calls.push({ url, method: options.method || "GET", body: options.body });
+    if (options.method === "PATCH") {
+      version = JSON.parse(options.body).VALUE;
+      return json({ id: "versionid", VALUE: version });
+    }
+    return json({ items: [{ id: "versionid", VALUE: version }] });
+  });
+  await assert.rejects(markSchemaVersion("https://example.test", "admin"), /without checking/);
+  await assert.rejects(markSchemaVersion("https://example.test", "admin", [{ ...collections[0], fields: [] }], schema), /value missing\/type mismatch/);
+  assert.equal(calls.some(call => call.method === "PATCH"), false);
+  await markSchemaVersion("https://example.test", "admin", collections, schema);
+  assert.equal(version, "21");
+  assert.deepEqual(calls.filter(call => call.method === "PATCH").map(call => JSON.parse(call.body)), [{ VALUE: "21" }]);
+  assert.match(calls.find(call => call.method === "PATCH").url, /\/dbInfo\/records\/versionid$/);
+});
+
+test("legacy upgrade reports an unconfirmed version update", async t => {
+  const { markSchemaVersion } = await import(modulePath("schema"));
+  const schema = [{ name: "items", fields: [] }];
+  const collections = [{ name: "items", type: "base", fields: [] }];
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    if (options.method === "PATCH") return json({});
+    return json({ items: [{ id: "versionid", VALUE: "1" }] });
+  });
+  await assert.rejects(markSchemaVersion("https://example.test", "admin", collections, schema), /version update could not be verified/);
+});
+
+test("legacy upgrade reports an uncertain version write", async t => {
+  const { markSchemaVersion } = await import(modulePath("schema"));
+  t.mock.method(globalThis, "fetch", async (url, options = {}) => {
+    if (options.method === "PATCH") throw Error("offline");
+    return json({ items: [{ id: "versionid", VALUE: "1" }] });
+  });
+  await assert.rejects(markSchemaVersion("https://example.test", "admin",
+    [{ name: "items", type: "base", fields: [] }], [{ name: "items", fields: [] }]),
+  /version update may have succeeded/);
 });
 
 test("currency name and code uniqueness ignores case and the edited record", async () => {

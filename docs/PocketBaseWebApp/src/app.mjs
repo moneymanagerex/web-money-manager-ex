@@ -1,10 +1,10 @@
 import { state,$,INSTANCE_KEY,tokenKey,showScreen,setView,setStatus,clearWorkspace } from "./core.mjs";
 import { api,normalizeUrl } from "./api.mjs";
 import { initWorkspace,loadWorkspace } from "./workspace.mjs";
-import { requireCompatibleSchema } from "./schema.mjs";
+import { requireCompatibleSchema } from "./schema.mjs?v=20261120-v21";
 import { resetCurrencyForm } from "./currencies.mjs";
 import { resetTransactionForm } from "./transactions.mjs";
-import "./setup.mjs?v=20261118-reset";
+import "./setup.mjs?v=20261120-v21";
 initWorkspace();
 async function chooseInstance(value) {
   const base=normalizeUrl(value);

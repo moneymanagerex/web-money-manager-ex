@@ -23,9 +23,17 @@ copy is needed.
 For self-hosting, serve the contents of `docs/PocketBaseWebApp/` over HTTPS
 (or HTTP on localhost). Pages does not run PocketBase; the selected server must be
 reachable by the browser and allow requests from the frontend origin.
-When updating `app.mjs` or `setup.mjs`, change the corresponding version query
-in the HTML or module import so cached older scripts are not reused. After
+When updating modules, change the relevant version queries in the HTML and
+module imports so cached older scripts are not reused. After
 publishing, a hard refresh may be needed if the HTML itself is still cached.
+
+The canonical collection definitions and seed data live in the
+[database repository](https://github.com/moneymanagerex/database/tree/master/pocketbase).
+For development, check out that repository as `../database` and run
+`sh scripts/sync-pocketbase-schema.sh` from this repository's root. Commit the
+resulting bundled files so the static frontend remains self-contained.
+`sh scripts/sync-pocketbase-schema.sh --check` detects drift. Set
+`DATABASE_ROOT` if the checkout is elsewhere. End users need no extra step.
 
 ## Instance setup
 
@@ -69,13 +77,22 @@ PocketBase relation is detected; review them before resetting.
 ## Schema versions and future upgrades
 
 The schema version is stored as `MMEX_SCHEMA_VERSION` in `dbInfo`. Setup
-creates version `1` for a fresh schema. For an existing unversioned schema, it
-checks the expected collection names and field types before marking it `1`;
-this check does not verify indexes, rules, or semantic compatibility, which an
-administrator must review. Versioned schemas are never silently relabeled.
-The frontend refuses to open an unversioned or unsupported version.
+creates version `21` for a fresh schema. An administrator can run the same
+setup on an existing unversioned or legacy PocketBase v1 instance: it checks
+expected collection names and field types before marking it `21`, without
+recreating collections or changing business records. Back up the instance and
+stop other clients first; older WebApp versions will not accept version `21`.
+The check does not verify indexes, rules, or semantic compatibility, which an
+administrator must review. Version `21` denotes the shared schema baseline,
+not proof that SQLite v20/v21 data-repair scripts were applied. The frontend
+refuses to open an unversioned or unsupported version until setup is run.
 
-There are no automatic migrations yet. For a future version, define an
+PocketBase's built-in `_migrations` tracks server-side migration files, not
+remote API imports. `dbInfo` remains necessary for this self-contained
+frontend to check the MMEX schema version on remote instances.
+
+Apart from the legacy v1 version-marker transition, there are no automatic
+migrations yet. For a future version, define an
 explicit, ordered migration from each supported prior version, validate its
 preconditions, preserve existing data and IDs, test on a restored backup, and
 update the version **only after** successful migration and verification.
