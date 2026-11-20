@@ -5,6 +5,14 @@
 ##########################
 class attachments
 {
+    public static function ensure_attachments_folder()
+    {
+        if (!is_dir(costant::attachments_folder()))
+        {
+            mkdir(costant::attachments_folder());
+        }
+    }
+
     public static function get_attachments_filename_array($TrID,$bIncludeZero=false)
         {
             $i=0;

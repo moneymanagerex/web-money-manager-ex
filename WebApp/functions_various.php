@@ -16,7 +16,7 @@ class various
 
     public static function update_configuration_file ($ParameterArray)
         {
-            $configfile="configuration_user.php";
+            $configfile = getenv('WEBMMX_USER_CONFIG_FILE') ?: 'configuration_user.php';
 
             if (file_exists($configfile))
                 {unlink($configfile);}

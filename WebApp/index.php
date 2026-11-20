@@ -14,6 +14,9 @@ else
                 various::send_alert_and_redirect($lang["db_successfully_updated_to_version"].costant::app_version(), 'index.php');
             }
     }
+
+attachments::ensure_attachments_folder();
+
 $username = null;
 $password = null;
 
