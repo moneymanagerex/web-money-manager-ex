@@ -1,26 +1,27 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs";
-import { initPayees,renderReferenceData } from "./payees.mjs";
-import { initCurrencies,renderCurrencies } from "./currencies.mjs";
-import { formatTransactionAmount } from "./balances.mjs";
+import { fetchRecords } from "./api.mjs?v=20261120-ux5";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261120-ux5";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261120-ux5";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261120-ux5";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261120-ux5";
+import { formatTransactionAmount } from "./balances.mjs?v=20261120-ux5";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;
   try {
-    data=await Promise.all([fetchRecords("ACCOUNTLIST_V1","ACCOUNTID"),fetchRecords("CHECKINGACCOUNT_V1","-TRANSDATE"),fetchRecords("CATEGORY_V1","CATEGNAME"),fetchRecords("PAYEE_V1","PAYEENAME"),fetchRecords("CURRENCYFORMATS_V1","CURRENCYNAME"),fetchRecords("SPLITTRANSACTIONS_V1"),fetchRecords("TRANSLINK_V1"),fetchRecords("SHAREINFO_V1")]);
+    data=await Promise.all([fetchRecords("ACCOUNTLIST_V1","ACCOUNTID"),fetchRecords("CHECKINGACCOUNT_V1","-TRANSDATE"),fetchRecords("CATEGORY_V1","CATEGNAME"),fetchRecords("PAYEE_V1","PAYEENAME"),fetchRecords("CURRENCYFORMATS_V1","CURRENCYNAME"),fetchRecords("SPLITTRANSACTIONS_V1"),fetchRecords("TRANSLINK_V1"),fetchRecords("SHAREINFO_V1"),fetchRecords("INFOTABLE_V1","",`INFONAME = "BASECURRENCYID"`)]);
   }
   catch(err) {
     setStatus("recentStatus","Refresh failed; displayed data may be out of date. "+err.message,"error");
     throw err;
   }
-  const [accounts,transactions,categories,payees,currencies,splits,links,shares]=data;
+  const [accounts,transactions,categories,payees,currencies,splits,links,shares,baseCurrency]=data;
   state.accounts=accounts;
   state.transactions=transactions;
   state.categories=categories;
   state.payees=payees;
   state.currencies=currencies;
+  state.baseCurrencyInfo=baseCurrency;
   state.protectedTransactions=new Map([...splits.map(x => [String(x.TRANSID),"split"]),...links.map(x => [String(x.CHECKINGACCOUNTID),"linked asset/stock"]),...shares.map(x => [String(x.CHECKINGACCOUNTID),"linked stock"])]);
   const active=transactions.filter(t => !t.DELETEDTIME);
   $("statAccounts").textContent=accounts.length;
@@ -31,6 +32,8 @@ async function loadWorkspace() {
   renderAccounts();
   renderReferenceData();
   renderCurrencies();
+  const baseCurrencyValue = $("statBaseCurrency");
+  if (baseCurrencyValue) baseCurrencyValue.textContent = baseCurrencyText();
   populateNewTx();
   renderTransactions();
   populateAccountCurrencies();
@@ -46,5 +49,23 @@ export function initWorkspace() {
   initCurrencies(loadWorkspace);
   document.querySelectorAll(".topnav [data-view]").forEach(b => b.addEventListener("click",() => setView(b.dataset.view)));
   document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click",() => setView(b.dataset.go)));
+  document.querySelectorAll("[data-refresh]").forEach(button => button.addEventListener("click", async () => {
+    const status = button.closest(".view")?.querySelector(".list-head .hint") ?? $("recentStatus");
+    const show = (message, kind = "muted") => {
+      if (!status) return;
+      status.textContent = message;
+      status.className = "hint status " + kind;
+    };
+    button.disabled = true;
+    show("Refreshing MMEX data…");
+    try {
+      await loadWorkspace();
+      show("Data refreshed.", "ok");
+    } catch (error) {
+      show("Refresh failed; displayed data may be out of date. " + error.message, "error");
+    } finally {
+      button.disabled = false;
+    }
+  }));
 }
 export { loadWorkspace };

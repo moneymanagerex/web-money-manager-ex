@@ -369,3 +369,95 @@ test("reset inspection shows the exact phrase and gates deletion", async t => {
     else globalThis.document = previousDocument;
   }
 });
+
+test("payee default category applies only to an existing category", async () => {
+  const { defaultCategoryForPayee } = await import(modulePath("transactions"));
+  const payees = [{ PAYEEID: 7, CATEGID: 3 }, { PAYEEID: 8, CATEGID: -1 }, { PAYEEID: 9, CATEGID: 99 }];
+  const categories = [{ CATEGID: 3 }, { CATEGID: 4 }];
+  assert.equal(defaultCategoryForPayee("7", payees, categories), "3");
+  assert.equal(defaultCategoryForPayee(7, payees, categories), "3");
+  assert.equal(defaultCategoryForPayee("8", payees, categories), null);
+  assert.equal(defaultCategoryForPayee("9", payees, categories), null);
+  assert.equal(defaultCategoryForPayee("-1", payees, categories), null);
+});
+
+test("remembered tokens stay out of session storage and are cleared on sign out", async () => {
+  const fakeStorage = () => {
+    const items = new Map();
+    return {
+      items,
+      getItem: key => items.has(key) ? items.get(key) : null,
+      setItem: (key, value) => items.set(key, String(value)),
+      removeItem: key => items.delete(key)
+    };
+  };
+  const previousSession = globalThis.sessionStorage;
+  const previousLocal = globalThis.localStorage;
+  globalThis.sessionStorage = fakeStorage();
+  globalThis.localStorage = fakeStorage();
+  try {
+    const { state } = await import(modulePath("core"));
+    const { tokenKey } = await import(modulePath("core"));
+    const { readStoredToken, saveStoredToken, clearStoredToken } = await import(modulePath("auth"));
+    state.base = "https://example.test";
+    const key = tokenKey();
+    assert.equal(readStoredToken(), null);
+    saveStoredToken("session-token", false);
+    assert.equal(globalThis.sessionStorage.getItem(key), "session-token");
+    assert.equal(globalThis.localStorage.getItem(key), null);
+    assert.deepEqual(readStoredToken(), { token: "session-token", remember: false });
+    saveStoredToken("persistent-token", true);
+    assert.equal(globalThis.localStorage.getItem(key), "persistent-token");
+    assert.equal(globalThis.sessionStorage.getItem(key), null);
+    assert.deepEqual(readStoredToken(), { token: "persistent-token", remember: true });
+    globalThis.sessionStorage.setItem(key, "newer-session-token");
+    assert.deepEqual(readStoredToken(), { token: "newer-session-token", remember: false });
+    clearStoredToken();
+    assert.equal(globalThis.sessionStorage.getItem(key), null);
+    assert.equal(globalThis.localStorage.getItem(key), null);
+  } finally {
+    if (previousSession === undefined) delete globalThis.sessionStorage;
+    else globalThis.sessionStorage = previousSession;
+    if (previousLocal === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = previousLocal;
+  }
+});
+
+test("base currency display reports unset, invalid, ambiguous and missing values", async () => {
+  const { state } = await import(modulePath("core"));
+  const { baseCurrencyText } = await import(modulePath("currencies"));
+  state.currencies = [{ CURRENCYID: 1, CURRENCYNAME: "US Dollar", CURRENCY_SYMBOL: "USD" }];
+  state.baseCurrencyInfo = [];
+  assert.match(baseCurrencyText(), /not set/);
+  state.baseCurrencyInfo = [{ INFONAME: "BASECURRENCYID", INFOVALUE: "1" }];
+  assert.equal(baseCurrencyText(), "US Dollar (USD)");
+  state.baseCurrencyInfo = [{ INFOVALUE: "2" }];
+  assert.match(baseCurrencyText(), /missing currency 2/);
+  state.baseCurrencyInfo = [{ INFOVALUE: "0" }];
+  assert.match(baseCurrencyText(), /invalid value 0/);
+  state.baseCurrencyInfo = [{ INFOVALUE: "1" }, { INFOVALUE: "2" }];
+  assert.match(baseCurrencyText(), /ambiguous: 1, 2/);
+});
+
+test("base currency plan inserts only when unset and never rewrites an existing choice", async () => {
+  const { planBaseCurrencyChange, canSetBaseCurrency, baseCurrencyId } = await import(modulePath("currencies"));
+  assert.deepEqual(planBaseCurrencyChange([], 5), { mode: "insert" });
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "5" }], 5), { mode: "none" });
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "5" }], 6), { mode: "blocked", reason: "change", current: 5 });
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "0" }], 7), { mode: "update", recordId: "r1" });
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "abc" }], 7), { mode: "update", recordId: "r1" });
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "5" }, { id: "r2", INFOVALUE: "6" }], 5), { mode: "blocked", reason: "duplicate" });
+  assert.deepEqual(planBaseCurrencyChange([], 0), { mode: "invalid" });
+  assert.deepEqual(planBaseCurrencyChange([], -1), { mode: "invalid" });
+  assert.equal(canSetBaseCurrency([]), true);
+  assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "0" }]), true);
+  assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "5" }]), false);
+  assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "5" }, { id: "r2", INFOVALUE: "6" }]), false);
+  assert.equal(baseCurrencyId([{ id: "r1", INFOVALUE: "5" }]), 5);
+  assert.equal(baseCurrencyId([]), null);
+  const ids = new Set([5, 6]);
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "5" }], 6, ids), { mode: "blocked", reason: "change", current: 5 });
+  assert.deepEqual(planBaseCurrencyChange([{ id: "r1", INFOVALUE: "99" }], 5, ids), { mode: "update", recordId: "r1" });
+  assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "99" }], ids), true);
+  assert.equal(canSetBaseCurrency([{ id: "r1", INFOVALUE: "5" }], ids), false);
+});

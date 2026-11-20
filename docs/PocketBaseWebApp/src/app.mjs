@@ -1,10 +1,11 @@
-import { state,$,INSTANCE_KEY,tokenKey,showScreen,setView,setStatus,clearWorkspace } from "./core.mjs";
-import { api,normalizeUrl } from "./api.mjs";
-import { initWorkspace,loadWorkspace } from "./workspace.mjs";
-import { requireCompatibleSchema } from "./schema.mjs?v=20261120-v21";
-import { resetCurrencyForm } from "./currencies.mjs";
-import { resetTransactionForm } from "./transactions.mjs";
-import "./setup.mjs?v=20261120-v21";
+import { state,$,INSTANCE_KEY,showScreen,setView,setStatus,clearWorkspace } from "./core.mjs";
+import { readStoredToken,saveStoredToken,clearStoredToken } from "./auth.mjs?v=20261120-ux5";
+import { api,normalizeUrl } from "./api.mjs?v=20261120-ux5";
+import { initWorkspace,loadWorkspace } from "./workspace.mjs?v=20261120-ux5";
+import { requireCompatibleSchema } from "./schema.mjs?v=20261120-ux5";
+import { resetCurrencyForm } from "./currencies.mjs?v=20261120-ux5";
+import { resetTransactionForm } from "./transactions.mjs?v=20261120-ux5";
+import "./setup.mjs?v=20261120-ux5";
 initWorkspace();
 async function chooseInstance(value) {
   const base=normalizeUrl(value);
@@ -56,7 +57,7 @@ async function signIn() {
   await requireCompatibleSchema(state.base,a.token);
   state.token=a.token;
   state.user=a.record;
-  sessionStorage.setItem(tokenKey(),a.token);
+  saveStoredToken(a.token,$("rememberLogin").checked);
   $("userEmail").textContent=a.record.email;
   $("connectedInstance").textContent=state.base;
   showScreen("workspace");
@@ -84,7 +85,7 @@ $("loginForm").addEventListener("submit",async (e) => {
 });
 function logout(showLogin=true) {
   if(state.base)
-    sessionStorage.removeItem(tokenKey());
+    clearStoredToken();
   state.token="";
   state.user=null;
   clearWorkspace();
@@ -108,20 +109,27 @@ $("logout").addEventListener("click",() => logout(true));
     state.base=normalizeUrl(saved);
     await api(state.base,"/api/health");
     showScreen("loginScreen");
-    const tok=sessionStorage.getItem(tokenKey());
-    if(tok) {
+    const savedToken=readStoredToken();
+    if(savedToken) {
       let me;
       try {
-        me=await api(state.base,"/api/collections/users/auth-refresh",{ method: "POST" },tok);
+        me=await api(state.base,"/api/collections/users/auth-refresh",{ method: "POST" },savedToken.token);
+      }
+      catch(e) {
+        if(e.status===401||e.status===403)
+          clearStoredToken();
+        setStatus("loginStatus","Session or schema check failed: "+e.message,"error");
+        return;
+      }
+      try {
         await requireCompatibleSchema(state.base,me.token);
       }
       catch(e) {
-        sessionStorage.removeItem(tokenKey());
         setStatus("loginStatus","Session or schema check failed: "+e.message,"error");
         return;
       }
       state.token=me.token;
-      sessionStorage.setItem(tokenKey(),me.token);
+      saveStoredToken(me.token,savedToken.remember);
       state.user=me.record;
       $("userEmail").textContent=me.record.email;
       $("connectedInstance").textContent=state.base;

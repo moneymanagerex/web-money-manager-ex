@@ -29,6 +29,7 @@ async function api(base,path,options={},token="") {
     const details=Object.entries(d.data||{}).map(([field,error]) => `${field}: ${error.message||error.code}`).join("; ");
     const error=Error((d.message||`HTTP ${r.status}`)+(details? ` ${details}`:""));
     error.uncertain=r.status>=500;
+    error.status=r.status;
     throw error;
   }
   return d;

@@ -1,4 +1,4 @@
-import { api } from "./api.mjs";
+import { api } from "./api.mjs?v=20261120-ux5";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");

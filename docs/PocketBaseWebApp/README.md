@@ -4,7 +4,9 @@ This static frontend requires a reachable PocketBase instance. The default URL
 is `https://ab0yt2hi73hitsy.pwz5.pocketbasecloud.com`, with `demo@mmex.org` as
 the default email. Enter the password yourself, or change the URL and sign in
 to your own instance. Remote instances must use HTTPS. The URL is saved in
-local storage and the authentication token in session storage.
+local storage. The login token is kept in session storage by default; ticking
+**Remember me on this device** stores it in local storage instead, so only use
+that option on a private device. Signing out removes both.
 
 The included access rules provide **one shared dataset**, not per-user
 isolation: every authenticated user can read and modify it. Use a private
@@ -103,6 +105,16 @@ partial failures. Never import the latest schema over an existing instance
 as a shortcut. `dbInfo` is currently writable by authenticated users, so its
 version is a compatibility marker, not a security or concurrency guarantee.
 
+## Schema compatibility choices
+
+The PocketBase collections keep MMEX's integer business keys (`ACCOUNTID`,
+`TRANSID`, `CATEGID`, …) instead of PocketBase `relation` fields. Relation
+fields store PocketBase record IDs, so replacing these columns would break the
+shared v21 schema used by MMEX desktop and other clients and would require
+writing both identities everywhere. The frontend resolves links from the loaded
+records instead. PocketBase therefore does not enforce these references on the
+server; guarded deletes are client-side checks, as described below.
+
 ## Future synchronization
 
 The intended direction is for MMEX desktop, Android and iOS clients to push
@@ -116,13 +128,32 @@ cross-device synchronization compatibility.
 
 ## Current functionality
 
+Every signed-in section uses the same layout: a short description, search or
+filters, an optional editor card, then the list with its own record count and a
+**Refresh data** button. Empty search results are reported instead of leaving a
+blank table.
+
 The app supports account creation/editing and guarded deletion; creating and
-editing withdrawals, deposits and transfers; soft-deleting and restoring
-transactions; filtering by account, date and type; viewing categories; adding
-payees; and managing currencies. Same-currency transfers default to matching
-amounts; enter the received amount for cross-currency transfers. Split and
-asset/stock-linked transactions are read-only to avoid corrupting related
-records. The app loads all pages of displayed collections and transaction links.
+editing withdrawals, deposits and transfers; duplicating an existing
+transaction into a new one; soft-deleting and restoring transactions; filtering
+by account, date and type; searching categories and accounts; adding payees; and
+managing currencies. Choosing a payee pre-fills its default category when that
+category exists, but does not clear a category you chose yourself. Same-currency
+transfers default to matching amounts; enter the received amount for
+cross-currency transfers. Split and asset/stock-linked transactions are
+read-only to avoid corrupting related records. The app loads all pages of
+displayed collections and transaction links.
+
+The base currency is shown in the overview and currencies sections, taken from
+`INFOTABLE_V1` (`INFONAME = "BASECURRENCYID"`). When it is not set yet, the
+currencies list offers **Set base**, which records the choice without touching
+conversion rates; an invalid or dangling stored value is repaired in place. Changing an
+existing base currency is not offered: the desktop app also resets stored
+conversion rates and deletes currency history when the base currency changes,
+and this frontend cannot reproduce that safely yet — use MMEX desktop instead.
+Currencies referenced by an account, asset, currency history or the
+base-currency setting cannot be deleted. Duplicate or ambiguous
+`BASECURRENCYID` rows block the in-app action and must be fixed in PocketBase.
 
 Accounts show their current cash balance through the browser's local today:
 initial balance plus deposits and incoming transfers, minus withdrawals and

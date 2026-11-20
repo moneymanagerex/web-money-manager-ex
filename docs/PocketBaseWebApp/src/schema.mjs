@@ -1,4 +1,4 @@
-import { api } from "./api.mjs";
+import { api } from "./api.mjs?v=20261120-ux5";
 export const SCHEMA_VERSION="21";
 const LEGACY_SCHEMA_VERSION="1";
 const VERSION_KEY="MMEX_SCHEMA_VERSION";

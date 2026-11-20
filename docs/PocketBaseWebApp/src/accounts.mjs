@@ -1,10 +1,16 @@
 import { state,$,esc,setStatus,fmtDate,newBusinessId,indexBy } from "./core.mjs";
-import { api } from "./api.mjs";
-import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs";
+import { api } from "./api.mjs?v=20261120-ux5";
+import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261120-ux5";
 let reloadWorkspace;
 function renderAccounts() {
   const cur=indexBy(state.currencies,"CURRENCYID");
-  $("accountsBody").innerHTML=state.accounts.map(a => {
+  const query=$("accountSearch")?.value.trim().toLowerCase()??"";
+  const rows=state.accounts.filter(a => {
+    const c=cur.get(String(a.CURRENCYID));
+    const currency=c? (c.CURRENCY_SYMBOL||c.CURRENCYNAME):a.CURRENCYID;
+    return !query||[a.ACCOUNTID,a.ACCOUNTNAME,a.ACCOUNTTYPE,a.STATUS,a.ACCOUNTNUM,currency].some(v => String(v??"").toLowerCase().includes(query));
+  });
+  $("accountsBody").innerHTML=rows.length? rows.map(a => {
     const c=cur.get(String(a.CURRENCYID));
     const currency=c? (c.CURRENCY_SYMBOL||c.CURRENCYNAME):a.CURRENCYID;
     let balance;
@@ -15,8 +21,8 @@ function renderAccounts() {
       balance="Unavailable: "+err.message;
     }
     return `<tr><td>${esc(a.ACCOUNTID)}</td><td>${esc(a.ACCOUNTNAME)}</td><td>${esc(a.ACCOUNTTYPE)}</td><td>${esc(a.STATUS)}</td><td>${esc(a.ACCOUNTNUM)}</td><td>${esc(currency)}</td><td class="num">${esc(balance)}</td><td><button type="button" class="editAccount" data-id="${esc(a.id)}">Edit</button> <button type="button" class="deleteAccount" data-id="${esc(a.id)}">Delete</button></td></tr>`;
-  }).join("");
-  $("accountsStatus").textContent=`${state.accounts.length} account(s) loaded (all pages)`;
+  }).join("") : `<tr><td colspan="8" class="muted">No accounts match the search.</td></tr>`;
+  $("accountsStatus").textContent=`${rows.length} shown / ${state.accounts.length} loaded (all pages)`;
   document.querySelectorAll(".editAccount").forEach(b => b.addEventListener("click",() => editAccount(b.dataset.id)));
   document.querySelectorAll(".deleteAccount").forEach(b => b.addEventListener("click",() => deleteAccount(b.dataset.id)));
 }
@@ -82,6 +88,7 @@ async function deleteAccount(id) {
 }
 export function initAccounts(reload) {
   reloadWorkspace=reload;
+  $("accountSearch").addEventListener("input",renderAccounts);
   $("accountForm").addEventListener("submit",async (e) => {
     e.preventDefault();
     const b=$("saveAccountButton");

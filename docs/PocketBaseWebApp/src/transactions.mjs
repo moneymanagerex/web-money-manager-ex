@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs";
-import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs";
+import { api,fetchRecords } from "./api.mjs?v=20261120-ux5";
+import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261120-ux5";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };
@@ -24,17 +24,18 @@ function renderTransactions() {
   const filters={ query: $("txSearch").value,type: $("txType").value,account: $("txFilterAccount").value,from: $("txFrom").value,through: $("txThrough").value,showDeleted: $("txShowDeleted").checked };
   const rows=filterTransactions(state.transactions,filters,state.accounts,state.payees,state.categories);
   const accounts=indexBy(state.accounts,"ACCOUNTID"),payees=indexBy(state.payees,"PAYEEID"),cats=indexBy(state.categories,"CATEGID");
-  $("txBody").innerHTML=rows.map(t => {
+  $("txBody").innerHTML=rows.length? rows.map(t => {
     const a=accounts.get(String(t.ACCOUNTID)),dest=accounts.get(String(t.TOACCOUNTID)),p=payees.get(String(t.PAYEEID)),c=cats.get(String(t.CATEGID));
     const protectedReason=state.protectedTransactions.get(String(t.TRANSID));
     const unsupported=!["Withdrawal","Deposit","Transfer"].includes(t.TRANSCODE)||!Object.hasOwn(statuses,t.STATUS??"");
-    const actions=protectedReason? `${esc(protectedReason)} (read-only)`:unsupported? "Unsupported (read-only)":t.DELETEDTIME? `<button type="button" class="restoreTx" data-id="${esc(t.id)}">Restore</button>`:`<button type="button" class="editTx" data-id="${esc(t.id)}">Edit</button> <button type="button" class="deleteTx" data-id="${esc(t.id)}">Delete</button>`;
+    const actions=protectedReason? `${esc(protectedReason)} (read-only)`:unsupported? "Unsupported (read-only)":t.DELETEDTIME? `<button type="button" class="restoreTx" data-id="${esc(t.id)}">Restore</button>`:`<button type="button" class="editTx" data-id="${esc(t.id)}">Edit</button> <button type="button" class="duplicateTx" data-id="${esc(t.id)}">Duplicate</button> <button type="button" class="deleteTx" data-id="${esc(t.id)}">Delete</button>`;
     const account=esc(a?.ACCOUNTNAME??t.ACCOUNTID)+(t.TRANSCODE==="Transfer"? " → "+esc(dest?.ACCOUNTNAME??t.TOACCOUNTID):"");
     const amount=esc(formatTransactionAmount(t.TRANSAMOUNT))+(t.TRANSCODE==="Transfer"? " → "+esc(formatTransactionAmount(t.TOTRANSAMOUNT)):"");
     return `<tr><td>${esc(t.TRANSID)}</td><td>${esc(fmtDate(t.TRANSDATE))}</td><td>${esc(t.TRANSCODE)} · ${esc(statuses[t.STATUS??""]??t.STATUS)}${t.DELETEDTIME? " · Deleted":""}</td><td>${account}</td><td>${esc(p?.PAYEENAME??(Number(t.PAYEEID)<=0? "":t.PAYEEID))}</td><td>${esc(c?.CATEGNAME??(Number(t.CATEGID)<=0? "":t.CATEGID))}</td><td class="num">${amount}</td><td>${esc(t.NOTES)}</td><td>${actions}</td></tr>`;
-  }).join("");
+  }).join("") : `<tr><td colspan="9" class="muted">No transactions match the current filters.</td></tr>`;
   $("txStatus").textContent=filters.from&&filters.through&&filters.from>filters.through? "The start date must not be after the end date.":`${rows.length} shown / ${state.transactions.length} loaded (including deleted)`;
   document.querySelectorAll(".editTx").forEach(b => b.addEventListener("click",() => selectTxById(b.dataset.id)));
+  document.querySelectorAll(".duplicateTx").forEach(b => b.addEventListener("click",() => selectTxById(b.dataset.id,true)));
   document.querySelectorAll(".deleteTx").forEach(b => b.addEventListener("click",() => setDeleted(b.dataset.id,true)));
   document.querySelectorAll(".restoreTx").forEach(b => b.addEventListener("click",() => setDeleted(b.dataset.id,false)));
 }
@@ -97,15 +98,16 @@ function resetTransactionForm() {
   populateNewTx();
   setStatus("createTxStatus","");
 }
-function selectTxById(id) {
+function selectTxById(id,duplicate=false) {
   const t=state.transactions.find(x => x.id===id);
-  if(!t||t.DELETEDTIME||state.protectedTransactions.has(String(t.TRANSID)))
+  if(!t||t.DELETEDTIME||state.protectedTransactions.has(String(t.TRANSID))||
+    !["Withdrawal","Deposit","Transfer"].includes(t.TRANSCODE)||!Object.hasOwn(statuses,t.STATUS??""))
     return;
   if(pendingCreate) {
-    setStatus("createTxStatus","Resolve or cancel the unconfirmed creation before editing another transaction.","error");
+    setStatus("createTxStatus","Resolve or cancel the unconfirmed creation before selecting another transaction.","error");
     return;
   }
-  state.selected=t;
+  state.selected=duplicate? null:t;
   $("newTxCode").value=t.TRANSCODE;
   $("newTxDate").value=fmtDate(t.TRANSDATE);
   selectValue("newTxAccount",t.ACCOUNTID,"account");
@@ -117,12 +119,17 @@ function selectTxById(id) {
   receivedManually=true;
   $("newTxStatus").value=t.STATUS??"";
   $("newTxNotes").value=t.NOTES??"";
-  $("txFormTitle").textContent=`Edit transaction ${t.TRANSID}`;
-  $("createTxButton").textContent="Save changes";
+  $("txFormTitle").textContent=duplicate? `Duplicate transaction ${t.TRANSID}`:`Edit transaction ${t.TRANSID}`;
+  $("createTxButton").textContent=duplicate? "Create duplicate":"Save changes";
   $("clearEdit").classList.remove("hidden");
   updateTransferFields();
-  setStatus("createTxStatus","Editing existing transaction; other fields are preserved.");
+  setStatus("createTxStatus",duplicate? "Review the copied fields before creating a new transaction; the original is unchanged.":"Editing existing transaction; other fields are preserved.");
   $("txFormTitle").scrollIntoView({ behavior: "smooth",block: "start" });
+}
+function defaultCategoryForPayee(payeeId,payees,categories) {
+  const payee=payees.find(item => String(item.PAYEEID)===String(payeeId));
+  const category=payee&&categories.find(item => Number(item.CATEGID)>0&&String(item.CATEGID)===String(payee.CATEGID));
+  return category? String(category.CATEGID):null;
 }
 function transactionPayload() {
   const code=$("newTxCode").value,account=Number($("newTxAccount").value),destination=Number($("newTxDestination").value),amount=parseStoredNumber($("newTxAmount").value),received=code==="Transfer"? parseStoredNumber($("newTxReceived").value):null;
@@ -207,6 +214,11 @@ export function initTransactions(reload) {
     updateTransferFields();
   }));
   $("newTxReceived").addEventListener("input",() => { receivedManually=true; });
+  $("newTxPayee").addEventListener("change",() => {
+    const category=defaultCategoryForPayee($("newTxPayee").value,state.payees,state.categories);
+    if(category)
+      $("newTxCategory").value=category;
+  });
   $("clearEdit").addEventListener("click",() => {
     if(pendingCreate&&!confirm("The previous creation may have succeeded. Check the transaction list before creating another. Cancel this pending form?"))
       return;
@@ -286,4 +298,4 @@ export function initTransactions(reload) {
     }
   });
 }
-export { renderTransactions,populateNewTx,resetTransactionForm,filterTransactions,transactionPayload,changedFields };
+export { renderTransactions,populateNewTx,resetTransactionForm,filterTransactions,transactionPayload,changedFields,defaultCategoryForPayee };

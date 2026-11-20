@@ -1,4 +1,4 @@
-const state={ base: "",token: "",user: null,accounts: [],transactions: [],categories: [],payees: [],currencies: [],protectedTransactions: new Map(),selected: null,view: "dashboard" };
+const state={ base: "",token: "",user: null,accounts: [],transactions: [],categories: [],payees: [],currencies: [],baseCurrencyInfo: [],protectedTransactions: new Map(),selected: null,view: "dashboard" };
 const $=id => document.getElementById(id),INSTANCE_KEY="mmex_pb_instance";
 function setStatus(id,msg,kind="muted") {
   $(id).className="hint status "+kind;
