@@ -1,11 +1,11 @@
 import { state,$,INSTANCE_KEY,showScreen,setView,setStatus,clearWorkspace } from "./core.mjs";
-import { readStoredToken,saveStoredToken,clearStoredToken } from "./auth.mjs?v=20261120-audit2";
-import { api,normalizeUrl } from "./api.mjs?v=20261120-audit2";
-import { initWorkspace,loadWorkspace } from "./workspace.mjs?v=20261120-audit2";
-import { requireCompatibleSchema } from "./schema.mjs?v=20261120-audit2";
-import { resetCurrencyForm } from "./currencies.mjs?v=20261120-audit2";
-import { resetTransactionForm } from "./transactions.mjs?v=20261120-audit2";
-import "./setup.mjs?v=20261120-audit2";
+import { readStoredToken,saveStoredToken,clearStoredToken } from "./auth.mjs?v=20261121-ux-panels";
+import { api,normalizeUrl } from "./api.mjs?v=20261121-ux-panels";
+import { initWorkspace,loadWorkspace } from "./workspace.mjs?v=20261121-ux-panels";
+import { requireCompatibleSchema } from "./schema.mjs?v=20261121-ux-panels";
+import { resetCurrencyForm } from "./currencies.mjs?v=20261121-ux-panels";
+import { resetTransactionForm } from "./transactions.mjs?v=20261121-ux-panels";
+import "./setup.mjs?v=20261121-ux-panels";
 initWorkspace();
 async function chooseInstance(value) {
   const base=normalizeUrl(value);

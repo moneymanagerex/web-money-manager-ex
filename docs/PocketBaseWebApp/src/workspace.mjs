@@ -1,10 +1,10 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261120-audit2";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261120-audit2";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261120-audit2";
-import { initPayees,renderReferenceData } from "./payees.mjs?v=20261120-audit2";
-import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261120-audit2";
-import { formatTransactionAmount } from "./balances.mjs?v=20261120-audit2";
+import { fetchRecords } from "./api.mjs?v=20261121-ux-panels";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261121-ux-panels";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261121-ux-panels";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261121-ux-panels";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261121-ux-panels";
+import { formatTransactionAmount } from "./balances.mjs?v=20261121-ux-panels";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;
@@ -27,8 +27,11 @@ async function loadWorkspace() {
   $("statAccounts").textContent=accounts.length;
   $("statTransactions").textContent=active.length;
   $("statCategories").textContent=categories.length;
-  $("statPayees").textContent=payees.length;
-  $("statCurrencies").textContent=currencies.length;
+  $("tabAccountsCount").textContent=accounts.length;
+  $("tabTransactionsCount").textContent=active.length;
+  $("tabCategoriesCount").textContent=categories.length;
+  $("tabPayeesCount").textContent=payees.length;
+  $("tabCurrenciesCount").textContent=currencies.length;
   renderAccounts();
   renderReferenceData();
   renderCurrencies();

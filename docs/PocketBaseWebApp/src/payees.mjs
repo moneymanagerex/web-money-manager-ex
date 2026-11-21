@@ -1,5 +1,5 @@
 import { state,$,esc,setStatus,indexBy,safeHttpUrl,newBusinessId } from "./core.mjs";
-import { api } from "./api.mjs?v=20261120-audit2";
+import { api } from "./api.mjs?v=20261121-ux-panels";
 let reloadWorkspace;
 function renderReferenceData() {
   const cats=indexBy(state.categories,"CATEGID");
@@ -32,6 +32,7 @@ export function initPayees(reload) {
       await api(state.base,"/api/collections/PAYEE_V1/records",{ method: "POST",body: JSON.stringify({ PAYEEID: payeeId,PAYEENAME: payeeName,CATEGID: null,NUMBER: "",WEBSITE: $("newPayeeWebsite").value.trim(),NOTES: $("newPayeeNotes").value,ACTIVE: 1,PATTERN: "" }) },state.token);
       await reloadWorkspace();
       $("newPayeeForm").reset();
+      $("payeeFormPanel").open=false;
       setStatus("createPayeeStatus",`Added payee ${payeeName||payeeId}.`,"ok");
     }
     catch(err) {

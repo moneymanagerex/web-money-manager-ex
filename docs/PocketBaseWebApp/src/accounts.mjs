@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,fmtDate,newBusinessId,indexBy } from "./core.mjs";
-import { api } from "./api.mjs?v=20261120-audit2";
-import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261120-audit2";
+import { api } from "./api.mjs?v=20261121-ux-panels";
+import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261121-ux-panels";
 let reloadWorkspace;
 function renderAccounts() {
   const cur=indexBy(state.currencies,"CURRENCYID");
@@ -50,6 +50,8 @@ function editAccount(id) {
   const a=state.accounts.find(x => x.id===id);
   if(!a)
     return;
+  $("accountFormPanel").open=true;
+  $("accountFormPanel").scrollIntoView({ behavior:"smooth",block:"start" });
   $("accountRecordId").value=a.id;
   $("accountName").value=a.ACCOUNTNAME??"";
   $("accountType").value=a.ACCOUNTTYPE??"Checking";
@@ -121,6 +123,7 @@ export function initAccounts(reload) {
       }
       await reloadWorkspace();
       resetAccountForm();
+      $("accountFormPanel").open=false;
       setStatus("accountFormStatus",recordId? "Account updated.":"Account created.","ok");
     }
     catch(err) {

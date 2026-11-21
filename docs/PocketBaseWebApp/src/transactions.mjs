@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs?v=20261120-audit2";
-import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261120-audit2";
+import { api,fetchRecords } from "./api.mjs?v=20261121-ux-panels";
+import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261121-ux-panels";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };
@@ -91,6 +91,7 @@ function resetTransactionForm() {
   receivedManually=false;
   priorSameCurrency=false;
   $("newTxForm").reset();
+  $("transactionFormPanel").open=false;
   $("newTxDate").value=localToday();
   $("txFormTitle").textContent="New transaction";
   $("createTxButton").textContent="Create transaction";
@@ -103,6 +104,7 @@ function selectTxById(id,duplicate=false) {
   if(!t||t.DELETEDTIME||state.protectedTransactions.has(String(t.TRANSID))||
     !["Withdrawal","Deposit","Transfer"].includes(t.TRANSCODE)||!Object.hasOwn(statuses,t.STATUS??""))
     return;
+  $("transactionFormPanel").open=true;
   if(pendingCreate) {
     setStatus("createTxStatus","Resolve or cancel the unconfirmed creation before selecting another transaction.","error");
     return;

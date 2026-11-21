@@ -1,5 +1,5 @@
 import { state, $, esc, setStatus, newBusinessId } from "./core.mjs";
-import { api, fetchRecords } from "./api.mjs?v=20261120-audit2";
+import { api, fetchRecords } from "./api.mjs?v=20261121-ux-panels";
 
 let reloadWorkspace;
 
@@ -137,6 +137,7 @@ async function setBaseCurrency(recordId) {
 
 export function resetCurrencyForm() {
   $("currencyForm").reset();
+  $("currencyFormPanel").open = false;
   $("currencyRecordId").value = "";
   $("currencyFormTitle").textContent = "New currency";
   $("saveCurrencyButton").textContent = "Create currency";
@@ -147,6 +148,8 @@ export function resetCurrencyForm() {
 function editCurrency(id) {
   const currency = state.currencies.find(item => item.id === id);
   if (!currency) return;
+  $("currencyFormPanel").open = true;
+  $("currencyFormPanel").scrollIntoView({ behavior: "smooth", block: "start" });
   if (!["Fiat", "Crypto"].includes(currency.CURRENCY_TYPE)) {
     setStatus("currencyFormStatus", `Unsupported currency type: ${currency.CURRENCY_TYPE}. Edit it in PocketBase instead.`, "error");
     return;

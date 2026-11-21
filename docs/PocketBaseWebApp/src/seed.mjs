@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261120-audit2";
+import { api } from "./api.mjs?v=20261121-ux-panels";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");
