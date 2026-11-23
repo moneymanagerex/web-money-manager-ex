@@ -60,7 +60,7 @@ function formatTransactionAmount(value) {
     return "Invalid amount";
   }
 }
-function transactionAmountParts(transaction) {
+function transactionAmountParts(transaction, accountId="") {
   const clean=value => {
     const formatted=formatTransactionAmount(value);
     return formatted.startsWith("-")? formatted.slice(1):formatted;
@@ -69,8 +69,10 @@ function transactionAmountParts(transaction) {
     return [{ text:"−"+clean(transaction.TRANSAMOUNT),tone:"out" }];
   if(transaction.TRANSCODE==="Deposit")
     return [{ text:"+"+clean(transaction.TRANSAMOUNT),tone:"in" }];
-  if(transaction.TRANSCODE==="Transfer")
-    return [{ text:"−"+clean(transaction.TRANSAMOUNT),tone:"out" },{ text:"+"+clean(transaction.TOTRANSAMOUNT),tone:"in" }];
+  if(transaction.TRANSCODE==="Transfer") {
+    const received=String(accountId)===String(transaction.TOACCOUNTID);
+    return [{ text:(received? "+":"−")+clean(received? transaction.TOTRANSAMOUNT:transaction.TRANSAMOUNT),tone:received? "in":"out" }];
+  }
   return [{ text:formatTransactionAmount(transaction.TRANSAMOUNT),tone:"neutral" }];
 }
 function accountBalance(account,transactions,today=localToday()) {

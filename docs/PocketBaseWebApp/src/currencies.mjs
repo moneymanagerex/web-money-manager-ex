@@ -1,5 +1,5 @@
 import { state, $, esc, setStatus, newBusinessId } from "./core.mjs";
-import { api, fetchRecords } from "./api.mjs?v=20261123-transaction-readability";
+import { api, fetchRecords } from "./api.mjs?v=20261123-transfer-perspective";
 
 let reloadWorkspace;
 

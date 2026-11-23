@@ -146,7 +146,7 @@ blank table.
 
 The app supports account creation/editing and guarded deletion; category creation/editing, parent assignment and activation; creating and
 editing withdrawals, deposits and transfers; duplicating an existing
-transaction into a new one; soft-deleting and restoring transactions; visually distinguishing deposits, withdrawals, transfers, reconciliation state and amount direction; filtering
+transaction into a new one; soft-deleting and restoring transactions; visually distinguishing deposits, withdrawals and transfers; transfers remain one row with source/destination accounts. In the all-account view a transfer displays the MMEX-style payee `> destination account` and a negative source amount; when filtered to the destination account it displays `< source account` and the positive received amount; filtering
 by account, date and type with one-click filter reset; searching categories and accounts; creating/editing payees, setting default categories and activating or deactivating payees; and
 managing currencies. Choosing a payee pre-fills its default category when that
 category exists, but does not clear a category you chose yourself. Same-currency

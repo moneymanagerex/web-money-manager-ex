@@ -61,7 +61,7 @@
  </nav>
  <section id="view-dashboard" class="view active">
   <h2>Overview</h2><div class="stats"><div class="stat"><div class="value" id="statAccounts">—</div><div class="label">Accounts</div></div><div class="stat"><div class="value" id="statTransactions">—</div><div class="label">Active transactions</div></div><div class="stat"><div class="value" id="statCategories">—</div><div class="label">Categories</div></div></div><p class="muted hint">Base currency: <strong id="statBaseCurrency">—</strong> · <button type="button" data-go="currencies">Manage currencies</button></p>
-  <section class="card"><div class="toolbar"><h3>Recent transactions</h3><button data-go="transactions">View all loaded transactions</button></div><div id="recentStatus" class="muted hint">Loading…</div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Payee</th><th>Category</th><th>Account</th><th>Code</th><th class="num">Amount</th></tr></thead><tbody id="recentBody"></tbody></table></div></section>
+  <section class="card"><div class="toolbar"><h3>Recent transactions</h3><button data-go="transactions">View all loaded transactions</button></div><div id="recentStatus" class="muted hint">Loading…</div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Payee</th><th>Category</th><th>Account</th><th>Type</th><th class="num">Amount</th></tr></thead><tbody id="recentBody"></tbody></table></div></section>
   <div class="warning hint">All signed-in users share this PocketBase dataset. Split and asset/stock-linked transactions are read-only here. Reconciliation and `.mmb` export are not implemented.</div>
  </section>
  <section id="view-accounts" class="view"><h2>Accounts</h2><p class="muted hint">Account records from <code>ACCOUNTLIST_V1</code>. The displayed MMEX PK is the existing business key, not PocketBase's internal record ID.</p>
@@ -108,5 +108,5 @@
   <div class="table-wrap"><table><thead><tr><th>MMEX PK</th><th>Name</th><th>Code</th><th>Type</th><th>Prefix</th><th>Suffix</th><th>Scale</th><th>Base rate</th><th>Actions</th></tr></thead><tbody id="currenciesBody"></tbody></table></div>
  </section>
 </main>
-<script type="module" src="src/app.mjs?v=20261123-transaction-readability"></script>
+<script type="module" src="src/app.mjs?v=20261123-transfer-perspective"></script>
 </body></html>
