@@ -681,7 +681,7 @@
       {
         "id": "7d7d24b2cb68722",
         "name": "TRANSAMOUNT",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
@@ -1322,7 +1322,7 @@
       {
         "id": "f0565c5ffc64e8d",
         "name": "TRANSAMOUNT",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
