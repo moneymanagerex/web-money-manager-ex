@@ -1,7 +1,7 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs?v=20261123-investments";
-import { localToday,formatTransactionAmount,transactionAmountParts,parseStoredNumber } from "./balances.mjs?v=20261123-investments";
-import { renderMiniOverview } from "./summary.mjs?v=20261123-investments";
+import { api,fetchRecords } from "./api.mjs?v=20261123-investments-assets";
+import { localToday,formatTransactionAmount,transactionAmountParts,parseStoredNumber } from "./balances.mjs?v=20261123-investments-assets";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-investments-assets";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };

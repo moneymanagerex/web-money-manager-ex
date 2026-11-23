@@ -166,8 +166,8 @@ Each data tab also has a compact summary strip: account status and currencies
 in use, transaction types for the current filters, category and payee activation
 and defaults, and currency mix with the selected base currency.
 
-The Investments tab reads `STOCK_V1`, `STOCKHISTORY_V1`,
-`TRANSLINK_V1` and `SHAREINFO_V1`. It shows linked trade positions using
+The Investments tab shows assets from `ASSETS_V1` and reads `STOCK_V1`,
+`STOCKHISTORY_V1`, `TRANSLINK_V1` and `SHAREINFO_V1`. It shows linked trade positions using
 the desktop app's average cost calculation, retains legacy position fields,
 and exposes recent trade lots, commissions and saved price history. It does
 not combine market values across account currencies or retrieve live quotes.

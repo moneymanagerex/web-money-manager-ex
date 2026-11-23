@@ -1,7 +1,7 @@
 import { state,$,esc,indexBy,fmtDate,setStatus } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261123-investments";
-import { renderMiniOverview } from "./summary.mjs?v=20261123-investments";
-import { localToday } from "./balances.mjs?v=20261123-investments";
+import { fetchRecords } from "./api.mjs?v=20261123-investments-assets";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-investments-assets";
+import { localToday } from "./balances.mjs?v=20261123-investments-assets";
 
 let historyRequest=null;
 async function loadStockHistory(force=false) {

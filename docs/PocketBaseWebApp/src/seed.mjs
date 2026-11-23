@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261123-investments";
+import { api } from "./api.mjs?v=20261123-investments-assets";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");

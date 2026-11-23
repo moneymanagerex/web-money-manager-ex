@@ -1,27 +1,29 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261123-investments";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-investments";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-investments";
-import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-investments";
-import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-investments";
-import { accountBalance,formatDecimal,transactionAmountParts } from "./balances.mjs?v=20261123-investments";
-import { initInvestments,renderInvestments,loadStockHistory } from "./investments.mjs?v=20261123-investments";
+import { fetchRecords } from "./api.mjs?v=20261123-investments-assets";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-investments-assets";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-investments-assets";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-investments-assets";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-investments-assets";
+import { accountBalance,formatDecimal,transactionAmountParts } from "./balances.mjs?v=20261123-investments-assets";
+import { initInvestments,renderInvestments,loadStockHistory } from "./investments.mjs?v=20261123-investments-assets";
+import { renderAssets } from "./assets.mjs?v=20261123-investments-assets";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;
   try {
-    data=await Promise.all([fetchRecords("ACCOUNTLIST_V1","ACCOUNTID"),fetchRecords("CHECKINGACCOUNT_V1","-TRANSDATE"),fetchRecords("CATEGORY_V1","CATEGNAME"),fetchRecords("PAYEE_V1","PAYEENAME"),fetchRecords("CURRENCYFORMATS_V1","CURRENCYNAME"),fetchRecords("STOCK_V1","STOCKNAME"),fetchRecords("SPLITTRANSACTIONS_V1"),fetchRecords("TRANSLINK_V1"),fetchRecords("SHAREINFO_V1"),fetchRecords("INFOTABLE_V1","",`INFONAME = "BASECURRENCYID"`)]);
+    data=await Promise.all([fetchRecords("ACCOUNTLIST_V1","ACCOUNTID"),fetchRecords("CHECKINGACCOUNT_V1","-TRANSDATE"),fetchRecords("CATEGORY_V1","CATEGNAME"),fetchRecords("PAYEE_V1","PAYEENAME"),fetchRecords("CURRENCYFORMATS_V1","CURRENCYNAME"),fetchRecords("ASSETS_V1","ASSETNAME"),fetchRecords("STOCK_V1","STOCKNAME"),fetchRecords("SPLITTRANSACTIONS_V1"),fetchRecords("TRANSLINK_V1"),fetchRecords("SHAREINFO_V1"),fetchRecords("INFOTABLE_V1","",`INFONAME = "BASECURRENCYID"`)]);
   }
   catch(err) {
     setStatus("recentStatus","Refresh failed; displayed data may be out of date. "+err.message,"error");
     throw err;
   }
-  const [accounts,transactions,categories,payees,currencies,stocks,splits,links,shares,baseCurrency]=data;
+  const [accounts,transactions,categories,payees,currencies,assets,stocks,splits,links,shares,baseCurrency]=data;
   state.accounts=accounts;
   state.transactions=transactions;
   state.categories=categories;
   state.payees=payees;
   state.currencies=currencies;
+  state.assets=assets;
   state.stocks=stocks;
   state.transactionLinks=links;
   state.shareInfo=shares;
@@ -32,7 +34,7 @@ async function loadWorkspace() {
   $("statTransactions").textContent=active.length;
   $("statCategories").textContent=categories.length;
   $("tabAccountsCount").textContent=accounts.length;
-  $("tabInvestmentsCount").textContent=stocks.length;
+  $("tabInvestmentsCount").textContent=stocks.length+assets.length;
   $("tabTransactionsCount").textContent=active.length;
   $("tabCategoriesCount").textContent=categories.length;
   $("tabPayeesCount").textContent=payees.length;
@@ -41,6 +43,7 @@ async function loadWorkspace() {
   renderReferenceData();
   renderCurrencies();
   renderInvestments();
+  renderAssets();
   const baseCurrencyValue = $("statBaseCurrency");
   if (baseCurrencyValue) baseCurrencyValue.textContent = baseCurrencyText();
   const accountCurrencies=indexBy(currencies,"CURRENCYID");

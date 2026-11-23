@@ -1,6 +1,6 @@
 import { state, $, esc, setStatus, newBusinessId } from "./core.mjs";
-import { api, fetchRecords } from "./api.mjs?v=20261123-investments";
-import { renderMiniOverview } from "./summary.mjs?v=20261123-investments";
+import { api, fetchRecords } from "./api.mjs?v=20261123-investments-assets";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-investments-assets";
 
 let reloadWorkspace;
 
