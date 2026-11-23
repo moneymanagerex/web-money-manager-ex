@@ -1,13 +1,58 @@
 import { state,$,esc,setStatus,indexBy,safeHttpUrl,newBusinessId } from "./core.mjs";
-import { api } from "./api.mjs?v=20261121-ux-panels";
+import { api } from "./api.mjs?v=20261123-category-management";
 let reloadWorkspace;
 function renderReferenceData() {
   const cats=indexBy(state.categories,"CATEGID");
   const query=$("categorySearch")?.value.trim().toLowerCase()??"";
   const rows=state.categories.filter(c => !query||[c.CATEGID,c.CATEGNAME,cats.get(String(c.PARENTID))?.CATEGNAME].some(v => String(v??"").toLowerCase().includes(query)));
-  $("categoriesBody").innerHTML=rows.length? rows.map(c => `<tr><td>${esc(c.CATEGID)}</td><td>${esc(c.CATEGNAME)}</td><td>${esc(c.PARENTID>0? `${cats.get(String(c.PARENTID))?.CATEGNAME??"Missing parent"} (${c.PARENTID})`:c.PARENTID)}</td><td>${Number(c.ACTIVE)===0? "No":"Yes / unspecified"}</td></tr>`).join("") : `<tr><td colspan="4" class="muted">No categories match the search.</td></tr>`;
+  $("categoriesBody").innerHTML=rows.length? rows.map(c => `<tr><td>${esc(c.CATEGID)}</td><td>${esc(c.CATEGNAME)}</td><td>${Number(c.PARENTID)>0? esc(cats.get(String(c.PARENTID))?.CATEGNAME??`Missing parent (${c.PARENTID})`):"—"}</td><td>${Number(c.ACTIVE)===0? "No":"Yes"}</td><td><button type="button" class="editCategory" data-id="${esc(c.id)}">Edit</button></td></tr>`).join("") : `<tr><td colspan="5" class="muted">No categories match the search.</td></tr>`;
   $("categoriesStatus").textContent=`${rows.length} shown / ${state.categories.length} category record(s) loaded`;
+  populateCategoryParents();
+  document.querySelectorAll(".editCategory").forEach(button => button.addEventListener("click",() => editCategory(button.dataset.id)));
   renderPayees();
+}
+function populateCategoryParents() {
+  const select=$("categoryParent"), selected=select.value, currentId=$("categoryRecordId").value;
+  const options=state.categories.filter(category => category.id!==currentId)
+    .map(category => `<option value="${esc(category.CATEGID)}">${esc(category.CATEGNAME)} (${esc(category.CATEGID)})</option>`).join("");
+  select.innerHTML='<option value="-1">No parent</option>'+options;
+  if(selected&&[...select.options].some(option => option.value===selected)) select.value=selected;
+}
+function resetCategoryForm() {
+  $("categoryForm").reset();
+  $("categoryRecordId").value="";
+  $("categoryFormTitle").textContent="New category";
+  $("saveCategoryButton").textContent="Create category";
+  $("cancelCategoryEdit").classList.add("hidden");
+  $("categoryFormPanel").open=false;
+  populateCategoryParents();
+  setStatus("categoryFormStatus","");
+}
+function editCategory(id) {
+  const category=state.categories.find(item => item.id===id);
+  if(!category) return;
+  $("categoryRecordId").value=category.id;
+  $("categoryName").value=category.CATEGNAME??"";
+  $("categoryParent").value=String(Number(category.PARENTID)>0? category.PARENTID:-1);
+  $("categoryActive").checked=Number(category.ACTIVE)!==0;
+  $("categoryFormTitle").textContent=`Edit category · ${category.CATEGNAME}`;
+  $("saveCategoryButton").textContent="Save category";
+  $("cancelCategoryEdit").classList.remove("hidden");
+  $("categoryFormPanel").open=true;
+  $("categoryFormPanel").scrollIntoView({ behavior:"smooth",block:"start" });
+  setStatus("categoryFormStatus",`Editing MMEX category ${category.CATEGID}. The existing ID will not change.`);
+}
+function parentCreatesCycle(categoryId,parentId) {
+  const visited=new Set();
+  let current=parentId;
+  while(current>0) {
+    if(current===categoryId||visited.has(current)) return true;
+    visited.add(current);
+    const parent=state.categories.find(item => Number(item.CATEGID)===current);
+    if(!parent) return false;
+    current=Number(parent.PARENTID)||-1;
+  }
+  return false;
 }
 function renderPayees() {
   const q=$("payeeSearch").value.trim().toLowerCase();
@@ -23,6 +68,34 @@ export function initPayees(reload) {
   reloadWorkspace=reload;
   $("payeeSearch").addEventListener("input",renderPayees);
   $("categorySearch").addEventListener("input",renderReferenceData);
+  $("categoryForm").addEventListener("submit",async event => {
+    event.preventDefault();
+    const button=$("saveCategoryButton"),recordId=$("categoryRecordId").value;
+    const name=$("categoryName").value.trim(),parentId=Number($("categoryParent").value),active=$("categoryActive").checked? 1:0;
+    button.disabled=true;
+    try {
+      if(!name) throw Error("Enter a category name.");
+      if(parentId>0&&!state.categories.some(item => Number(item.CATEGID)===parentId)) throw Error("Choose an existing parent category.");
+      const current=state.categories.find(item => item.id===recordId);
+      const categoryId=current? Number(current.CATEGID):newBusinessId();
+      if(parentId>0&&parentCreatesCycle(categoryId,parentId)) throw Error("A category cannot be its own parent or a descendant of itself.");
+      const duplicate=state.categories.find(item => item.id!==recordId&&item.CATEGNAME.trim().toLowerCase()===name.toLowerCase()&&Number(item.PARENTID||-1)===parentId);
+      if(duplicate) throw Error("A category with this name already exists under the selected parent.");
+      const payload={ CATEGNAME:name,PARENTID:parentId,ACTIVE:active };
+      if(current) await api(state.base,`/api/collections/CATEGORY_V1/records/${encodeURIComponent(recordId)}`,{ method:"PATCH",body:JSON.stringify(payload) },state.token);
+      else await api(state.base,"/api/collections/CATEGORY_V1/records",{ method:"POST",body:JSON.stringify({ ...payload,CATEGID:categoryId }) },state.token);
+      await reloadWorkspace();
+      resetCategoryForm();
+      setStatus("categoryFormStatus",current? "Category updated.":`Category ${name} created.` ,"ok");
+    }
+    catch(error) {
+      setStatus("categoryFormStatus",error.message,"error");
+    }
+    finally {
+      button.disabled=false;
+    }
+  });
+  $("cancelCategoryEdit").addEventListener("click",resetCategoryForm);
   $("newPayeeForm").addEventListener("submit",async (e) => {
     e.preventDefault();
     const b=$("createPayeeButton");

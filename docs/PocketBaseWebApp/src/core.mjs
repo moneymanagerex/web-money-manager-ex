@@ -54,7 +54,7 @@ function fmtAmount(v) {
   return Number.isFinite(n)? n.toLocaleString(undefined,{ maximumFractionDigits: 20 }):String(v??"");
 }
 function newBusinessId() {
-  const used=new Set([...state.accounts.map(x => x.ACCOUNTID),...state.transactions.map(x => x.TRANSID),...state.payees.map(x => x.PAYEEID),...state.currencies.map(x => x.CURRENCYID)].map(String));
+  const used=new Set([...state.accounts.map(x => x.ACCOUNTID),...state.transactions.map(x => x.TRANSID),...state.categories.map(x => x.CATEGID),...state.payees.map(x => x.PAYEEID),...state.currencies.map(x => x.CURRENCYID)].map(String));
   let id;
   do {
     id=Date.now()*1000+crypto.getRandomValues(new Uint16Array(1))[0]%1000;

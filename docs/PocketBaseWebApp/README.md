@@ -144,7 +144,7 @@ filters, an optional editor card, then the list with its own record count and a
 **Refresh data** button. Empty search results are reported instead of leaving a
 blank table.
 
-The app supports account creation/editing and guarded deletion; creating and
+The app supports account creation/editing and guarded deletion; category creation/editing, parent assignment and activation; creating and
 editing withdrawals, deposits and transfers; duplicating an existing
 transaction into a new one; soft-deleting and restoring transactions; filtering
 by account, date and type; searching categories and accounts; adding payees; and

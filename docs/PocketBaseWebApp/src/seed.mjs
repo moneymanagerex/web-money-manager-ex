@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261121-ux-panels";
+import { api } from "./api.mjs?v=20261123-category-management";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");

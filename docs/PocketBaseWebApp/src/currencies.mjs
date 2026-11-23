@@ -1,5 +1,5 @@
 import { state, $, esc, setStatus, newBusinessId } from "./core.mjs";
-import { api, fetchRecords } from "./api.mjs?v=20261121-ux-panels";
+import { api, fetchRecords } from "./api.mjs?v=20261123-category-management";
 
 let reloadWorkspace;
 
