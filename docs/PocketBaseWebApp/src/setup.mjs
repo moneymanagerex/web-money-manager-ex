@@ -1,8 +1,8 @@
 import { state,$,setStatus,esc,showScreen } from "./core.mjs";
-import { api } from "./api.mjs?v=20261123-category-management";
-import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261123-category-management";
-import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261123-category-management";
-import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261123-category-management";
+import { api } from "./api.mjs?v=20261123-payee-management";
+import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261123-payee-management";
+import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261123-payee-management";
+import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261123-payee-management";
 let resetPreview=null;
 function clearResetPreview() {
   resetPreview=null;

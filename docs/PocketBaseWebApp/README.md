@@ -147,7 +147,7 @@ blank table.
 The app supports account creation/editing and guarded deletion; category creation/editing, parent assignment and activation; creating and
 editing withdrawals, deposits and transfers; duplicating an existing
 transaction into a new one; soft-deleting and restoring transactions; filtering
-by account, date and type; searching categories and accounts; adding payees; and
+by account, date and type; searching categories and accounts; creating/editing payees, setting default categories and activating or deactivating payees; and
 managing currencies. Choosing a payee pre-fills its default category when that
 category exists, but does not clear a category you chose yourself. Same-currency
 transfers default to matching amounts; enter the received amount for

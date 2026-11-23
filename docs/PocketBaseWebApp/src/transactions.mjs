@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs?v=20261123-category-management";
-import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261123-category-management";
+import { api,fetchRecords } from "./api.mjs?v=20261123-payee-management";
+import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261123-payee-management";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };

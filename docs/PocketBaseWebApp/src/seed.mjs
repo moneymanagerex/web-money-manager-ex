@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261123-category-management";
+import { api } from "./api.mjs?v=20261123-payee-management";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");
