@@ -1,7 +1,7 @@
 import { state,$,esc,setStatus,fmtDate,newBusinessId,indexBy } from "./core.mjs";
-import { api } from "./api.mjs?v=20261123-tab-overviews";
-import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261123-tab-overviews";
-import { renderMiniOverview } from "./summary.mjs?v=20261123-tab-overviews";
+import { api } from "./api.mjs?v=20261123-investments";
+import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261123-investments";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-investments";
 let reloadWorkspace;
 function renderAccounts() {
   const cur=indexBy(state.currencies,"CURRENCYID");

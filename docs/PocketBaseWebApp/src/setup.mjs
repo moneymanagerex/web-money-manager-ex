@@ -1,8 +1,8 @@
 import { state,$,setStatus,esc,showScreen } from "./core.mjs";
-import { api } from "./api.mjs?v=20261123-tab-overviews";
-import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261123-tab-overviews";
-import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261123-tab-overviews";
-import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261123-tab-overviews";
+import { api } from "./api.mjs?v=20261123-investments";
+import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261123-investments";
+import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261123-investments";
+import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261123-investments";
 let resetPreview=null;
 function clearResetPreview() {
   resetPreview=null;

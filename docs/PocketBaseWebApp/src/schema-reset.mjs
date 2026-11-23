@@ -1,5 +1,5 @@
-import { api } from "./api.mjs?v=20261123-tab-overviews";
-import { readSchemaVersion,checkSchemaVersion } from "./schema.mjs?v=20261123-tab-overviews";
+import { api } from "./api.mjs?v=20261123-investments";
+import { readSchemaVersion,checkSchemaVersion } from "./schema.mjs?v=20261123-investments";
 
 export const MMEX_COLLECTIONS=["ACCOUNTLIST_V1","ASSETS_V1","ATTACHMENT_V1","BILLSDEPOSITS_V1","BUDGETSPLITTRANSACTIONS_V1","BUDGETTABLE_V1","BUDGETYEAR_V1","CATEGORY_V1","CHECKINGACCOUNT_V1","CURRENCYFORMATS_V1","CURRENCYHISTORY_V1","CUSTOMFIELDDATA_V1","CUSTOMFIELD_V1","INFOTABLE_V1","PAYEE_V1","REPORT_V1","SETTING_V1","SHAREINFO_V1","SPLITTRANSACTIONS_V1","STOCKHISTORY_V1","STOCK_V1","TAGLINK_V1","TAG_V1","TRANSLINK_V1","USAGE_V1","dbInfo"];
 

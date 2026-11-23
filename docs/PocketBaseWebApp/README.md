@@ -166,6 +166,14 @@ Each data tab also has a compact summary strip: account status and currencies
 in use, transaction types for the current filters, category and payee activation
 and defaults, and currency mix with the selected base currency.
 
+The Investments tab reads `STOCK_V1`, `STOCKHISTORY_V1`,
+`TRANSLINK_V1` and `SHAREINFO_V1`. It shows linked trade positions using
+the desktop app's average cost calculation, retains legacy position fields,
+and exposes recent trade lots, commissions and saved price history. It does
+not combine market values across account currencies or retrieve live quotes.
+Price history loads only when the Investments tab opens. Stock and lot editing
+remains in the desktop app.
+
 The base currency is shown in the overview and currencies sections, taken from
 `INFOTABLE_V1` (`INFONAME = "BASECURRENCYID"`). When it is not set yet, the
 currencies list offers **Set base**, which records the choice without touching

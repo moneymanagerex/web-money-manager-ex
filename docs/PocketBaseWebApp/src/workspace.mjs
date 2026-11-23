@@ -1,26 +1,30 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261123-tab-overviews";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-tab-overviews";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-tab-overviews";
-import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-tab-overviews";
-import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-tab-overviews";
-import { accountBalance,formatDecimal,transactionAmountParts } from "./balances.mjs?v=20261123-tab-overviews";
+import { fetchRecords } from "./api.mjs?v=20261123-investments";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-investments";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-investments";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-investments";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-investments";
+import { accountBalance,formatDecimal,transactionAmountParts } from "./balances.mjs?v=20261123-investments";
+import { initInvestments,renderInvestments,loadStockHistory } from "./investments.mjs?v=20261123-investments";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;
   try {
-    data=await Promise.all([fetchRecords("ACCOUNTLIST_V1","ACCOUNTID"),fetchRecords("CHECKINGACCOUNT_V1","-TRANSDATE"),fetchRecords("CATEGORY_V1","CATEGNAME"),fetchRecords("PAYEE_V1","PAYEENAME"),fetchRecords("CURRENCYFORMATS_V1","CURRENCYNAME"),fetchRecords("SPLITTRANSACTIONS_V1"),fetchRecords("TRANSLINK_V1"),fetchRecords("SHAREINFO_V1"),fetchRecords("INFOTABLE_V1","",`INFONAME = "BASECURRENCYID"`)]);
+    data=await Promise.all([fetchRecords("ACCOUNTLIST_V1","ACCOUNTID"),fetchRecords("CHECKINGACCOUNT_V1","-TRANSDATE"),fetchRecords("CATEGORY_V1","CATEGNAME"),fetchRecords("PAYEE_V1","PAYEENAME"),fetchRecords("CURRENCYFORMATS_V1","CURRENCYNAME"),fetchRecords("STOCK_V1","STOCKNAME"),fetchRecords("SPLITTRANSACTIONS_V1"),fetchRecords("TRANSLINK_V1"),fetchRecords("SHAREINFO_V1"),fetchRecords("INFOTABLE_V1","",`INFONAME = "BASECURRENCYID"`)]);
   }
   catch(err) {
     setStatus("recentStatus","Refresh failed; displayed data may be out of date. "+err.message,"error");
     throw err;
   }
-  const [accounts,transactions,categories,payees,currencies,splits,links,shares,baseCurrency]=data;
+  const [accounts,transactions,categories,payees,currencies,stocks,splits,links,shares,baseCurrency]=data;
   state.accounts=accounts;
   state.transactions=transactions;
   state.categories=categories;
   state.payees=payees;
   state.currencies=currencies;
+  state.stocks=stocks;
+  state.transactionLinks=links;
+  state.shareInfo=shares;
   state.baseCurrencyInfo=baseCurrency;
   state.protectedTransactions=new Map([...splits.map(x => [String(x.TRANSID),"split"]),...links.map(x => [String(x.CHECKINGACCOUNTID),"linked asset/stock"]),...shares.map(x => [String(x.CHECKINGACCOUNTID),"linked stock"])]);
   const active=transactions.filter(t => !t.DELETEDTIME);
@@ -28,6 +32,7 @@ async function loadWorkspace() {
   $("statTransactions").textContent=active.length;
   $("statCategories").textContent=categories.length;
   $("tabAccountsCount").textContent=accounts.length;
+  $("tabInvestmentsCount").textContent=stocks.length;
   $("tabTransactionsCount").textContent=active.length;
   $("tabCategoriesCount").textContent=categories.length;
   $("tabPayeesCount").textContent=payees.length;
@@ -35,6 +40,7 @@ async function loadWorkspace() {
   renderAccounts();
   renderReferenceData();
   renderCurrencies();
+  renderInvestments();
   const baseCurrencyValue = $("statBaseCurrency");
   if (baseCurrencyValue) baseCurrencyValue.textContent = baseCurrencyText();
   const accountCurrencies=indexBy(currencies,"CURRENCYID");
@@ -69,15 +75,52 @@ export function initWorkspace() {
   initTransactions(loadWorkspace);
   initPayees(loadWorkspace);
   initCurrencies(loadWorkspace);
+  initInvestments();
   document.querySelectorAll(".topnav [data-view]").forEach(b => b.addEventListener("click",() => setView(b.dataset.view)));
   document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click",() => setView(b.dataset.go)));
   $("overviewAccountGrid").addEventListener("click",event => {
     const button=event.target.closest(".account-activity");
     if(!button)
       return;
+    $("txSearch").value="";
+    $("txType").value="";
+    $("txFrom").value="";
+    $("txThrough").value="";
+    $("txShowDeleted").checked=false;
     $("txFilterAccount").value=button.dataset.accountId;
     renderTransactions();
     setView("transactions");
+  });
+  $("investmentsBody").addEventListener("click",event => {
+    const button=event.target.closest(".investment-account-link");
+    if(!button)
+      return;
+    $("txSearch").value="";
+    $("txType").value="";
+    $("txFrom").value="";
+    $("txThrough").value="";
+    $("txShowDeleted").checked=false;
+    $("txFilterAccount").value=button.dataset.accountId;
+    renderTransactions();
+    setView("transactions");
+  });
+  $("investmentSearch").addEventListener("input",renderInvestments);
+  $("investmentAccountFilter").addEventListener("change",renderInvestments);
+  $("refreshInvestments").addEventListener("click",async event => {
+    const button=event.currentTarget;
+    button.disabled=true;
+    setStatus("investmentsStatus","Refreshing investment data…");
+    try {
+      await loadWorkspace();
+      await loadStockHistory(true);
+      setStatus("investmentsStatus","Investment data refreshed.","ok");
+    }
+    catch(error) {
+      setStatus("investmentsStatus","Refresh failed; displayed data may be out of date. "+error.message,"error");
+    }
+    finally {
+      button.disabled=false;
+    }
   });
   document.querySelectorAll("[data-refresh]").forEach(button => button.addEventListener("click", async () => {
     const status = button.closest(".view")?.querySelector(".list-head .hint") ?? $("recentStatus");
