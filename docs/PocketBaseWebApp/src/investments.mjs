@@ -104,9 +104,9 @@ function renderTradeActivity(position) {
   const rows=position.trades.map(({trx,share})=>{
     if(!share)
       return `<li class="trade-missing">${esc(fmtDate(trx.TRANSDATE))} · Missing share details (transaction ${esc(trx.TRANSID)})</li>`;
-    const qty=number(share.SHARENUMBER),action=qty>0? "Buy":qty<0? "Sell":"Adjustment";
+    const qty=number(share.SHARENUMBER),action=qty>0? "Buy":qty<0? "Sell":"Adjust";
     const state=trx.DELETEDTIME? "Deleted":trx.STATUS==="V"? "Void":action;
-    return `<li><time>${esc(fmtDate(trx.TRANSDATE))}</time><span class="trade-action">${esc(state)}</span><span>${esc(formatQuantity(qty))} × ${esc(formatMoney(number(share.SHAREPRICE),position.currency))}</span><span>Fee ${esc(formatMoney(number(share.SHARECOMMISSION),position.currency))}</span><span>Lot ${esc(share.SHARELOT||"—")}</span></li>`;
+    return `<li><time>${esc(fmtDate(trx.TRANSDATE))}</time><span class="trade-action">${esc(state)}</span><span>${esc(formatQuantity(qty))} × ${esc(formatMoney(number(share.SHAREPRICE),position.currency))}</span><span>Fee ${esc(formatMoney(number(share.SHARECOMMISSION),position.currency))}</span></li>`;
   });
   if(!rows.length)
     return "";
