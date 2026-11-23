@@ -1,5 +1,6 @@
 import { state, $, esc, setStatus, newBusinessId } from "./core.mjs";
-import { api, fetchRecords } from "./api.mjs?v=20261123-transfer-perspective";
+import { api, fetchRecords } from "./api.mjs?v=20261123-tab-overviews";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-tab-overviews";
 
 let reloadWorkspace;
 
@@ -80,6 +81,12 @@ export function renderCurrencies() {
   const baseId = baseCurrencyId(baseRows);
   const currencyIds = new Set(state.currencies.map(currency => Number(currency.CURRENCYID)));
   const settable = canSetBaseCurrency(baseRows, currencyIds);
+  const baseCurrency=state.currencies.find(currency => Number(currency.CURRENCYID)===baseId);
+  renderMiniOverview("currenciesMiniOverview",[
+    { label:"Base currency",value:baseCurrency?.CURRENCYNAME??(baseId? `Missing ${baseId}`:"Not set") },
+    { label:"Fiat",value:state.currencies.filter(currency => currency.CURRENCY_TYPE==="Fiat").length },
+    { label:"Crypto",value:state.currencies.filter(currency => currency.CURRENCY_TYPE==="Crypto").length }
+  ]);
   const rows = state.currencies.filter(currency =>
     !query || [currency.CURRENCYNAME, currency.CURRENCY_SYMBOL, currency.CURRENCY_TYPE, currency.PFX_SYMBOL, currency.SFX_SYMBOL]
       .some(value => String(value ?? "").toLowerCase().includes(query))

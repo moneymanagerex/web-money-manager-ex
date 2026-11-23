@@ -1,10 +1,18 @@
 import { state,$,esc,setStatus,indexBy,safeHttpUrl,newBusinessId } from "./core.mjs";
-import { api } from "./api.mjs?v=20261123-transfer-perspective";
+import { api } from "./api.mjs?v=20261123-tab-overviews";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-tab-overviews";
 let reloadWorkspace;
 function renderReferenceData() {
   const cats=indexBy(state.categories,"CATEGID");
   const query=$("categorySearch")?.value.trim().toLowerCase()??"";
   const rows=state.categories.filter(c => !query||[c.CATEGID,c.CATEGNAME,cats.get(String(c.PARENTID))?.CATEGNAME].some(v => String(v??"").toLowerCase().includes(query)));
+  const activeCategories=state.categories.filter(category => Number(category.ACTIVE)!==0);
+  renderMiniOverview("categoriesMiniOverview",[
+    { label:"Active",value:activeCategories.length },
+    { label:"Inactive",value:state.categories.length-activeCategories.length },
+    { label:"Top-level",value:state.categories.length-state.categories.filter(category => Number(category.PARENTID)>0).length },
+    { label:"Subcategories",value:state.categories.filter(category => Number(category.PARENTID)>0).length }
+  ]);
   $("categoriesBody").innerHTML=rows.length? rows.map(c => `<tr><td>${esc(c.CATEGID)}</td><td>${esc(c.CATEGNAME)}</td><td>${Number(c.PARENTID)>0? esc(cats.get(String(c.PARENTID))?.CATEGNAME??`Missing parent (${c.PARENTID})`):"—"}</td><td>${Number(c.ACTIVE)===0? "No":"Yes"}</td><td><button type="button" class="editCategory" data-id="${esc(c.id)}">Edit</button></td></tr>`).join("") : `<tr><td colspan="5" class="muted">No categories match the search.</td></tr>`;
   $("categoriesStatus").textContent=`${rows.length} shown / ${state.categories.length} category record(s) loaded`;
   populateCategoryParents();
@@ -58,6 +66,14 @@ function parentCreatesCycle(categoryId,parentId) {
 function renderPayees() {
   const q=$("payeeSearch").value.trim().toLowerCase();
   const rows=state.payees.filter(p => !q||[p.PAYEENAME,p.WEBSITE,p.NOTES,p.NUMBER].some(v => String(v??"").toLowerCase().includes(q)));
+  const activePayees=state.payees.filter(payee => Number(payee.ACTIVE)!==0);
+  const payeesWithDefault=state.payees.filter(payee => Number(payee.CATEGID)>0).length;
+  renderMiniOverview("payeesMiniOverview",[
+    { label:"Active",value:activePayees.length },
+    { label:"Inactive",value:state.payees.length-activePayees.length },
+    { label:"With default category",value:payeesWithDefault },
+    { label:"Without default",value:state.payees.length-payeesWithDefault }
+  ]);
   $("payeesBody").innerHTML=rows.length? rows.map(p => `<tr><td>${esc(p.PAYEEID)}</td><td>${esc(p.PAYEENAME)}</td><td>${esc(catsName(p.CATEGID))}</td><td>${esc(p.NUMBER)}</td><td>${Number(p.ACTIVE)===0? "No":"Yes"}</td><td>${safeHttpUrl(p.WEBSITE)? `<a href="${esc(safeHttpUrl(p.WEBSITE))}" target="_blank" rel="noopener noreferrer">${esc(p.WEBSITE)}</a>`:""}</td><td>${esc(p.NOTES)}</td><td><button type="button" class="editPayee" data-id="${esc(p.id)}">Edit</button></td></tr>`).join("") : `<tr><td colspan="8" class="muted">No payees match the search.</td></tr>`;
   $("payeesStatus").textContent=`${rows.length} shown / ${state.payees.length} loaded`;
   document.querySelectorAll(".editPayee").forEach(button => button.addEventListener("click",() => editPayee(button.dataset.id)));

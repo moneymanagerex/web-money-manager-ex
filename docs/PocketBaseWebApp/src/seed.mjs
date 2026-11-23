@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261123-transfer-perspective";
+import { api } from "./api.mjs?v=20261123-tab-overviews";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");

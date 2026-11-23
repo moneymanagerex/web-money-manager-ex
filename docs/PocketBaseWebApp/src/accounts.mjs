@@ -1,6 +1,7 @@
 import { state,$,esc,setStatus,fmtDate,newBusinessId,indexBy } from "./core.mjs";
-import { api } from "./api.mjs?v=20261123-transfer-perspective";
-import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261123-transfer-perspective";
+import { api } from "./api.mjs?v=20261123-tab-overviews";
+import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261123-tab-overviews";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-tab-overviews";
 let reloadWorkspace;
 function renderAccounts() {
   const cur=indexBy(state.currencies,"CURRENCYID");
@@ -10,6 +11,13 @@ function renderAccounts() {
     const currency=c? (c.CURRENCY_SYMBOL||c.CURRENCYNAME):a.CURRENCYID;
     return !query||[a.ACCOUNTID,a.ACCOUNTNAME,a.ACCOUNTTYPE,a.STATUS,a.ACCOUNTNUM,currency].some(v => String(v??"").toLowerCase().includes(query));
   });
+  const open=state.accounts.filter(account => account.STATUS!=="Closed").length;
+  const usedCurrencies=new Set(state.accounts.filter(account => account.STATUS!=="Closed").map(account => String(account.CURRENCYID)).filter(Boolean));
+  renderMiniOverview("accountsMiniOverview",[
+    { label:"Open",value:open },
+    { label:"Closed",value:state.accounts.length-open },
+    { label:"Currencies in use",value:usedCurrencies.size }
+  ]);
   $("accountsBody").innerHTML=rows.length? rows.map(a => {
     const c=cur.get(String(a.CURRENCYID));
     const currency=c? (c.CURRENCY_SYMBOL||c.CURRENCYNAME):a.CURRENCYID;

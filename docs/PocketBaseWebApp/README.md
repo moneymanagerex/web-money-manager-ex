@@ -155,6 +155,17 @@ cross-currency transfers. Split and asset/stock-linked transactions are
 read-only to avoid corrupting related records. The app loads all pages of
 displayed collections and transaction links.
 
+The overview shows current balances for up to six open accounts in each
+account's own currency, with a direct link into that account's filtered
+transaction activity, plus the latest transactions. Balances include cash
+through today and exclude investment holdings and asset values. The interface adapts to
+light and dark system appearance and uses horizontally scrollable tables on
+small screens.
+
+Each data tab also has a compact summary strip: account status and currencies
+in use, transaction types for the current filters, category and payee activation
+and defaults, and currency mix with the selected base currency.
+
 The base currency is shown in the overview and currencies sections, taken from
 `INFOTABLE_V1` (`INFONAME = "BASECURRENCYID"`). When it is not set yet, the
 currencies list offers **Set base**, which records the choice without touching

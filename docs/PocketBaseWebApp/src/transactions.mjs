@@ -1,6 +1,7 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs?v=20261123-transfer-perspective";
-import { localToday,formatTransactionAmount,transactionAmountParts,parseStoredNumber } from "./balances.mjs?v=20261123-transfer-perspective";
+import { api,fetchRecords } from "./api.mjs?v=20261123-tab-overviews";
+import { localToday,formatTransactionAmount,transactionAmountParts,parseStoredNumber } from "./balances.mjs?v=20261123-tab-overviews";
+import { renderMiniOverview } from "./summary.mjs?v=20261123-tab-overviews";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };
@@ -23,6 +24,12 @@ function filterTransactions(transactions,{ query="",type="",account="",from="",t
 function renderTransactions() {
   const filters={ query: $("txSearch").value,type: $("txType").value,account: $("txFilterAccount").value,from: $("txFrom").value,through: $("txThrough").value,showDeleted: $("txShowDeleted").checked };
   const rows=filterTransactions(state.transactions,filters,state.accounts,state.payees,state.categories);
+  renderMiniOverview("transactionsMiniOverview",[
+    { label:"Withdrawals",value:rows.filter(transaction => transaction.TRANSCODE==="Withdrawal").length },
+    { label:"Deposits",value:rows.filter(transaction => transaction.TRANSCODE==="Deposit").length },
+    { label:"Transfers",value:rows.filter(transaction => transaction.TRANSCODE==="Transfer").length },
+    { label:"Voided",value:rows.filter(transaction => transaction.STATUS==="V").length }
+  ],"Counts follow the current filters; amounts are not combined across currencies.");
   const accounts=indexBy(state.accounts,"ACCOUNTID"),payees=indexBy(state.payees,"PAYEEID"),cats=indexBy(state.categories,"CATEGID");
   $("txBody").innerHTML=rows.length? rows.map(t => {
     const a=accounts.get(String(t.ACCOUNTID)),dest=accounts.get(String(t.TOACCOUNTID)),p=payees.get(String(t.PAYEEID)),c=cats.get(String(t.CATEGID));
@@ -71,8 +78,13 @@ function selectValue(id,value,label) {
 function updateTransferFields() {
   const transfer=$("newTxCode").value==="Transfer";
   $("txDestinationLabel").classList.toggle("hidden",!transfer);
+  $("txSourceAccountCaption").textContent=transfer? "From account":"Account";
+  $("txPayeeLabel").classList.toggle("hidden",transfer);
   $("txReceivedLabel").classList.toggle("hidden",!transfer);
+  $("txAmountCaption").textContent=transfer? "Amount sent":"Amount";
   $("newTxDestination").required=transfer;
+  if(transfer)
+    $("newTxPayee").value="-1";
   const a=state.accounts.find(x => String(x.ACCOUNTID)===$("newTxAccount").value),b=state.accounts.find(x => String(x.ACCOUNTID)===$("newTxDestination").value);
   const sameCurrency=transfer&&a&&b&&String(a.CURRENCYID)===String(b.CURRENCYID);
   $("newTxReceived").required=transfer;
