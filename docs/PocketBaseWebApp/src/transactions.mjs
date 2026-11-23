@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs?v=20261123-filter-polish";
-import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261123-filter-polish";
+import { api,fetchRecords } from "./api.mjs?v=20261123-transaction-readability";
+import { localToday,formatTransactionAmount,transactionAmountParts,parseStoredNumber } from "./balances.mjs?v=20261123-transaction-readability";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };
@@ -30,8 +30,10 @@ function renderTransactions() {
     const unsupported=!["Withdrawal","Deposit","Transfer"].includes(t.TRANSCODE)||!Object.hasOwn(statuses,t.STATUS??"");
     const actions=protectedReason? `${esc(protectedReason)} (read-only)`:unsupported? "Unsupported (read-only)":t.DELETEDTIME? `<button type="button" class="restoreTx" data-id="${esc(t.id)}">Restore</button>`:`<button type="button" class="editTx" data-id="${esc(t.id)}">Edit</button> <button type="button" class="duplicateTx" data-id="${esc(t.id)}">Duplicate</button> <button type="button" class="deleteTx" data-id="${esc(t.id)}">Delete</button>`;
     const account=esc(a?.ACCOUNTNAME??t.ACCOUNTID)+(t.TRANSCODE==="Transfer"? " → "+esc(dest?.ACCOUNTNAME??t.TOACCOUNTID):"");
-    const amount=esc(formatTransactionAmount(t.TRANSAMOUNT))+(t.TRANSCODE==="Transfer"? " → "+esc(formatTransactionAmount(t.TOTRANSAMOUNT)):"");
-    return `<tr><td>${esc(t.TRANSID)}</td><td>${esc(fmtDate(t.TRANSDATE))}</td><td>${esc(t.TRANSCODE)} · ${esc(statuses[t.STATUS??""]??t.STATUS)}${t.DELETEDTIME? " · Deleted":""}</td><td>${account}</td><td>${esc(p?.PAYEENAME??(Number(t.PAYEEID)<=0? "":t.PAYEEID))}</td><td>${esc(c?.CATEGNAME??(Number(t.CATEGID)<=0? "":t.CATEGID))}</td><td class="num">${amount}</td><td>${esc(t.NOTES)}</td><td>${actions}</td></tr>`;
+    const amounts=transactionAmountParts(t).map(part => `<span class="money-${part.tone}">${esc(part.text)}</span>`).join(t.TRANSCODE==="Transfer"? ' <span class="muted">→</span> ':'');
+    const statusClass=t.DELETEDTIME? "state-deleted":t.STATUS==="R"? "state-reconciled":t.STATUS==="V"? "state-void":"state-open";
+    const typeClass=t.TRANSCODE==="Deposit"? "type-deposit":t.TRANSCODE==="Withdrawal"? "type-withdrawal":t.TRANSCODE==="Transfer"? "type-transfer":"type-other";
+    return `<tr><td>${esc(t.TRANSID)}</td><td>${esc(fmtDate(t.TRANSDATE))}</td><td><span class="type-badge ${typeClass}">${esc(t.TRANSCODE)}</span><br><span class="state-label ${statusClass}">${esc(t.DELETEDTIME? "Deleted":statuses[t.STATUS??""]??t.STATUS)}</span></td><td>${account}</td><td>${esc(p?.PAYEENAME??(Number(t.PAYEEID)<=0? "":t.PAYEEID))}</td><td>${esc(c?.CATEGNAME??(Number(t.CATEGID)<=0? "":t.CATEGID))}</td><td class="num amount-cell">${amounts}</td><td>${esc(t.NOTES)}</td><td>${actions}</td></tr>`;
   }).join("") : `<tr><td colspan="9" class="muted">No transactions match the current filters.</td></tr>`;
   $("txStatus").textContent=filters.from&&filters.through&&filters.from>filters.through? "The start date must not be after the end date.":`${rows.length} shown / ${state.transactions.length} loaded (including deleted)`;
   document.querySelectorAll(".editTx").forEach(b => b.addEventListener("click",() => selectTxById(b.dataset.id)));

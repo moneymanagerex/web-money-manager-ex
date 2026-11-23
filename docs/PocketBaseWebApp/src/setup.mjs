@@ -1,8 +1,8 @@
 import { state,$,setStatus,esc,showScreen } from "./core.mjs";
-import { api } from "./api.mjs?v=20261123-filter-polish";
-import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261123-filter-polish";
-import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261123-filter-polish";
-import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261123-filter-polish";
+import { api } from "./api.mjs?v=20261123-transaction-readability";
+import { readSchemaVersion,checkSchemaVersion,ensureSchemaFields,markSchemaVersion } from "./schema.mjs?v=20261123-transaction-readability";
+import { seedDefaults,loadDefaultData } from "./seed.mjs?v=20261123-transaction-readability";
+import { MMEX_COLLECTIONS,listCollections,loadBundledSchema,inspectReset,resetCollections } from "./schema-reset.mjs?v=20261123-transaction-readability";
 let resetPreview=null;
 function clearResetPreview() {
   resetPreview=null;

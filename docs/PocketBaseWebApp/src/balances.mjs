@@ -60,6 +60,19 @@ function formatTransactionAmount(value) {
     return "Invalid amount";
   }
 }
+function transactionAmountParts(transaction) {
+  const clean=value => {
+    const formatted=formatTransactionAmount(value);
+    return formatted.startsWith("-")? formatted.slice(1):formatted;
+  };
+  if(transaction.TRANSCODE==="Withdrawal")
+    return [{ text:"−"+clean(transaction.TRANSAMOUNT),tone:"out" }];
+  if(transaction.TRANSCODE==="Deposit")
+    return [{ text:"+"+clean(transaction.TRANSAMOUNT),tone:"in" }];
+  if(transaction.TRANSCODE==="Transfer")
+    return [{ text:"−"+clean(transaction.TRANSAMOUNT),tone:"out" },{ text:"+"+clean(transaction.TOTRANSAMOUNT),tone:"in" }];
+  return [{ text:formatTransactionAmount(transaction.TRANSAMOUNT),tone:"neutral" }];
+}
 function accountBalance(account,transactions,today=localToday()) {
   let total=add({ units: 0n,scale: 0 },account.INITIALBAL??0);
   const id=String(account.ACCOUNTID);
@@ -91,4 +104,4 @@ function accountBalance(account,transactions,today=localToday()) {
   }
   return total;
 }
-export { accountBalance,formatDecimal,formatTransactionAmount,localToday,parseStoredNumber };
+export { accountBalance,formatDecimal,formatTransactionAmount,transactionAmountParts,localToday,parseStoredNumber };

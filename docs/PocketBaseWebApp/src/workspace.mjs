@@ -1,10 +1,10 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261123-filter-polish";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-filter-polish";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-filter-polish";
-import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-filter-polish";
-import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-filter-polish";
-import { formatTransactionAmount } from "./balances.mjs?v=20261123-filter-polish";
+import { fetchRecords } from "./api.mjs?v=20261123-transaction-readability";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-transaction-readability";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-transaction-readability";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-transaction-readability";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-transaction-readability";
+import { transactionAmountParts } from "./balances.mjs?v=20261123-transaction-readability";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;
@@ -42,7 +42,11 @@ async function loadWorkspace() {
   populateAccountCurrencies();
   const recent=[...active].sort((a,b) => String(b.TRANSDATE||"").localeCompare(String(a.TRANSDATE||""))).slice(0,10);
   const aidx=indexBy(accounts,"ACCOUNTID"),pidx=indexBy(payees,"PAYEEID"),cidx=indexBy(categories,"CATEGID");
-  $("recentBody").innerHTML=recent.map(t => `<tr><td>${esc(fmtDate(t.TRANSDATE))}</td><td>${esc(pidx.get(String(t.PAYEEID))?.PAYEENAME??(Number(t.PAYEEID)<=0? "":t.PAYEEID))}</td><td>${esc(cidx.get(String(t.CATEGID))?.CATEGNAME??(Number(t.CATEGID)<=0? "":t.CATEGID))}</td><td>${esc(aidx.get(String(t.ACCOUNTID))?.ACCOUNTNAME??t.ACCOUNTID)}</td><td>${esc(t.TRANSCODE)}</td><td class="num">${esc(formatTransactionAmount(t.TRANSAMOUNT))}</td></tr>`).join("");
+  $("recentBody").innerHTML=recent.map(t => {
+    const amounts=transactionAmountParts(t).map(part => `<span class="money-${part.tone}">${esc(part.text)}</span>`).join(t.TRANSCODE==="Transfer"? ' <span class="muted">→</span> ':'');
+    const typeClass=t.TRANSCODE==="Deposit"? "type-deposit":t.TRANSCODE==="Withdrawal"? "type-withdrawal":t.TRANSCODE==="Transfer"? "type-transfer":"type-other";
+    return `<tr><td>${esc(fmtDate(t.TRANSDATE))}</td><td>${esc(pidx.get(String(t.PAYEEID))?.PAYEENAME??(Number(t.PAYEEID)<=0? "":t.PAYEEID))}</td><td>${esc(cidx.get(String(t.CATEGID))?.CATEGNAME??(Number(t.CATEGID)<=0? "":t.CATEGID))}</td><td>${esc(aidx.get(String(t.ACCOUNTID))?.ACCOUNTNAME??t.ACCOUNTID)}</td><td><span class="type-badge ${typeClass}">${esc(t.TRANSCODE)}</span></td><td class="num amount-cell">${amounts}</td></tr>`;
+  }).join("");
   $("recentStatus").textContent=`Latest ${recent.length} of ${active.length} active transactions`;
 }
 export function initWorkspace() {

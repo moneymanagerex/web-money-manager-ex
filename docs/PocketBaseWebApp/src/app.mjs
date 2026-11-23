@@ -1,11 +1,11 @@
 import { state,$,INSTANCE_KEY,showScreen,setView,setStatus,clearWorkspace } from "./core.mjs";
-import { readStoredToken,saveStoredToken,clearStoredToken } from "./auth.mjs?v=20261123-filter-polish";
-import { api,normalizeUrl } from "./api.mjs?v=20261123-filter-polish";
-import { initWorkspace,loadWorkspace } from "./workspace.mjs?v=20261123-filter-polish";
-import { requireCompatibleSchema } from "./schema.mjs?v=20261123-filter-polish";
-import { resetCurrencyForm } from "./currencies.mjs?v=20261123-filter-polish";
-import { resetTransactionForm } from "./transactions.mjs?v=20261123-filter-polish";
-import "./setup.mjs?v=20261123-filter-polish";
+import { readStoredToken,saveStoredToken,clearStoredToken } from "./auth.mjs?v=20261123-transaction-readability";
+import { api,normalizeUrl } from "./api.mjs?v=20261123-transaction-readability";
+import { initWorkspace,loadWorkspace } from "./workspace.mjs?v=20261123-transaction-readability";
+import { requireCompatibleSchema } from "./schema.mjs?v=20261123-transaction-readability";
+import { resetCurrencyForm } from "./currencies.mjs?v=20261123-transaction-readability";
+import { resetTransactionForm } from "./transactions.mjs?v=20261123-transaction-readability";
+import "./setup.mjs?v=20261123-transaction-readability";
 initWorkspace();
 async function chooseInstance(value) {
   const base=normalizeUrl(value);

@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261123-filter-polish";
+import { api } from "./api.mjs?v=20261123-transaction-readability";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");
