@@ -1031,7 +1031,7 @@
       {
         "id": "42da52d23cc4327",
         "name": "AMOUNT",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
@@ -2026,7 +2026,7 @@
       {
         "id": "a258ea728e549ab",
         "name": "INFOVALUE",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
@@ -2696,7 +2696,7 @@
       {
         "id": "c305f9d1aa7e6a2",
         "name": "VALUE",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
@@ -2838,7 +2838,7 @@
       {
         "id": "3c2d4209b032c40",
         "name": "PURCHASEPRICE",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
@@ -2865,7 +2865,7 @@
       {
         "id": "19458e420c01270",
         "name": "CURRENTPRICE",
-        "required": true,
+        "required": false,
         "presentable": false,
         "system": false,
         "hidden": false,
