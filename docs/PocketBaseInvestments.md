@@ -55,13 +55,19 @@ flowchart LR
 
 ## Sync order
 
-The desktop **Sync investments** action must preserve dependencies when it
-imports records: accounts and investment records first, then linked
-transactions, then transaction links and share details. Upload follows the
-same order so a linked record never points to a missing local business key.
-Stock history is keyed by symbol and date; the other records use their MMEX
-business IDs. Sync compares rows by those keys and leaves conflicting rows for
-the user to resolve.
+The desktop **Sync investments** action synchronizes the prerequisites
+(currencies, accounts, categories, and payees), assets, stock positions, price
+history, investment-linked transactions, transaction links, and share details
+in dependency order. It downloads missing rows and uploads local-only rows;
+rows that differ on both sides are reported as conflicts and left untouched.
+The separate **Sync transactions** action continues to sync regular
+withdrawals, deposits, and transfers without investment links.
+
+Stock history, transaction links, and share details use their MMEX row IDs.
+Assets, stocks, and transactions use their MMEX business IDs. The sync compares
+the serialized business fields and does not overwrite edits made on either
+side. Linked transactions are only imported when their referenced asset or
+stock exists; stock trades also need a share detail record.
 
 The WebApp currently displays assets and stock records as read-only data. It
 loads stock price history when the Investments view opens. It does not retrieve
