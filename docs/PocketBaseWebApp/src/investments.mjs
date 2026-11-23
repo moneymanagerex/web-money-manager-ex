@@ -120,9 +120,12 @@ function renderPriceHistory(position) {
 }
 function populateAccountFilter() {
   const select=$("investmentAccountFilter"),selected=select.value;
-  select.innerHTML='<option value="">All accounts</option>'+state.accounts.map(account=>`<option value="${esc(account.ACCOUNTID)}">${esc(account.ACCOUNTNAME)}</option>`).join("");
+  const investmentAccounts=state.accounts.filter(account=>String(account.ACCOUNTTYPE??"").trim().toLowerCase()==="investment");
+  select.innerHTML='<option value="">All investment accounts</option>'+investmentAccounts.map(account=>`<option value="${esc(account.ACCOUNTID)}">${esc(account.ACCOUNTNAME)}</option>`).join("");
   if([...select.options].some(option=>option.value===selected))
     select.value=selected;
+  else
+    select.value="";
 }
 function renderInvestments() {
   populateAccountFilter();
