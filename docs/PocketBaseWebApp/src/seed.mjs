@@ -1,4 +1,4 @@
-import { api } from "./api.mjs?v=20261123-payee-management";
+import { api } from "./api.mjs?v=20261123-filter-polish";
 
 export async function loadDefaultData() {
   const response = await fetch("defaults.json");

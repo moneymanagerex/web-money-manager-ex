@@ -1,6 +1,6 @@
 import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs";
-import { api,fetchRecords } from "./api.mjs?v=20261123-payee-management";
-import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261123-payee-management";
+import { api,fetchRecords } from "./api.mjs?v=20261123-filter-polish";
+import { localToday,formatTransactionAmount,parseStoredNumber } from "./balances.mjs?v=20261123-filter-polish";
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };
@@ -209,6 +209,16 @@ async function setDeleted(id,deleting) {
 export function initTransactions(reload) {
   reloadWorkspace=reload;
   ["txSearch","txType","txFilterAccount","txFrom","txThrough","txShowDeleted"].forEach(id => $(id).addEventListener(id==="txSearch"? "input":"change",renderTransactions));
+  $("clearTxFilters").addEventListener("click",() => {
+    $("txSearch").value="";
+    $("txType").value="";
+    $("txFilterAccount").value="";
+    $("txFrom").value="";
+    $("txThrough").value="";
+    $("txShowDeleted").checked=false;
+    renderTransactions();
+    $("txSearch").focus();
+  });
   ["newTxCode","newTxAmount"].forEach(id => $(id).addEventListener(id==="newTxAmount"? "input":"change",updateTransferFields));
   ["newTxAccount","newTxDestination"].forEach(id => $(id).addEventListener("change",() => {
     receivedManually=false;

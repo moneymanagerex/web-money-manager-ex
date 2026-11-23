@@ -1,10 +1,10 @@
 import { state,$,setStatus,esc,indexBy,fmtDate,setView } from "./core.mjs";
-import { fetchRecords } from "./api.mjs?v=20261123-payee-management";
-import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-payee-management";
-import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-payee-management";
-import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-payee-management";
-import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-payee-management";
-import { formatTransactionAmount } from "./balances.mjs?v=20261123-payee-management";
+import { fetchRecords } from "./api.mjs?v=20261123-filter-polish";
+import { initAccounts,renderAccounts,populateAccountCurrencies } from "./accounts.mjs?v=20261123-filter-polish";
+import { initTransactions,renderTransactions,populateNewTx } from "./transactions.mjs?v=20261123-filter-polish";
+import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-filter-polish";
+import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-filter-polish";
+import { formatTransactionAmount } from "./balances.mjs?v=20261123-filter-polish";
 async function loadWorkspace() {
   setStatus("recentStatus","Loading MMEX data…");
   let data;
