@@ -2,6 +2,17 @@ import { state,$,esc,setStatus,indexBy,fmtDate,newBusinessId } from "./core.mjs"
 import { api,fetchRecords } from "./api.mjs?v=20261123-investments-assets";
 import { localToday,formatTransactionAmount,transactionAmountParts,parseStoredNumber } from "./balances.mjs?v=20261123-investments-assets";
 import { renderMiniOverview } from "./summary.mjs?v=20261123-investments-assets";
+import { baseCurrencyId } from "./currencies.mjs?v=20261123-investments-assets";
+
+function toBase(value,currency) {
+  if(!Number.isFinite(value)||!currency)
+    return NaN;
+  const baseId=baseCurrencyId(state.baseCurrencyInfo);
+  if(!baseId||Number(currency.CURRENCYID)===baseId)
+    return value;
+  const rate=Number(currency.BASECONVRATE??0);
+  return rate>0? value/rate:NaN;
+}
 
 let reloadWorkspace,pendingCreate=null,receivedManually=false,priorSameCurrency=false;
 const statuses={ "": "Unreconciled",R: "Reconciled",V: "Void",F: "Follow up",D: "Duplicate" };
@@ -24,22 +35,36 @@ function filterTransactions(transactions,{ query="",type="",account="",from="",t
 function renderTransactions() {
   const filters={ query: $("txSearch").value,type: $("txType").value,account: $("txFilterAccount").value,from: $("txFrom").value,through: $("txThrough").value,showDeleted: $("txShowDeleted").checked };
   const rows=filterTransactions(state.transactions,filters,state.accounts,state.payees,state.categories);
+  const currencies=indexBy(state.currencies,"CURRENCYID");
+  const baseCur=currencies.get(String(baseCurrencyId(state.baseCurrencyInfo)));
+  let baseTotal=0;
+  for(const t of rows) {
+    const a=state.accounts.find(x=>String(x.ACCOUNTID)===String(t.ACCOUNTID));
+    const c=a? currencies.get(String(a.CURRENCYID)):null;
+    const raw=Number(t.TRANSAMOUNT??0);
+    const converted=t.TRANSCODE==="Deposit"? toBase(raw,c):t.TRANSCODE==="Withdrawal"? -toBase(raw,c):0;
+    if(Number.isFinite(converted)) baseTotal+=converted;
+  }
   renderMiniOverview("transactionsMiniOverview",[
     { label:"Withdrawals",value:rows.filter(transaction => transaction.TRANSCODE==="Withdrawal").length },
     { label:"Deposits",value:rows.filter(transaction => transaction.TRANSCODE==="Deposit").length },
     { label:"Transfers",value:rows.filter(transaction => transaction.TRANSCODE==="Transfer").length },
-    { label:"Voided",value:rows.filter(transaction => transaction.STATUS==="V").length }
-  ],"Counts follow the current filters; amounts are not combined across currencies.");
+    { label:"Voided",value:rows.filter(transaction => transaction.STATUS==="V").length },
+    { label:"Net (base)",value:Number.isFinite(baseTotal)? `${baseCur?.CURRENCY_SYMBOL||""} ${baseTotal.toLocaleString(undefined,{ minimumFractionDigits:2, maximumFractionDigits:2 })}`:"—"}
+  ],"Counts follow the current filters; net is converted to base currency.");
   const accounts=indexBy(state.accounts,"ACCOUNTID"),payees=indexBy(state.payees,"PAYEEID"),cats=indexBy(state.categories,"CATEGID");
   $("txBody").innerHTML=rows.length? rows.map(t => {
     const a=accounts.get(String(t.ACCOUNTID)),dest=accounts.get(String(t.TOACCOUNTID)),p=payees.get(String(t.PAYEEID)),c=cats.get(String(t.CATEGID));
+    const txCurrency=a? currencies.get(String(a.CURRENCYID)):null;
     const protectedReason=state.protectedTransactions.get(String(t.TRANSID));
     const unsupported=!["Withdrawal","Deposit","Transfer"].includes(t.TRANSCODE)||!Object.hasOwn(statuses,t.STATUS??"");
     const actions=protectedReason? `${esc(protectedReason)} (read-only)`:unsupported? "Unsupported (read-only)":t.DELETEDTIME? `<button type="button" class="restoreTx" data-id="${esc(t.id)}">Restore</button>`:`<button type="button" class="editTx" data-id="${esc(t.id)}">Edit</button> <button type="button" class="duplicateTx" data-id="${esc(t.id)}">Duplicate</button> <button type="button" class="deleteTx" data-id="${esc(t.id)}">Delete</button>`;
     const transfer=t.TRANSCODE==="Transfer";
     const selectedAccount=$("txFilterAccount").value;
     const account=transfer&&selectedAccount? esc(accounts.get(selectedAccount)?.ACCOUNTNAME??selectedAccount):esc(a?.ACCOUNTNAME??t.ACCOUNTID);
-    const amounts=transactionAmountParts(t,selectedAccount).map(part => `<span class="money-${part.tone}">${esc(part.text)}</span>`).join("");
+    const parts=transactionAmountParts(t,selectedAccount);
+    const sym=txCurrency? `${txCurrency.CURRENCY_SYMBOL||txCurrency.CURRENCYNAME} `:"";
+    const amounts=parts.map(part => `<span class="money-${part.tone}">${sym}${esc(part.text)}</span>`).join(" ");
     const statusClass=t.DELETEDTIME? "state-deleted":t.STATUS==="R"? "state-reconciled":t.STATUS==="V"? "state-void":"state-open";
     const incomingTransfer=transfer&&selectedAccount&&String(t.TOACCOUNTID)===selectedAccount;
     const typeClass=transfer?(incomingTransfer? "type-deposit":"type-withdrawal"):t.TRANSCODE==="Deposit"? "type-deposit":t.TRANSCODE==="Withdrawal"? "type-withdrawal":"type-other";

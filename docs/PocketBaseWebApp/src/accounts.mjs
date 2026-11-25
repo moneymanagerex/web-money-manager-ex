@@ -2,6 +2,17 @@ import { state,$,esc,setStatus,fmtDate,newBusinessId,indexBy } from "./core.mjs"
 import { api } from "./api.mjs?v=20261123-investments-assets";
 import { accountBalance,formatDecimal,parseStoredNumber } from "./balances.mjs?v=20261123-investments-assets";
 import { renderMiniOverview } from "./summary.mjs?v=20261123-investments-assets";
+import { baseCurrencyId } from "./currencies.mjs?v=20261123-investments-assets";
+function toBase(value,currency) {
+  if(!Number.isFinite(value)||!currency)
+    return NaN;
+  const baseId=baseCurrencyId(state.baseCurrencyInfo);
+  if(!baseId||Number(currency.CURRENCYID)===baseId)
+    return value;
+  const rate=Number(currency.BASECONVRATE??0);
+  return rate>0? value/rate:NaN;
+}
+
 let reloadWorkspace;
 function renderAccounts() {
   const cur=indexBy(state.currencies,"CURRENCYID");
@@ -13,10 +24,22 @@ function renderAccounts() {
   });
   const open=state.accounts.filter(account => account.STATUS!=="Closed").length;
   const usedCurrencies=new Set(state.accounts.filter(account => account.STATUS!=="Closed").map(account => String(account.CURRENCYID)).filter(Boolean));
+  const baseCur=cur.get(String(baseCurrencyId(state.baseCurrencyInfo)));
+  let baseTotal=0;
+  for(const a of rows) {
+    const c=cur.get(String(a.CURRENCYID));
+    let bal;
+    try { bal=accountBalance(a,state.transactions); }
+    catch { continue; }
+    const raw=Number(formatDecimal(bal,c));
+    const converted=toBase(raw,c);
+    if(Number.isFinite(converted)) baseTotal+=converted;
+  }
   renderMiniOverview("accountsMiniOverview",[
     { label:"Open",value:open },
     { label:"Closed",value:state.accounts.length-open },
-    { label:"Currencies in use",value:usedCurrencies.size }
+    { label:"Currencies in use",value:usedCurrencies.size },
+    { label:"Total (base)",value:Number.isFinite(baseTotal)? `${baseCur?.CURRENCY_SYMBOL||""} ${baseTotal.toLocaleString(undefined,{ minimumFractionDigits:2, maximumFractionDigits:2 })}`:"—"}
   ]);
   $("accountsBody").innerHTML=rows.length? rows.map(a => {
     const c=cur.get(String(a.CURRENCYID));
@@ -28,7 +51,7 @@ function renderAccounts() {
     catch(err) {
       balance="Unavailable: "+err.message;
     }
-    return `<tr><td>${esc(a.ACCOUNTID)}</td><td>${esc(a.ACCOUNTNAME)}</td><td>${esc(a.ACCOUNTTYPE)}</td><td>${esc(a.STATUS)}</td><td>${esc(a.ACCOUNTNUM)}</td><td>${esc(currency)}</td><td class="num">${esc(balance)}</td><td><button type="button" class="editAccount" data-id="${esc(a.id)}">Edit</button> <button type="button" class="deleteAccount" data-id="${esc(a.id)}">Delete</button></td></tr>`;
+    return `<tr><td>${esc(a.ACCOUNTID)}</td><td>${esc(a.ACCOUNTNAME)}</td><td>${esc(a.ACCOUNTTYPE)}</td><td>${esc(a.STATUS)}</td><td>${esc(a.ACCOUNTNUM)}</td><td>${esc(currency)}</td><td class="num">${esc(baseCur? `${baseCur.CURRENCY_SYMBOL} ${balance}`:balance)}</td><td><button type="button" class="editAccount" data-id="${esc(a.id)}">Edit</button> <button type="button" class="deleteAccount" data-id="${esc(a.id)}">Delete</button></td></tr>`;
   }).join("") : `<tr><td colspan="8" class="muted">No accounts match the search.</td></tr>`;
   $("accountsStatus").textContent=`${rows.length} shown / ${state.accounts.length} loaded (all pages)`;
   document.querySelectorAll(".editAccount").forEach(b => b.addEventListener("click",() => editAccount(b.dataset.id)));

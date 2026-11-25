@@ -2,6 +2,7 @@ import { state,$,esc,indexBy,fmtDate,setStatus } from "./core.mjs";
 import { fetchRecords } from "./api.mjs?v=20261123-investments-assets";
 import { renderMiniOverview } from "./summary.mjs?v=20261123-investments-assets";
 import { localToday } from "./balances.mjs?v=20261123-investments-assets";
+import { baseCurrencyId } from "./currencies.mjs?v=20261123-investments-assets";
 
 let historyRequest=null;
 async function loadStockHistory(force=false) {
@@ -43,7 +44,18 @@ function formatMoney(value,currency) {
     return "—";
   const scale=String(currency?.SCALE??"100");
   const places=/^10*$/.test(scale)? Math.min(scale.length-1,10):2;
-  return value.toLocaleString(undefined,{ minimumFractionDigits:places,maximumFractionDigits:places });
+  const sym=currency?.CURRENCY_SYMBOL||currency?.CURRENCYNAME||"";
+  const formatted=value.toLocaleString(undefined,{ minimumFractionDigits:places,maximumFractionDigits:places });
+  return sym? `${sym} ${formatted}`:formatted;
+}
+function toBase(value,currency) {
+  if(!Number.isFinite(value)||!currency)
+    return NaN;
+  const baseId=baseCurrencyId(state.baseCurrencyInfo);
+  if(!baseId||Number(currency.CURRENCYID)===baseId)
+    return value;
+  const rate=Number(currency.BASECONVRATE??0);
+  return rate>0? value/rate:NaN;
 }
 function stockRows() {
   const inputs=[state.stocks,state.transactions,state.shareInfo,state.transactionLinks,state.accounts,state.currencies,state.stockHistory];
@@ -135,11 +147,18 @@ function renderInvestments() {
     const {stock,account}=position;
     return (!accountId||String(stock.HELDAT)===accountId)&&(!query||[stock.STOCKNAME,stock.SYMBOL,account?.ACCOUNTNAME].some(value=>String(value??"").toLowerCase().includes(query)));
   });
+  const baseCurrencies=indexBy(state.currencies,"CURRENCYID");
+  const baseTotal=rows.reduce((sum,position)=>{
+    const converted=toBase(position.marketValue,position.currency);
+    return sum+(Number.isFinite(converted)? converted:0);
+  },0);
+  const baseCur=baseCurrencies.get(String(baseCurrencyId(state.baseCurrencyInfo)));
   renderMiniOverview("investmentsMiniOverview",[
     {label:"Securities",value:rows.length},
     {label:"Open positions",value:rows.filter(position=>position.quantity>0).length},
     {label:"Linked trades",value:rows.reduce((total,position)=>total+position.trades.length,0)},
-    {label:"With price history",value:rows.filter(position=>position.history.length>0).length}
+    {label:"With price history",value:rows.filter(position=>position.history.length>0).length},
+    {label:"Total (base)",value:Number.isFinite(baseTotal)? formatMoney(baseTotal,baseCur):"—"}
   ],"Summaries follow the current search and account filter.");
   const tableRows=rows.map(position=>{
     const {stock,account,currency,quantity,avgCost,price,priceAvailable,marketValue,gain,latestHistory,linked}=position;
@@ -151,7 +170,7 @@ function renderInvestments() {
     const accountCell=account? `<span>${esc(account.ACCOUNTNAME)}</span><button type="button" class="investment-account-link" data-account-id="${esc(account.ACCOUNTID)}">Cash activity</button>`:`<span class="muted">Missing account (${esc(stock.HELDAT)})</span>`;
     const source=linked? '<span class="position-origin">Trade linked</span>':'<span class="position-origin">Legacy position</span>';
     const activity=[renderTradeActivity(position),renderPriceHistory(position)].filter(Boolean).join("");
-    return `<tr><td><strong>${esc(stock.STOCKNAME)}</strong><div class="stock-symbol">${esc(stock.SYMBOL||"No ticker")}</div>${source}</td><td>${accountCell}</td><td class="num amount-cell">${esc(formatQuantity(quantity))}</td><td class="num">${esc(costText)}</td><td class="num">${esc(currentText)}</td><td class="num">${esc(valueText)}<div class="stock-currency">${esc(currency?.CURRENCY_SYMBOL||currency?.CURRENCYNAME||"")}</div></td><td class="num ${gainClass}">${esc(gainText)}</td><td>${esc(latestHistory?fmtDate(latestHistory.DATE):"—")}</td><td>${activity||'<span class="muted">No linked activity</span>'}</td></tr>`;
+    return `<tr><td><strong>${esc(stock.STOCKNAME)}</strong><div class="stock-symbol">${esc(stock.SYMBOL||"No ticker")}</div>${source}</td><td>${accountCell}</td><td class="num amount-cell">${esc(formatQuantity(quantity))}</td><td class="num">${esc(costText)}</td><td class="num">${esc(currentText)}</td><td class="num">${esc(valueText)}</td><td class="num ${gainClass}">${esc(gainText)}</td><td>${esc(latestHistory?fmtDate(latestHistory.DATE):"—")}</td><td>${activity||'<span class="muted">No linked activity</span>'}</td></tr>`;
   });
   $("investmentsBody").innerHTML=tableRows.length? tableRows.join(""):'<tr><td colspan="9" class="muted">No investment positions match these filters.</td></tr>';
   $("investmentsStatus").textContent=`${rows.length} shown / ${state.stocks.length} loaded · saved MMEX prices only`;
