@@ -43,16 +43,31 @@ function assetActivity(asset,transactions,accounts,payees,categories,currencies)
   return `<details class="investment-details"><summary>Transactions · ${rows.length}</summary><ul class="asset-transaction-list">${items.join("")}</ul>${rows.length>8?`<small>Latest 8 of ${rows.length} linked transactions shown.</small>`:""}</details>`;
 }
 
+function populateAccountFilter() {
+  const select=$("assetAccountFilter");
+  if(!select)
+    return;
+  const selected=select.value;
+  const assetAccounts=state.accounts.filter(account=>String(account.ACCOUNTTYPE??"").trim().toLowerCase()==="asset");
+  select.innerHTML='<option value="">All asset accounts</option>'+assetAccounts.map(account=>`<option value="${esc(account.ACCOUNTID)}">${esc(account.ACCOUNTNAME)}</option>`).join("");
+  if([...select.options].some(option=>option.value===selected))
+    select.value=selected;
+  else
+    select.value="";
+}
 function renderAssets() {
   const currencies=indexBy(state.currencies,"CURRENCYID");
   const transactions=indexBy(state.transactions,"TRANSID"),accounts=indexBy(state.accounts,"ACCOUNTID"),payees=indexBy(state.payees,"PAYEEID"),categories=indexBy(state.categories,"CATEGID");
   const accountList=[...state.accounts];
-  const query=$("assetsSearch")?.value?.trim().toLowerCase()??"";
+  populateAccountFilter();
+  const query=$("assetsSearch")?.value?.trim().toLowerCase()??"",accountId=$("assetAccountFilter")?.value??"";
   const all=[...state.assets].sort((a,b)=>String(a.ASSETNAME??"").localeCompare(String(b.ASSETNAME??"")));
   const rows=all.filter(asset=>{
+    const account=assetAccount(asset,accountList);
+    if(accountId&&String(account?.ACCOUNTID)!==accountId)
+      return false;
     if(!query)
       return true;
-    const account=assetAccount(asset,accountList);
     return [asset.ASSETNAME,asset.ASSETTYPE,asset.ASSETSTATUS,asset.NOTES,account?.ACCOUNTNAME].some(value=>String(value??"").toLowerCase().includes(query));
   });
   const open=rows.filter(asset=>asset.ASSETSTATUS==="Open");
@@ -86,5 +101,6 @@ function renderAssets() {
 }
 function initAssets() {
   $("assetsSearch").addEventListener("input",renderAssets);
+  $("assetAccountFilter").addEventListener("change",renderAssets);
 }
 export { renderAssets,initAssets,assetAccount,assetCurrency };

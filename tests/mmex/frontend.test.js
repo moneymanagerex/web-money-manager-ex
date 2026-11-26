@@ -570,10 +570,19 @@ test("assets render currency from the matching account, ignoring stale CURRENCYI
   const previousDocument = globalThis.document;
   const elements = new Map();
   const element = id => {
-    if (!elements.has(id)) elements.set(id, {
-      value: "", checked: false, disabled: false, textContent: "", innerHTML: "", className: "",
-      addEventListener() {}
-    });
+    if (!elements.has(id)) {
+      const el = {
+        value: "", checked: false, disabled: false, textContent: "", className: "",
+        options: [], _innerHTML: "",
+        addEventListener() {},
+        get innerHTML() { return this._innerHTML; },
+        set innerHTML(html) {
+          this._innerHTML = html;
+          this.options = [...html.matchAll(/<option value="([^"]*)">/g)].map(m => ({ value: m[1] }));
+        }
+      };
+      elements.set(id, el);
+    }
     return elements.get(id);
   };
   globalThis.document = { getElementById: element };
@@ -630,10 +639,19 @@ test("assets search filters rows and the overview, and orphan assets are labeled
   const previousDocument = globalThis.document;
   const elements = new Map();
   const element = id => {
-    if (!elements.has(id)) elements.set(id, {
-      value: "", checked: false, disabled: false, textContent: "", innerHTML: "", className: "",
-      addEventListener() {}
-    });
+    if (!elements.has(id)) {
+      const el = {
+        value: "", checked: false, disabled: false, textContent: "", className: "",
+        options: [], _innerHTML: "",
+        addEventListener() {},
+        get innerHTML() { return this._innerHTML; },
+        set innerHTML(html) {
+          this._innerHTML = html;
+          this.options = [...html.matchAll(/<option value="([^"]*)">/g)].map(m => ({ value: m[1] }));
+        }
+      };
+      elements.set(id, el);
+    }
     return elements.get(id);
   };
   globalThis.document = { getElementById: element };
@@ -684,6 +702,155 @@ test("assets search filters rows and the overview, and orphan assets are labeled
     renderAssets();
     body = element("assetsBody").innerHTML;
     assert.match(body, /Orphan/);
+  } finally {
+    state.accounts = previous.accounts;
+    state.transactions = previous.transactions;
+    state.categories = previous.categories;
+    state.payees = previous.payees;
+    state.currencies = previous.currencies;
+    state.assets = previous.assets;
+    state.transactionLinks = previous.transactionLinks;
+    state.baseCurrencyInfo = previous.baseCurrencyInfo;
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
+});
+
+test("assets account filter narrows rows and preserves selection", async t => {
+  const { state } = await import(modulePath("core"));
+  const { renderAssets } = await import(modulePath("assets"));
+  const previous = {
+    accounts: state.accounts, transactions: state.transactions, categories: state.categories,
+    payees: state.payees, currencies: state.currencies, assets: state.assets,
+    transactionLinks: state.transactionLinks, baseCurrencyInfo: state.baseCurrencyInfo
+  };
+  const previousDocument = globalThis.document;
+  const elements = new Map();
+  const element = id => {
+    if (!elements.has(id)) {
+      const el = {
+        value: "", checked: false, disabled: false, textContent: "", className: "",
+        options: [], _innerHTML: "",
+        addEventListener() {},
+        get innerHTML() { return this._innerHTML; },
+        set innerHTML(html) {
+          this._innerHTML = html;
+          this.options = [...html.matchAll(/<option value="([^"]*)">/g)].map(m => ({ value: m[1] }));
+        }
+      };
+      elements.set(id, el);
+    }
+    return elements.get(id);
+  };
+  globalThis.document = { getElementById: element };
+  try {
+    state.accounts = [
+      { ACCOUNTID: 1, ACCOUNTNAME: "Gold", ACCOUNTTYPE: "asset", CURRENCYID: 10 },
+      { ACCOUNTID: 2, ACCOUNTNAME: "Silver", ACCOUNTTYPE: "asset", CURRENCYID: 10 },
+      { ACCOUNTID: 3, ACCOUNTNAME: "Investment", ACCOUNTTYPE: "investment", CURRENCYID: 20 }
+    ];
+    state.currencies = [{ CURRENCYID: 10, CURRENCYNAME: "USD", CURRENCY_SYMBOL: "$" }];
+    state.assets = [
+      { ASSETID: 1, ASSETNAME: "Gold", ASSETTYPE: "Metal", ASSETSTATUS: "Open", STARTDATE: "2026-01-01", CURRENCYID: 10, VALUE: 100, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" },
+      { ASSETID: 2, ASSETNAME: "Silver", ASSETTYPE: "Metal", ASSETSTATUS: "Open", STARTDATE: "2026-01-02", CURRENCYID: 10, VALUE: 50, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" },
+      { ASSETID: 3, ASSETNAME: "Watch", ASSETTYPE: "Jewelry", ASSETSTATUS: "Open", STARTDATE: "2026-01-03", CURRENCYID: 10, VALUE: 200, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" }
+    ];
+    state.transactions = [];
+    state.categories = [];
+    state.payees = [];
+    state.transactionLinks = [];
+    state.baseCurrencyInfo = [];
+    renderAssets();
+    const select = element("assetAccountFilter");
+    assert.deepStrictEqual(select.options.map(o => o.value), ["", "1", "2"]);
+    assert.match(element("assetsBody").innerHTML, /Gold/);
+    assert.match(element("assetsBody").innerHTML, /Silver/);
+    assert.match(element("assetsBody").innerHTML, /Watch/);
+    select.value = "1";
+    renderAssets();
+    let body = element("assetsBody").innerHTML;
+    assert.match(body, /Gold/);
+    assert.doesNotMatch(body, /Silver/);
+    assert.doesNotMatch(body, /Watch/);
+    assert.match(element("assetsStatus").textContent, /1 shown \/ 3 loaded/);
+    assert.strictEqual(select.value, "1");
+    select.value = "2";
+    renderAssets();
+    body = element("assetsBody").innerHTML;
+    assert.doesNotMatch(body, /Gold/);
+    assert.match(body, /Silver/);
+    assert.doesNotMatch(body, /Watch/);
+    assert.strictEqual(select.value, "2");
+    select.value = "";
+    renderAssets();
+    body = element("assetsBody").innerHTML;
+    assert.match(body, /Gold/);
+    assert.match(body, /Silver/);
+    assert.match(body, /Watch/);
+  } finally {
+    state.accounts = previous.accounts;
+    state.transactions = previous.transactions;
+    state.categories = previous.categories;
+    state.payees = previous.payees;
+    state.currencies = previous.currencies;
+    state.assets = previous.assets;
+    state.transactionLinks = previous.transactionLinks;
+    state.baseCurrencyInfo = previous.baseCurrencyInfo;
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
+});
+
+test("assets account filter excludes orphan assets when a filter is selected", async t => {
+  const { state } = await import(modulePath("core"));
+  const { renderAssets } = await import(modulePath("assets"));
+  const previous = {
+    accounts: state.accounts, transactions: state.transactions, categories: state.categories,
+    payees: state.payees, currencies: state.currencies, assets: state.assets,
+    transactionLinks: state.transactionLinks, baseCurrencyInfo: state.baseCurrencyInfo
+  };
+  const previousDocument = globalThis.document;
+  const elements = new Map();
+  const element = id => {
+    if (!elements.has(id)) {
+      const el = {
+        value: "", checked: false, disabled: false, textContent: "", className: "",
+        options: [], _innerHTML: "",
+        addEventListener() {},
+        get innerHTML() { return this._innerHTML; },
+        set innerHTML(html) {
+          this._innerHTML = html;
+          this.options = [...html.matchAll(/<option value="([^"]*)">/g)].map(m => ({ value: m[1] }));
+        }
+      };
+      elements.set(id, el);
+    }
+    return elements.get(id);
+  };
+  globalThis.document = { getElementById: element };
+  try {
+    state.accounts = [
+      { ACCOUNTID: 1, ACCOUNTNAME: "Gold", ACCOUNTTYPE: "asset", CURRENCYID: 10 }
+    ];
+    state.currencies = [{ CURRENCYID: 10, CURRENCYNAME: "USD", CURRENCY_SYMBOL: "$" }];
+    state.assets = [
+      { ASSETID: 1, ASSETNAME: "Gold", ASSETTYPE: "Metal", ASSETSTATUS: "Open", STARTDATE: "2026-01-01", CURRENCYID: 10, VALUE: 100, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" },
+      { ASSETID: 2, ASSETNAME: "Watch", ASSETTYPE: "Jewelry", ASSETSTATUS: "Open", STARTDATE: "2026-01-03", CURRENCYID: 10, VALUE: 200, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" }
+    ];
+    state.transactions = [];
+    state.categories = [];
+    state.payees = [];
+    state.transactionLinks = [];
+    state.baseCurrencyInfo = [];
+    renderAssets();
+    assert.match(element("assetsBody").innerHTML, /Orphan/);
+    element("assetAccountFilter").value = "1";
+    renderAssets();
+    const body = element("assetsBody").innerHTML;
+    assert.match(body, /Gold/);
+    assert.doesNotMatch(body, /Watch/);
+    assert.doesNotMatch(body, /Orphan/);
+    assert.match(element("assetsStatus").textContent, /1 shown \/ 2 loaded/);
   } finally {
     state.accounts = previous.accounts;
     state.transactions = previous.transactions;

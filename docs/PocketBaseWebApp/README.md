@@ -179,7 +179,8 @@ Assets are matched to their asset-type account by name (`ASSETNAME` =
 Currency column and the base-total conversion, and `ASSETS_V1.CURRENCYID` is
 not read. Assets with no matching asset-type account are labeled **Orphan**
 and excluded from the base total. The assets list supports a search filter
-(name, type, status, notes, account) and summarizes the filtered rows.
+(name, type, status, notes, account) and an asset-account filter, and
+summarizes the filtered rows.
 
 The base currency is shown in the overview and currencies sections, taken from
 `INFOTABLE_V1` (`INFONAME = "BASECURRENCYID"`). When it is not set yet, the
