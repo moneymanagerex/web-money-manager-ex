@@ -13,6 +13,17 @@ function toBase(value,currency) {
   return rate>0? value/rate:NaN;
 }
 
+function assetAccount(asset,accounts) {
+  const name=String(asset.ASSETNAME??"").trim().toLowerCase();
+  if(!name)
+    return null;
+  return accounts.find(account=>String(account.ACCOUNTTYPE??"").trim().toLowerCase()==="asset"&&String(account.ACCOUNTNAME??"").trim().toLowerCase()===name)??null;
+}
+function assetCurrency(asset,accounts,currencies) {
+  const account=assetAccount(asset,accounts);
+  return account? currencies.get(String(account.CURRENCYID))??null:null;
+}
+
 function assetActivity(asset,transactions,accounts,payees,categories,currencies) {
   const links=state.transactionLinks.filter(link=>String(link.LINKTYPE).toLowerCase()==="asset"&&String(link.LINKRECORDID)===String(asset.ASSETID));
   const rows=links.map(link=>transactions.get(String(link.CHECKINGACCOUNTID))).filter(Boolean)
@@ -35,11 +46,12 @@ function assetActivity(asset,transactions,accounts,payees,categories,currencies)
 function renderAssets() {
   const currencies=indexBy(state.currencies,"CURRENCYID");
   const transactions=indexBy(state.transactions,"TRANSID"),accounts=indexBy(state.accounts,"ACCOUNTID"),payees=indexBy(state.payees,"PAYEEID"),categories=indexBy(state.categories,"CATEGID");
+  const accountList=[...state.accounts];
   const rows=[...state.assets].sort((a,b)=>String(a.ASSETNAME??"").localeCompare(String(b.ASSETNAME??"")));
   const open=rows.filter(asset=>asset.ASSETSTATUS==="Open");
   const activityCount=rows.reduce((total,asset)=>total+state.transactionLinks.filter(link=>String(link.LINKTYPE).toLowerCase()==="asset"&&String(link.LINKRECORDID)===String(asset.ASSETID)).length,0);
   const baseTotal=rows.reduce((sum,asset)=>{
-    const currency=Number(asset.CURRENCYID)>0? currencies.get(String(asset.CURRENCYID)):null;
+    const currency=assetCurrency(asset,accountList,currencies);
     const converted=toBase(Number(asset.VALUE),currency);
     return sum+(Number.isFinite(converted)? converted:0);
   },0);
@@ -52,8 +64,8 @@ function renderAssets() {
     {label:"Total (base)",value:Number.isFinite(baseTotal)? `${baseCur?.CURRENCY_SYMBOL||""} ${baseTotal.toLocaleString(undefined,{ minimumFractionDigits:2, maximumFractionDigits:2 })}`:"—"}
   ]);
   $("assetsBody").innerHTML=rows.length? rows.map(asset=>{
-    const currency=Number(asset.CURRENCYID)>0? currencies.get(String(asset.CURRENCYID)):null;
-    return `<tr><td><strong>${esc(asset.ASSETNAME)}</strong></td><td>${esc(asset.ASSETTYPE)}</td><td>${esc(asset.ASSETSTATUS)}</td><td>${esc(fmtDate(asset.STARTDATE))}</td><td>${esc(currency?.CURRENCY_SYMBOL||currency?.CURRENCYNAME||"Base currency")}</td><td class="num amount-cell">${esc(asset.VALUE)}</td><td>${esc(asset.VALUECHANGE)} · ${esc(asset.VALUECHANGEMODE)} · ${esc(asset.VALUECHANGERATE)}</td><td>${esc(asset.NOTES)}</td><td>${assetActivity(asset,transactions,accounts,payees,categories,currencies)}</td></tr>`;
+    const currency=assetCurrency(asset,accountList,currencies);
+    return `<tr><td><strong>${esc(asset.ASSETNAME)}</strong></td><td>${esc(asset.ASSETTYPE)}</td><td>${esc(asset.ASSETSTATUS)}</td><td>${esc(fmtDate(asset.STARTDATE))}</td><td>${esc(currency?.CURRENCY_SYMBOL||currency?.CURRENCYNAME||"—")}</td><td class="num amount-cell">${esc(asset.VALUE)}</td><td>${esc(asset.VALUECHANGE)} · ${esc(asset.VALUECHANGEMODE)} · ${esc(asset.VALUECHANGERATE)}</td><td>${esc(asset.NOTES)}</td><td>${assetActivity(asset,transactions,accounts,payees,categories,currencies)}</td></tr>`;
   }).join(""):'<tr><td colspan="9" class="muted">No assets in this PocketBase dataset.</td></tr>';
 }
-export { renderAssets };
+export { renderAssets,assetAccount,assetCurrency };
