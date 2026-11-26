@@ -47,8 +47,16 @@ function renderAssets() {
   const currencies=indexBy(state.currencies,"CURRENCYID");
   const transactions=indexBy(state.transactions,"TRANSID"),accounts=indexBy(state.accounts,"ACCOUNTID"),payees=indexBy(state.payees,"PAYEEID"),categories=indexBy(state.categories,"CATEGID");
   const accountList=[...state.accounts];
-  const rows=[...state.assets].sort((a,b)=>String(a.ASSETNAME??"").localeCompare(String(b.ASSETNAME??"")));
+  const query=$("assetsSearch")?.value?.trim().toLowerCase()??"";
+  const all=[...state.assets].sort((a,b)=>String(a.ASSETNAME??"").localeCompare(String(b.ASSETNAME??"")));
+  const rows=all.filter(asset=>{
+    if(!query)
+      return true;
+    const account=assetAccount(asset,accountList);
+    return [asset.ASSETNAME,asset.ASSETTYPE,asset.ASSETSTATUS,asset.NOTES,account?.ACCOUNTNAME].some(value=>String(value??"").toLowerCase().includes(query));
+  });
   const open=rows.filter(asset=>asset.ASSETSTATUS==="Open");
+  const orphanCount=rows.filter(asset=>!assetAccount(asset,accountList)).length;
   const activityCount=rows.reduce((total,asset)=>total+state.transactionLinks.filter(link=>String(link.LINKTYPE).toLowerCase()==="asset"&&String(link.LINKRECORDID)===String(asset.ASSETID)).length,0);
   const baseTotal=rows.reduce((sum,asset)=>{
     const currency=assetCurrency(asset,accountList,currencies);
@@ -60,12 +68,23 @@ function renderAssets() {
     {label:"Assets",value:rows.length},
     {label:"Open",value:open.length},
     {label:"Closed",value:rows.length-open.length},
+    {label:"Orphan",value:orphanCount},
     {label:"Linked transactions",value:activityCount},
     {label:"Total (base)",value:Number.isFinite(baseTotal)? `${baseCur?.CURRENCY_SYMBOL||""} ${baseTotal.toLocaleString(undefined,{ minimumFractionDigits:2, maximumFractionDigits:2 })}`:"—"}
-  ]);
+  ],"Summaries follow the current search.");
+  const emptyMessage=state.assets.length? "No assets match these filters.":"No assets in this PocketBase dataset.";
   $("assetsBody").innerHTML=rows.length? rows.map(asset=>{
-    const currency=assetCurrency(asset,accountList,currencies);
-    return `<tr><td><strong>${esc(asset.ASSETNAME)}</strong></td><td>${esc(asset.ASSETTYPE)}</td><td>${esc(asset.ASSETSTATUS)}</td><td>${esc(fmtDate(asset.STARTDATE))}</td><td>${esc(currency?.CURRENCY_SYMBOL||currency?.CURRENCYNAME||"—")}</td><td class="num amount-cell">${esc(asset.VALUE)}</td><td>${esc(asset.VALUECHANGE)} · ${esc(asset.VALUECHANGEMODE)} · ${esc(asset.VALUECHANGERATE)}</td><td>${esc(asset.NOTES)}</td><td>${assetActivity(asset,transactions,accounts,payees,categories,currencies)}</td></tr>`;
-  }).join(""):'<tr><td colspan="9" class="muted">No assets in this PocketBase dataset.</td></tr>';
+    const account=assetAccount(asset,accountList);
+    const currency=account? currencies.get(String(account.CURRENCYID))??null:null;
+    const orphan=!account;
+    const origin=orphan? '<span class="position-origin orphan-badge">Orphan</span>':"";
+    return `<tr><td><strong>${esc(asset.ASSETNAME)}</strong>${origin}</td><td>${esc(asset.ASSETTYPE)}</td><td>${esc(asset.ASSETSTATUS)}</td><td>${esc(fmtDate(asset.STARTDATE))}</td><td>${esc(currency?.CURRENCY_SYMBOL||currency?.CURRENCYNAME||"—")}</td><td class="num amount-cell">${esc(asset.VALUE)}</td><td>${esc(asset.VALUECHANGE)} · ${esc(asset.VALUECHANGEMODE)} · ${esc(asset.VALUECHANGERATE)}</td><td>${esc(asset.NOTES)}</td><td>${assetActivity(asset,transactions,accounts,payees,categories,currencies)}</td></tr>`;
+  }).join(""):`<tr><td colspan="9" class="muted">${esc(emptyMessage)}</td></tr>`;
+  const status=$("assetsStatus");
+  if(status)
+    status.textContent=`${rows.length} shown / ${state.assets.length} loaded`;
 }
-export { renderAssets,assetAccount,assetCurrency };
+function initAssets() {
+  $("assetsSearch").addEventListener("input",renderAssets);
+}
+export { renderAssets,initAssets,assetAccount,assetCurrency };

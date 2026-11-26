@@ -174,6 +174,13 @@ not combine market values across account currencies or retrieve live quotes.
 Price history loads only when the Investments tab opens. Stock and lot editing
 remains in the desktop app.
 
+Assets are matched to their asset-type account by name (`ASSETNAME` =
+`ACCOUNTNAME`, case-insensitive); the account's currency is used for the
+Currency column and the base-total conversion, and `ASSETS_V1.CURRENCYID` is
+not read. Assets with no matching asset-type account are labeled **Orphan**
+and excluded from the base total. The assets list supports a search filter
+(name, type, status, notes, account) and summarizes the filtered rows.
+
 The base currency is shown in the overview and currencies sections, taken from
 `INFOTABLE_V1` (`INFONAME = "BASECURRENCYID"`). When it is not set yet, the
 currencies list offers **Set base**, which records the choice without touching

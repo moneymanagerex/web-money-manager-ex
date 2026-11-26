@@ -206,6 +206,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .investment-table td:first-child strong { display: block; max-width: 230px; }
 .stock-symbol, .stock-currency { color: var(--muted); font-size: .76rem; }
 .position-origin { display: inline-block; margin-top: 5px; color: var(--muted); font-size: .7rem; }
+.orphan-badge { color: #b42318; font-weight: 600; }
 .investment-account-link { display: block; min-height: 30px; margin-top: 6px; padding: 4px 8px; color: var(--accent); background: var(--surface-subtle); font-size: .76rem; }
 .investment-details { min-width: 170px; }
 .investment-details summary { cursor: pointer; color: var(--accent); font-size: .8rem; font-weight: 600; }

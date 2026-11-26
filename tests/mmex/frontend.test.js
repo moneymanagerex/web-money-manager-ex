@@ -534,3 +534,166 @@ test("audit field repair patches collections then re-verifies the schema", async
     /items\.value missing\/type mismatch/
   );
 });
+
+test("asset currency resolves from the matching asset-type account", async () => {
+  const { assetAccount, assetCurrency } = await import(modulePath("assets"));
+  const accounts = [
+    { ACCOUNTID: 1, ACCOUNTNAME: "Gold", ACCOUNTTYPE: "asset", CURRENCYID: 10 },
+    { ACCOUNTID: 2, ACCOUNTNAME: "Gold", ACCOUNTTYPE: "investment", CURRENCYID: 20 },
+    { ACCOUNTID: 3, ACCOUNTNAME: "silver", ACCOUNTTYPE: "asset", CURRENCYID: 30 }
+  ];
+  const currencies = new Map([
+    ["10", { CURRENCYID: 10, CURRENCY_SYMBOL: "$" }],
+    ["20", { CURRENCYID: 20, CURRENCY_SYMBOL: "€" }],
+    ["30", { CURRENCYID: 30, CURRENCY_SYMBOL: "£" }]
+  ]);
+  const asset = { ASSETNAME: "  gold ", CURRENCYID: 999 };
+  assert.equal(assetAccount(asset, accounts)?.ACCOUNTID, 1);
+  assert.equal(assetCurrency(asset, accounts, currencies)?.CURRENCY_SYMBOL, "$");
+  assert.equal(assetAccount({ ASSETNAME: "silver" }, accounts)?.ACCOUNTID, 3);
+  assert.equal(assetAccount({ ASSETNAME: "  " }, accounts), null);
+  assert.equal(assetAccount({}, accounts), null);
+  assert.equal(assetAccount({ ASSETNAME: "platinum" }, accounts), null);
+  assert.equal(assetCurrency({ ASSETNAME: "platinum" }, accounts, currencies), null);
+  assert.equal(assetAccount({ ASSETNAME: "investment-only" }, [{ ACCOUNTID: 9, ACCOUNTNAME: "investment-only", ACCOUNTTYPE: "investment", CURRENCYID: 20 }]), null);
+  assert.equal(assetCurrency({ ASSETNAME: "gold" }, accounts, new Map()), null);
+});
+
+test("assets render currency from the matching account, ignoring stale CURRENCYID", async t => {
+  const { state } = await import(modulePath("core"));
+  const { renderAssets } = await import(modulePath("assets"));
+  const previous = {
+    accounts: state.accounts, transactions: state.transactions, categories: state.categories,
+    payees: state.payees, currencies: state.currencies, assets: state.assets,
+    transactionLinks: state.transactionLinks, baseCurrencyInfo: state.baseCurrencyInfo
+  };
+  const previousDocument = globalThis.document;
+  const elements = new Map();
+  const element = id => {
+    if (!elements.has(id)) elements.set(id, {
+      value: "", checked: false, disabled: false, textContent: "", innerHTML: "", className: "",
+      addEventListener() {}
+    });
+    return elements.get(id);
+  };
+  globalThis.document = { getElementById: element };
+  try {
+    state.accounts = [
+      { ACCOUNTID: 1, ACCOUNTNAME: "Gold", ACCOUNTTYPE: "asset", CURRENCYID: 10 },
+      { ACCOUNTID: 2, ACCOUNTNAME: "Investment", ACCOUNTTYPE: "investment", CURRENCYID: 20 }
+    ];
+    state.currencies = [
+      { CURRENCYID: 10, CURRENCYNAME: "USD", CURRENCY_SYMBOL: "$" },
+      { CURRENCYID: 20, CURRENCYNAME: "EUR", CURRENCY_SYMBOL: "€" }
+    ];
+    state.assets = [
+      { ASSETID: 1, ASSETNAME: "Gold", ASSETTYPE: "Metal", ASSETSTATUS: "Open", STARTDATE: "2026-01-01", CURRENCYID: 999, VALUE: 100, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" },
+      { ASSETID: 2, ASSETNAME: "Unmatched", ASSETTYPE: "Other", ASSETSTATUS: "Closed", STARTDATE: "2026-01-02", CURRENCYID: 10, VALUE: 50, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" }
+    ];
+    state.transactions = [];
+    state.categories = [];
+    state.payees = [];
+    state.transactionLinks = [];
+    state.baseCurrencyInfo = [];
+    renderAssets();
+    const body = element("assetsBody").innerHTML;
+    assert.match(body, /\$/);
+    assert.doesNotMatch(body, /999/);
+    const unmatchedRow = body.split("<tr>").find(row => row.includes("Unmatched"));
+    assert.ok(unmatchedRow);
+    assert.match(unmatchedRow, /—/);
+    const overview = element("assetsMiniOverview").innerHTML;
+    assert.match(overview, /100\.00/);
+    assert.doesNotMatch(overview, /150\.00/);
+  } finally {
+    state.accounts = previous.accounts;
+    state.transactions = previous.transactions;
+    state.categories = previous.categories;
+    state.payees = previous.payees;
+    state.currencies = previous.currencies;
+    state.assets = previous.assets;
+    state.transactionLinks = previous.transactionLinks;
+    state.baseCurrencyInfo = previous.baseCurrencyInfo;
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
+});
+
+test("assets search filters rows and the overview, and orphan assets are labeled", async t => {
+  const { state } = await import(modulePath("core"));
+  const { renderAssets } = await import(modulePath("assets"));
+  const previous = {
+    accounts: state.accounts, transactions: state.transactions, categories: state.categories,
+    payees: state.payees, currencies: state.currencies, assets: state.assets,
+    transactionLinks: state.transactionLinks, baseCurrencyInfo: state.baseCurrencyInfo
+  };
+  const previousDocument = globalThis.document;
+  const elements = new Map();
+  const element = id => {
+    if (!elements.has(id)) elements.set(id, {
+      value: "", checked: false, disabled: false, textContent: "", innerHTML: "", className: "",
+      addEventListener() {}
+    });
+    return elements.get(id);
+  };
+  globalThis.document = { getElementById: element };
+  try {
+    state.accounts = [
+      { ACCOUNTID: 1, ACCOUNTNAME: "Gold", ACCOUNTTYPE: "asset", CURRENCYID: 10 }
+    ];
+    state.currencies = [{ CURRENCYID: 10, CURRENCYNAME: "USD", CURRENCY_SYMBOL: "$" }];
+    state.assets = [
+      { ASSETID: 1, ASSETNAME: "Gold", ASSETTYPE: "Metal", ASSETSTATUS: "Open", STARTDATE: "2026-01-01", CURRENCYID: 10, VALUE: 100, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" },
+      { ASSETID: 2, ASSETNAME: "Silver", ASSETTYPE: "Metal", ASSETSTATUS: "Closed", STARTDATE: "2026-01-02", CURRENCYID: 10, VALUE: 50, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "" },
+      { ASSETID: 3, ASSETNAME: "Watch", ASSETTYPE: "Jewelry", ASSETSTATUS: "Open", STARTDATE: "2026-01-03", CURRENCYID: 10, VALUE: 200, VALUECHANGE: "", VALUECHANGEMODE: "", VALUECHANGERATE: "", NOTES: "gift" }
+    ];
+    state.transactions = [];
+    state.categories = [];
+    state.payees = [];
+    state.transactionLinks = [];
+    state.baseCurrencyInfo = [];
+    renderAssets();
+    let body = element("assetsBody").innerHTML;
+    assert.match(body, /Orphan/);
+    assert.match(body, /Silver/);
+    assert.match(body, /Watch/);
+    assert.match(element("assetsMiniOverview").innerHTML, /Orphan/);
+    assert.match(element("assetsStatus").textContent, /3 shown \/ 3 loaded/);
+    element("assetsSearch").value = "metal";
+    renderAssets();
+    body = element("assetsBody").innerHTML;
+    assert.match(body, /Gold/);
+    assert.match(body, /Silver/);
+    assert.doesNotMatch(body, /Watch/);
+    assert.match(element("assetsStatus").textContent, /2 shown \/ 3 loaded/);
+    assert.match(element("assetsMiniOverview").innerHTML, /Orphan/);
+    element("assetsSearch").value = "gift";
+    renderAssets();
+    body = element("assetsBody").innerHTML;
+    assert.match(body, /Watch/);
+    assert.doesNotMatch(body, /Gold/);
+    assert.doesNotMatch(body, /Silver/);
+    element("assetsSearch").value = "gold";
+    renderAssets();
+    body = element("assetsBody").innerHTML;
+    assert.match(body, /Gold/);
+    assert.doesNotMatch(body, /Silver/);
+    assert.doesNotMatch(body, /Watch/);
+    assert.doesNotMatch(body, /Orphan/);
+    element("assetsSearch").value = "";
+    renderAssets();
+    body = element("assetsBody").innerHTML;
+    assert.match(body, /Orphan/);
+  } finally {
+    state.accounts = previous.accounts;
+    state.transactions = previous.transactions;
+    state.categories = previous.categories;
+    state.payees = previous.payees;
+    state.currencies = previous.currencies;
+    state.assets = previous.assets;
+    state.transactionLinks = previous.transactionLinks;
+    state.baseCurrencyInfo = previous.baseCurrencyInfo;
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
+});

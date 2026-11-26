@@ -6,7 +6,7 @@ import { initPayees,renderReferenceData } from "./payees.mjs?v=20261123-investme
 import { initCurrencies,renderCurrencies,baseCurrencyText } from "./currencies.mjs?v=20261123-investments-assets";
 import { accountBalance,formatDecimal,transactionAmountParts } from "./balances.mjs?v=20261123-investments-assets";
 import { initInvestments,renderInvestments,loadStockHistory } from "./investments.mjs?v=20261123-investments-assets";
-import { renderAssets } from "./assets.mjs?v=20261123-investments-assets";
+import { renderAssets,initAssets } from "./assets.mjs?v=20261123-investments-assets";
 import { baseCurrencyId } from "./currencies.mjs?v=20261123-investments-assets";
 
 function toBase(value,currency) {
@@ -100,6 +100,7 @@ export function initWorkspace() {
   initPayees(loadWorkspace);
   initCurrencies(loadWorkspace);
   initInvestments();
+  initAssets();
   document.querySelectorAll(".topnav [data-view]").forEach(b => b.addEventListener("click",() => setView(b.dataset.view)));
   document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click",() => setView(b.dataset.go)));
   $("overviewAccountGrid").addEventListener("click",event => {
